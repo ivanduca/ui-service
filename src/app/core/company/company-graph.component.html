@@ -1,0 +1,136 @@
+<div class="container px-0 border shadow-lg">
+  <div class="btn-toolbar bg-light pt-2 d-flex justify-content-around" role="toolbar" aria-label="Toolbar with button groups">
+    <a class="btn" href="#" (click)="zoomOut()">
+      <it-icon color="primary" name="zoom-out"></it-icon>
+      <span class="d-none d-lg-block" translate>it.rule.graph.zoomout</span>
+    </a>
+    <a class="btn" href="#" (click)="zoomIn()">
+      <it-icon color="primary" name="zoom-in"></it-icon>
+      <span class="d-none d-lg-block" translate>it.rule.graph.zoomin</span>
+    </a>
+    <a class="btn" href="#" (click)="swap()">
+      <it-icon color="primary" name="exchange-circle"></it-icon>
+      <span class="d-none d-lg-block" translate>it.rule.graph.rotate</span>
+    </a>
+    <a class="btn" href="#" (click)="fit()">
+      <it-icon color="primary" name="minimize"></it-icon>
+      <span class="d-none d-lg-block" translate>it.rule.graph.fit</span>
+    </a>
+    <a class="btn" href="#" (click)="expandAll()">
+      <it-icon color="primary" name="arrow-down-circle"></it-icon>
+      <span class="d-none d-lg-block" translate>it.rule.graph.expand</span>
+    </a>
+    <a class="btn" href="#" (click)="collapseAll()">
+      <it-icon color="primary" name="arrow-up-circle"></it-icon>
+      <span class="d-none d-lg-block" translate>it.rule.graph.collapse</span>
+    </a>
+    <a class="btn" href="#" (click)="compactGraph()">
+      <it-icon color="primary" name="piattaforme"></it-icon>
+      <span class="d-none d-lg-block" translate>it.rule.graph.compact</span>
+    </a>
+    <a class="btn" href="#" (click)="center()">
+      <it-icon color="primary" name="maximize-alt"></it-icon>
+      <span class="d-none d-lg-block" translate>it.rule.graph.center</span>
+    </a>
+    <div class="mt-4">
+      <it-dropdown mode="button">
+        <span button>
+          <it-icon color="primary" name="file-slides"></it-icon>
+          <span translate>it.rule.graph.export.title</span>
+        </span>
+        <ng-container list>
+          <it-dropdown-item (click)="exportImg(false)"><span translate>it.rule.graph.export.visible</span></it-dropdown-item>
+          <it-dropdown-item (click)="exportImg(true)"><span translate>it.rule.graph.export.all</span></it-dropdown-item>
+          <it-dropdown-item (click)="exportPdf()"><span translate>it.rule.graph.export.pdf</span></it-dropdown-item>
+        </ng-container>
+      </it-dropdown>
+    </div>
+  </div>
+  <div class="row mx-0 bg-light">  
+    <div class="col-md-9 ps-md-1 pe-md-0">
+      @if (company) {
+        <form *ngIf="filterFormSearch" [formGroup]="filterFormSearch">
+          <div class="row">
+              <div class="form-group mb-0">
+                  <it-select [options]="optionsWorkflow" formControlName="workflowId"></it-select>        
+              </div>
+          </div>
+        </form>        
+      }
+      @if (!data) {
+        <div class="h-100 align-content-md-center">
+          <div class="d-flex justify-content-center">
+              <it-spinner double="true"></it-spinner>
+          </div>
+        </div>
+      }
+      <div #chartContainer id="chartContainer" class="bg-secondary"></div>
+    </div>
+    <div class="col-md-3 px-1">
+      <it-tab-container #tab dark="true" (onTabSelected)="onTabSelected($event)">
+        @if (company) {
+          <it-tab-item #tabPA label="PA" icon="pa" [active]="tabPAActive">
+            <it-list>
+              <app-show-list-text [label]="'it.company.codiceIpa'" [value]="company.codiceIpa"></app-show-list-text>
+              <app-show-list-text [label]="'it.company.denominazioneEnte'" [value]="company.denominazioneEnte"></app-show-list-text>
+              <app-show-list-text [label]="'it.company.acronimo'" [value]="company.acronimo"></app-show-list-text>
+              <app-show-list-text [label]="'it.company.codiceFiscaleEnte'" [value]="company.codiceFiscaleEnte"></app-show-list-text>
+              <app-show-list-text [label]="'it.company.codiceCategoria'" [value]="company.codiceCategoria"></app-show-list-text>
+              <app-show-list-text [label]="'it.company.codiceNatura'" [value]="company.codiceNatura"></app-show-list-text>
+              <app-show-list-text [label]="'it.company.tipologia'" [value]="company.tipologia"></app-show-list-text>
+              <app-show-list-text [label]="'it.company.sitoIstituzionale'" [value]="company.sitoIstituzionale" url="true"></app-show-list-text>
+              <app-show-list-text [label]="'it.company.indirizzo'" [value]="company.fullIndirizzo"></app-show-list-text>
+              <app-show-list-text [label]="'it.company.regione'" [value]="company.denominazioneRegione"></app-show-list-text>
+              <it-list-item>
+                <div class="d-flex justify-content-around w-100">
+                  <app-show-workflow-history [codiceIpa]="company.codiceIpa"></app-show-workflow-history>
+                  <a itButton="outline-warning" size="xs" class="mt-1" translate routerLink="/search" [queryParams]="{workflowId: '',codiceIpa: company.codiceIpa, sort: 'createdAt,desc'}">
+                    <it-icon name="chart-line" color="warning"></it-icon>it.company.history
+                  </a>
+                  <a itButton="outline-success" size="xs" class="mt-1" translate routerLink="/company-map" [queryParams]="{codiceIpa: company.codiceIpa}">
+                    <it-icon name="map-marker-circle" color="success"></it-icon>it.company.map
+                  </a>
+                </div>      
+              </it-list-item>
+            </it-list>
+          </it-tab-item>
+        }
+        <it-tab-item #tabRule label="Regola" icon="file" [active]="tabRuleActive">
+          <it-list>
+            <app-show-list-text [label]="'it.rule.name'" [value]="currentNode?.data?.nodeId"></app-show-list-text>
+            <app-show-list-text [label]="'it.rule.parent.name'" [value]="currentNode?.data?.parentNodeId"></app-show-list-text>
+            <app-show-list-text [label]="'it.rule.term'" [value]="currentNode?.data?.term"></app-show-list-text>
+            <app-show-list-text [label]="'it.rule.alternativeTerm'" [value]="currentNode?.data?.alternativeTerm"></app-show-list-text>
+            <app-show-list-text [label]="'it.rule.children'" [value]="currentNode?._children?.length"></app-show-list-text>
+            @if(currentNode?.data?.status) {
+              <app-show-list-text [label]="'it.rule.status-label'" [value]="'it.rule.status.' + currentNode?.data?.status + '.ruletitle'| translate"></app-show-list-text>
+            }
+            <app-show-list-text [label]="'it.result.updatedAt'" [value]="currentNode?.data?.updatedAt| date: 'dd/MM/yyyy HH:mm:ss'"></app-show-list-text>
+            <app-show-list-text [label]="'it.result.destinationUrl'" [value]="currentNode?.data?.destinationUrl" url="true"></app-show-list-text>
+            @if (company) {
+              @if (currentNode?.data?.storageData?.screenshotId || currentNode?.data?.storageData?.objectId) {
+                <it-list-item>
+                  <div class="w-100 d-flex justify-content-around">
+                    <app-show-storage-result class="w-100" [screenshot]="true" [storageData]="currentNode?.data?.storageData" [denominazione]="company.denominazioneEnte"></app-show-storage-result>
+                    <app-show-storage-result class="w-100" [html]="true" [storageData]="currentNode?.data?.storageData" [denominazione]="company.denominazioneEnte"></app-show-storage-result>
+                  </div>
+                </it-list-item>  
+              }
+              @if (!currentNode?.data?.storageData?.objectId && currentNode?.data?.status != 407 && currentNode?.data?.status != 500 && currentNode?.data?.workflowChildId) {
+                <it-list-item>
+                  <div class="w-100 d-flex justify-content-around">
+                    <app-show-html-page
+                      [workflowChildId]="currentNode?.data?.workflowChildId" 
+                      [denominazione]="company.denominazioneEnte"
+                      [searchText]="currentNode?.data?.term">
+                    </app-show-html-page>
+                  </div>
+                </it-list-item>  
+              }
+            }
+          </it-list>          
+        </it-tab-item>
+      </it-tab-container>
+    </div>
+  </div>
+</div>

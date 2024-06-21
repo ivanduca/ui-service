@@ -1,0 +1,22 @@
+@if (options) {
+    <div #chartdiv leaflet 
+        [leafletOptions]="options"
+        [leafletMarkerCluster]="markerClusterData"
+        [leafletMarkerClusterOptions]="markerClusterOptions"         
+        [(leafletCenter)]="center"
+        [(leafletZoom)]="zoom"
+        (leafletMapReady)="onMapReady($event)"
+        (leafletMarkerClusterReady)="markerClusterReady($event)"        
+        style="height: 70vh;" 
+        class="my-3">
+    </div>
+}
+@if (!isGEOLoaded) {
+    <div style="height: 70vh;" class="my-3">
+        <div class="overlay-spinner">
+            <div class="d-flex justify-content-center">
+                <it-spinner double="true"></it-spinner>
+            </div>
+        </div>
+    </div>
+}

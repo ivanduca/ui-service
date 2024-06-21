@@ -1,0 +1,18 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": "./",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "skipLibCheck": true,
+    "paths": {
+      "@src/*": [
+        "src/*.tns.ts",
+        "src/*.ts"
+      ]
+    }
+  },
+  "files": [
+    "src/main.tns.ts"
+  ]
+}

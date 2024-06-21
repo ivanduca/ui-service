@@ -1,0 +1,82 @@
+<footer class="it-footer">
+    <div class="it-footer-main bg-dark">
+        <div class="container">
+            <section>
+                <div class="row clearfix">
+                    <div class="col-sm-12">
+                        <div class="it-brand-wrapper">
+                        <a [routerLink]="['/']" class="navbar-brand logo">
+                            <it-icon name="pa"></it-icon>
+                            <div class="it-brand-text ps-2">
+                                <h2 class="no_toc">{{'header.title' | translate}}</h2>
+                                <h3 class="no_toc d-none d-md-block">{{'header.subtitle' | translate}}</h3>
+                            </div>
+                        </a>
+                        </div>
+                    </div>
+                    <div class="col-sm-12">
+                        <p class="text-justify">{{'footer.first' | translate}}</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+    <div class="it-footer-main bg-light">
+        <div class="container">
+            <section class="py-4 bg-light border-top text-primary">
+                <div class="row">
+                    <div class="col-md-5 pb-2">
+                        <h4>Contatti</h4>
+                        <div class="link-list-wrapper">
+                            <ul class="footer-list link-list clearfix">
+                                <li class="list-item">Consiglio Nazionale delle Ricerche</li>
+                                <li class="list-item">Direzione Generale - Unità Piattaforme digitali per la PA</li>
+                                <li class="list-item">Ivan Duca</li>
+                                <li class="list-item"><div><span class="pe-2">Email:</span><a class="d-inline text-primary" href="mailto:ivan.duca@cnr.it">ivan.duca&#64;cnr.it</a></div></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-3 pb-2">
+                        <h4>Collaborazione</h4>
+                        <ul class="list-inline text-start social">
+                            <li class="list-inline-item">
+                                <div class="d-flex align-items-center">
+                                    <div class="px-2">
+                                        <a class="p-2 " href="https://www.anticorruzione.it/" target="_blank">
+                                            <img class="logo" src="./assets/images/anac.png"/>
+                                            <span class="sr-only">ANAC</span>
+                                        </a>        
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-inline-item">
+                                <div class="d-flex align-items-center">
+                                    <div class="px-2">
+                                        <a class="p-2" href="https://cnr.it/" target="_blank">
+                                            <img class="logo" src="./assets/images/logo_CNR_affiancato.png"/>
+                                            <span class="sr-only">CNR</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </section>    
+        </div>        
+    </div>
+    <div class="it-footer-small-prints clearfix">
+        <div class="container">
+            <h3 class="sr-only">Sezione Link Utili</h3>
+            <ul class="it-footer-small-prints-list list-inline mb-0 d-flex flex-column flex-md-row">
+                <li class="list-inline-item">
+                    <a href="#" title="Note Legali">Note legali</a>
+                </li>
+                <li class="list-inline-item">
+                    <a href="#" title="Privacy-Cookies">Privacy policy</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</footer>
+<it-back-to-top [shadow]="true" [dark]="false"></it-back-to-top>

@@ -1,0 +1,48 @@
+/*
+* Fix label left space width input prepend icon
+*/
+.input-group .input-group-text ~ label {
+    left: 2.50rem !important;    
+}
+@media (min-width: 1400px) {
+    .modal-overflow-y {
+        max-height: calc(100vh - 200px); 
+        overflow-y: auto;
+    }
+    /*
+    * Fix sticky header height
+    */
+    .bs-it-sticky-wrapper {
+        height: 58px !important;
+    }
+}
+
+.hmin-100 {
+    min-height: 100%!important;
+}
+
+.form-group {
+    label {
+        z-index: 1!important;
+    }
+}
+
+.select-wrapper {
+    margin-bottom: 0.5rem !important;
+}  
+
+.bs-is-fixed {
+    position: fixed !important;
+    z-index: 1000 !important; /* per fare in modo che uno sticky non finisca sopra un fixed (es. l'header) */
+}
+  
+.ng-select-searchable {
+    margin-top: -0.70em;
+}
+.ng-placeholder {
+    color: unset !important;
+}
+
+ng-select.break-spaces .ng-option {
+    white-space: break-spaces !important;
+} 

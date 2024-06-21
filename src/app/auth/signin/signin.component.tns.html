@@ -1,0 +1,24 @@
+<FlexboxLayout class="page page-login" backgroundImage="~/assets/images/mesh.png">
+    <Image src="~/assets/images/ace.png" stretch="aspectFit" class="company-logo"></Image>
+    <StackLayout class="flexbox-item">
+        <Label class="t-15 company-name" text="Utilizzare le credenziali ufficiali CNR"></Label>            
+        <GridLayout rows="auto, auto, auto">
+            <StackLayout row="0" class="input-field">
+                <GridLayout columns="auto, *">
+                    <Label row="0" col="0" text="&#xf007;" class="fa t-18 fa-fw" verticalAlignment="center"></Label>
+                    <TextField row="0" col="1" #username class="input t-18" autocapitalizationType="none" returnKeyType="next"></TextField>
+                </GridLayout>    
+                <StackLayout class="hr-light"></StackLayout>
+            </StackLayout>
+            <StackLayout row="1" class="input-field">
+                <GridLayout columns="auto, *, auto">
+                    <Label row="0" col="0" text="&#xf084;" class="fa t-18 fa-fw" verticalAlignment="center"></Label>
+                    <TextField row="0" col="1" #password class="input t-18" secure="{{pwdSecure}}"></TextField>
+                    <Label row="0" col="2" class="fa t-18 fa-fw" text="&#xf06e;" verticalAlignment="center" (tap)="pwdSecure = !pwdSecure" ></Label>
+                </GridLayout>
+                <StackLayout class="hr-light"></StackLayout>
+            </StackLayout>
+        </GridLayout>  
+        <Button class="btn btn-login btn-rounded-sm font-weight-bold t-18" (tap)="onSignin()" text="Accedi"></Button>
+    </StackLayout>
+</FlexboxLayout>

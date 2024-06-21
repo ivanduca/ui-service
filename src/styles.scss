@@ -1,0 +1,63 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import 'variables';
+
+@import '../node_modules/ngx-bootstrap/datepicker/bs-datepicker.css';
+@import "../node_modules/@ng-select/ng-select/themes/material.theme.css";
+// Importazione libreria SCSS di bootstrap-italia
+@import "bootstrap-italia/src/scss/bootstrap-italia";
+@import "../node_modules/leaflet/dist/leaflet.css";
+@import "../node_modules/leaflet.markercluster/dist/MarkerCluster.css";
+@import "../node_modules/leaflet.markercluster/dist/MarkerCluster.Default.css";
+@import 'bootstrap-override';
+
+// ---------------------
+// Main Layout
+// ---------------------
+/**
+  Personalizzazione input form e select 2.
+ */
+@media (min-width: 1400px) {
+  .container, .container-lg, .container-md, .container-sm, .container-xl {
+      max-width: calc(100vw - 200px);
+  }
+  .modal-lg, .modal-xl {
+    max-width: calc(100vw - 400px);
+  }
+}
+
+.label-show-text::after {
+  content: ":";
+  display: inline-block;
+}
+
+.overlay-spinner {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+  top: 40%;
+  left: 0px;
+  opacity: 0.5;
+  filter: alpha(opacity=50);
+}
+
+.asterix-b::before {
+  content: '(*) ';
+  text-decoration: none;
+  display: inline-block;
+}
+.asterix-b2::before {
+  content: '(**) ';
+  text-decoration: none;
+  display: inline-block;
+}
+.asterix-a::after {
+  content: ' (*)';
+}
+.asterix-a2::after {
+  content: ' (**)';
+}
+.leaflet-pane,.leaflet-top, .leaflet-bottom {
+  z-index: 1 !important;
+}

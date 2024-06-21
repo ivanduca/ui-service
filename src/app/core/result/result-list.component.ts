@@ -1,0 +1,137 @@
+import { ChangeDetectorRef, Component, OnInit, Input } from '@angular/core';
+import { CommonListComponent } from '../../common/controller/common-list.component';
+import { ActivatedRoute, Router } from '@angular/router';
+import { FormGroup } from '@angular/forms';
+import { NavigationService } from '../navigation.service';
+import { TranslateService } from '@ngx-translate/core';
+import { animate, keyframes, style, transition, trigger } from '@angular/animations';
+import { Result } from './result.model';
+import { ResultService } from './result.service';
+
+@Component({
+  selector: 'result-list',
+  template:
+  `
+    <!-- List -->
+    <app-grid-layout 
+      [loading]="loading" 
+      [items]="items"
+      [noItem]="'message.no_item'" 
+      [showPage]="showPage" 
+      [infiniteScroll]="infiniteScroll" 
+      [page]="getPage()" 
+      [showPageOnTop]="showPageOnTop"
+      [showTotalOnTop]="showTotalOnTop"
+      [count]="count" 
+      (onChangePage)="onChangePage($event)" 
+      [page_offset]="pageOffset">
+      @if (items) {
+        <div class="row row-eq-height w-100" 
+          infiniteScroll       
+          [infiniteScrollThrottle]="300"
+          [infiniteScrollDistance]="1"
+          (scrolled)="onScroll()">
+          <div *ngFor="let item of items" class="col-sm-12 px-md-2 pb-2" @scale [ngClass]="classForDisplayCard()">
+            <app-list-item-result [item]="item" [filterForm]="filterForm">
+              <it-callout [appearance]="'highlight'" [icon]="'pa'" [color]="item.color" [label]="item.company.denominazioneEnte">
+                <div class="col-sm-12">
+                  <app-show-text [label]="'it.company.codiceIpa'" [value]="item.company.codiceIpa"></app-show-text>
+                  <app-show-text class="pull-right" [label]="'it.company.acronimo'" [value]="item.company.acronimo"></app-show-text>
+                </div>  
+                <div class="col-sm-12">
+                  <app-show-text [label]="'it.company.codiceFiscaleEnte'" [value]="item.company.codiceFiscaleEnte"></app-show-text>
+                </div>
+                <div class="col-sm-12">
+                  <app-show-text [label]="'it.company.codiceCategoria'" [value]="item.company.codiceCategoria"></app-show-text>
+                  <app-show-text class="pull-right" [label]="'it.company.codiceNatura'" [value]="item.company.codiceNatura"></app-show-text>
+                </div>
+                <div class="col-sm-12">
+                  <app-show-text [label]="'it.company.tipologia'" [value]="item.company.tipologia"></app-show-text>
+                </div>
+                <div class="col-sm-12">
+                  <app-show-url [label]="'it.company.sitoIstituzionale'" [value]="item.company.sitoIstituzionale"></app-show-url>
+                </div>
+              </it-callout>
+              <div class="col-sm-12">
+                <app-show-text [label]="'it.rule.status-label'" [value]="'it.rule.status.' + item.status + '.ruletitle'| translate"></app-show-text>
+              </div>
+              <div class="col-sm-12">
+                <app-show-text [label]="'it.result.updatedAt'" [value]="item.updatedAt| date: 'dd/MM/yyyy HH:mm:ss'"></app-show-text>
+              </div>
+              <div class="col-sm-12">
+                <app-show-text [label]="'it.rule.name'" [value]="item.ruleName"></app-show-text>
+              </div>
+              <div class="col-sm-12">
+                <app-show-text-popover [label]="'it.rule.term'" [value]="item.term" [popover_title]="'it.result.content'|translate" [popover_text]="item.content"></app-show-text-popover>
+              </div>
+              <div class="col-sm-12">
+                <app-show-url [label]="'it.result.destinationUrl'" [value]="item.destinationUrl"></app-show-url>
+              </div>            
+            </app-list-item-result>
+          </div>
+        </div>
+      }
+    </app-grid-layout>
+  `,
+  styles : [
+    `.callout { max-width: unset!important; }`
+  ],  
+  animations: [
+    trigger('scale', [
+      transition('void => *', animate('500ms ease-in-out', keyframes([
+        style({ transform: 'scale(0.3)' }),
+        style({ transform: 'scale(1)' })
+      ]))) 
+    ])
+  ]
+})
+export class ResultListComponent extends CommonListComponent<Result> implements OnInit {
+
+  public items: Result[];
+  @Input() showTotalOnTop: boolean = true;
+  @Input() showPageOnTop: boolean = false;
+  @Input() showPage: boolean = false;
+  @Input() infiniteScroll: boolean = true;
+
+  pageOffset = ResultService.PAGE_OFFSET;
+  public constructor(public service: ResultService,
+                     protected route: ActivatedRoute,
+                     protected router: Router,
+                     protected changeDetector: ChangeDetectorRef,
+                     protected navigationService: NavigationService,
+                     protected translateService: TranslateService) {
+    super(service, route, router, changeDetector, navigationService);
+  }
+  
+  public setItems(items: Result[]) {
+    this.items = items;
+  }
+
+  public getItems(): Result[] {
+    return this.items;
+  }
+
+  public buildFilterForm(): FormGroup {
+    return this.filterForm;
+  }
+
+  public classForDisplayCard() {    
+    return {
+      'col-md-12': this.count <= 1,
+      'col-lg-4': this.count > 1
+    };
+  }
+
+  onScroll() {
+    if (this.infiniteScroll) {
+      setTimeout(() => {
+        this.loadMoreItems();
+      }, 100);
+    }
+  }
+
+  protected isScrollTopOnPageChange(): boolean {
+    return true;
+  }
+
+}

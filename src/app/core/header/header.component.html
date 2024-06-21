@@ -1,0 +1,116 @@
+<it-header
+  [loginStyle]="'none'"
+  [light]="light"
+  [showSearch]="search"
+  [sticky]="sticky"
+  [megamenu]="true"
+  [slimTitle]="companylabel | translate"
+  [slimTitleLink]="'header.company.url' | translate"
+  (searchClick)="onSearch()">
+  <ul class="link-list" slimLinkList>
+    <li><a class="list-item" [routerLinkActive]="['active']" routerLink="/credits">CREDITS</a></li>
+  </ul>
+  <ng-container slimRightZone>
+    <it-language-switcher mode="nav"></it-language-switcher>
+    <a itButton="primary" class="btn-full btn-icon" routerLink="auth/signin">
+      <span class="rounded-icon">
+        <it-icon name="user" color="primary"></it-icon>
+      </span>
+      <span class="d-none d-lg-block">{{ 'it.navigation.full-login' | translate }}</span>
+    </a>
+  </ng-container>
+  <ng-container brand>
+    <a routerLink="/">
+      <it-icon name="pa"></it-icon>
+      <div class="it-brand-text">
+        <div class="it-brand-title">{{'header.title' | translate}}</div>
+        <div class="it-brand-tagline d-none d-md-block">{{'header.subtitle' | translate}}</div>
+      </div>
+    </a>
+  </ng-container>
+  <div class="d-flex" rightZone>
+    <div class="it-search-wrapper">
+      <span class="d-none d-md-block">{{ 'it.company.search' | translate }}</span>
+      <a
+        class="search-link rounded-icon"
+        [attr.aria-label]="'it.company.search' | translate"
+        href="{{searchHREF}}">
+        <it-icon name="search"></it-icon>
+      </a>
+    </div>
+  </div>
+  <ng-container navItems>
+    <it-navbar-item>
+      <a class="nav-link close-menu"  (click)="toggleCollapse()" [routerLinkActive]="['active']" routerLink="/company-map">
+        <it-icon size="sm" [color]="iconColor" name="map-marker-circle"></it-icon>
+        <span translate>it.navigation.map</span>
+      </a>
+    </it-navbar-item>
+    <it-navbar-item>
+      <a class="nav-link close-menu"  (click)="toggleCollapse()" [routerLinkActive]="['active']" routerLink="/company-graph">
+        <it-icon size="sm" [color]="iconColor" name="settings"></it-icon>
+        <span class="ps-1" translate>it.navigation.rule</span>
+      </a>
+    </it-navbar-item>
+    <it-navbar-item>
+      <it-dropdown mode="nav" [megamenu]="true">
+        <span button translate>it.navigation.sezioni</span>
+        <ng-container list>
+          <it-megamenu [mode]="'normal'">
+            <ng-container megamenuLinkList>
+              <div class="col-12 col-lg-4">
+                <it-list linkList="true">
+                  <it-list-item href="#" (click)="toggleCollapse()" routerLink="/search" [queryParams]="{ruleName: 'bilanci'}">
+                    <it-icon name="arrow-right-triangle"></it-icon>
+                    <span>Bilanci</span>
+                  </it-list-item>
+                  <it-list-item href="#" (click)="toggleCollapse()" routerLink="/search" [queryParams]="{ruleName: 'bandi-gara-contratti'}">
+                    <it-icon name="arrow-right-triangle"></it-icon>
+                    <span>Bandi di gara e contratti</span>
+                  </it-list-item>
+                  <it-list-item href="#" (click)="toggleCollapse()" routerLink="/search" [queryParams]="{ruleName: 'bandi-concorso'}">
+                    <it-icon name="arrow-right-triangle"></it-icon>
+                    <span>Bandi di Concorso</span>
+                  </it-list-item>
+                </it-list>
+              </div>
+              <div class="col-12 col-lg-4">
+                <it-list linkList="true">
+                  <it-list-item href="#" (click)="toggleCollapse()" routerLink="/search" [queryParams]="{ruleName: 'servizi-erogati'}">
+                    <it-icon name="arrow-right-triangle"></it-icon>
+                    <span>Servizi erogati</span>
+                  </it-list-item>
+                  <it-list-item href="#" (click)="toggleCollapse()" routerLink="/search" [queryParams]="{ruleName: 'opere-pubbliche'}">
+                    <it-icon name="arrow-right-triangle"></it-icon>
+                    <span>Opere Pubbliche</span>
+                  </it-list-item>
+                  <it-list-item href="#" (click)="toggleCollapse()" routerLink="/search" [queryParams]="{ruleName: 'enti-controllati'}">
+                    <it-icon name="arrow-right-triangle"></it-icon>
+                    <span>Enti controllati</span>
+                  </it-list-item>
+                </it-list>
+              </div>
+              <div class="col-12 col-lg-4">
+                <it-list linkList="true">
+                  <it-list-item href="#" (click)="toggleCollapse()" routerLink="/search" [queryParams]="{ruleName: 'organizzazione'}">
+                    <it-icon name="arrow-right-triangle"></it-icon>
+                    <span>Organizzazione</span>
+                  </it-list-item>
+                  <it-list-item href="#" (click)="toggleCollapse()" routerLink="/search" [queryParams]="{ruleName: 'disposizioni-generali'}">
+                    <it-icon name="arrow-right-triangle"></it-icon>
+                    <span>Disposizioni Generali</span>
+                  </it-list-item>
+                  <it-list-item href="#" (click)="toggleCollapse()" routerLink="/search" [queryParams]="{ruleName: 'personale'}">
+                    <it-icon name="arrow-right-triangle"></it-icon>
+                    <span>Personale</span>
+                  </it-list-item>
+                </it-list>
+              </div>
+            </ng-container>
+          </it-megamenu>
+        </ng-container>
+      </it-dropdown>
+    </it-navbar-item>
+  </ng-container>
+</it-header>
+<simple-notifications [options]="notificationOptions"></simple-notifications>

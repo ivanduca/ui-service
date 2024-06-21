@@ -1,0 +1,114 @@
+import { JsonProperty, JsonObject } from 'json2typescript';
+import { Base } from '../../common/model/base.model';
+import { StorageData } from '../result/result.model';
+
+export class SelectRule {
+    public key: string;
+    public text: string;
+
+    constructor(key: string, label: string, level: number) {
+        this.key = key;
+        this.text = `    `.repeat(level) + `${label}`;
+    }
+}
+
+export class RuleChart {
+    public nodeId: string;
+    public parentNodeId: string;
+    public term: string;
+    public alternativeTerm: string;
+    public childStatus : Number[];
+
+    public status: number;
+    public destinationUrl: string;
+    public storageData: StorageData; 
+    public color: string;
+    public buttonColor: string;
+    public ruleStatus: {};
+    public updatedAt: Date;
+    public workflowChildId: string;
+    public content: string;
+
+    constructor(nodeId: string, parentNodeId: string, term: string, alternativeTerm?: string, childStatus?: Number[]) {
+        this.nodeId = nodeId;
+        this.parentNodeId = parentNodeId;
+        this.term = term;
+        this.alternativeTerm = alternativeTerm;
+        this.childStatus = childStatus;
+        this.color = 'primary';
+        this.buttonColor = 'primary';
+    }
+}
+
+@JsonObject("Term")
+export class Term {
+    @JsonProperty('key')
+    public key: string;
+    @JsonProperty('code')
+    public code: number;
+}
+
+@JsonObject("Rule")
+export class Rule implements Base {
+    public static AMMINISTRAZIONE_TRASPARENTE : string = 'amministrazione-trasparente';
+    public static AMMINISTRAZIONE_TRASPARENTE_TERM : string = 'Amministrazione trasparente';
+
+    @JsonProperty('term', [Term])
+    public term: Term[] = [];
+    @JsonProperty('childs')
+    public childs: Map<String, Rule>;    
+
+    public getKeys(rule: Rule, key: string, array: SelectRule[], leveli: number): SelectRule[] {
+        let level = leveli + 1;
+        let result = array || [];        
+        let childs : Map<String, Rule> = rule ? rule.childs : this.childs;
+        if (key) {
+            result.push(new SelectRule(
+                key,
+                rule ? rule.term.filter(key => key.code == 200)[0].key : Rule.AMMINISTRAZIONE_TRASPARENTE_TERM, 
+                level
+            ));
+        }
+        if (childs) {
+            Object.keys(childs).forEach((key) => {
+                this.getKeys(childs[key], key, result, level);
+            });
+        } 
+        return result;
+    }
+
+    public getCharts(rule: Rule, key: string, array: RuleChart[]): RuleChart[] {
+        let result = array || [];        
+        let childs : Map<String, Rule> = rule ? rule.childs : this.childs;
+        if (childs) {
+            Object.keys(childs).forEach((child) => {
+                result.push(new RuleChart(child, key, this.term200(childs[child].term), this.splitTerm(childs[child].term)));
+                this.getCharts(childs[child], child, result);
+            });
+        } 
+        if (key && !rule) {
+            result.push(new RuleChart(key, null, this.term200(this.term), this.splitTerm(this.term)));
+        }
+        return result;
+    }
+
+    public term200(terms: Term[]): string {
+        return terms.filter(key => key.code === 200)[0].key;
+    }
+
+    public splitTerm(terms: Term[]): string {
+        if (terms.length == 1) {
+            return undefined;
+        }
+        return terms.filter(key => key.code !== 200).map(a => a.key).join(',');
+    }
+
+    getId(): string {
+        return undefined;
+    }
+    
+    hasId(): boolean {
+        return true;
+    }
+  
+}
