@@ -33,7 +33,8 @@ export class CompanyMapComponent implements OnInit {
   protected center;
   protected zoom;
   protected currentMarker: Leaflet.Marker;
-  protected map: Leaflet.Map  
+  protected map: Leaflet.Map;
+  
   markerClusterData: Leaflet.Marker[] = [];
   markerClusterOptions: Leaflet.MarkerClusterGroupOptions = {
     iconCreateFunction: function(cluster) {
@@ -46,12 +47,33 @@ export class CompanyMapComponent implements OnInit {
       } else {
         c += 'large';
       }
-  
-      return new Leaflet.DivIcon({ 
-        html: `<div><span>${childCount}</span></div>`, 
-        className: `marker-cluster${c}`, 
-        iconSize: new Leaflet.Point(40, 40) 
+      var markers = cluster.getAllChildMarkers();
+      var markersOK = 0, statusPresent = false;
+      markers.forEach((element: any) => {
+        let status = element?.options?.status;
+        if (status) {
+          if (status == 200 || status == 202) {
+            markersOK++;
+          }
+          statusPresent = true;
+        }
       });
+      if (statusPresent) {
+          var percentOK = Math.floor((markersOK * 100)/childCount), percentFail = 100 - percentOK,            
+            style = percentOK > 50 ? `color:white; background-image: conic-gradient(green ${percentOK}%, red ${percentFail}%);` :
+                `color:white; background-image: conic-gradient(red ${percentFail}%, green ${percentOK}%)`;
+            return new Leaflet.DivIcon({ 
+              html: `<div style="${style}"><span>${childCount}</span></div>`, 
+              className: `marker-cluster`, 
+              iconSize: new Leaflet.Point(40, 40) 
+            });      
+      } else {
+        return new Leaflet.DivIcon({ 
+          html: `<div><span>${childCount}</span></div>`, 
+          className: `marker-cluster${c}`, 
+          iconSize: new Leaflet.Point(40, 40) 
+        });  
+      }
     }
   };
 
@@ -74,13 +96,32 @@ export class CompanyMapComponent implements OnInit {
       }
       this.currentMarker.openPopup();
     }
+    markerCluster.on('clustermouseover', function ($event) {
+      var cluster = $event?.sourceTarget,
+        childCount = cluster.getChildCount(),
+        markers = cluster.getAllChildMarkers(),
+        markersOK = 0, statusPresent = false;
+      markers.forEach((element: any) => {
+        let status = element?.options?.status;
+        if (status) {
+          if (status == 200 || status == 202) {
+            markersOK++;
+          }
+          statusPresent = true;
+        }
+      });
+      var percentOK = Math.floor((markersOK * 100)/childCount), 
+        percentFail = 100 - percentOK;
+      $event.propagatedFrom.bindTooltip(`<span class="fw-bolder">Conforme ${percentOK}%</span>`, {sticky: true}).openTooltip();
+    });
   }
+
   public getGeoJson(queryParams: any): Observable<any> {
     if (queryParams.workflowId && queryParams.ruleName) {
       let params = new HttpParams()
         .set(`workflowId`, queryParams.workflowId)
         .set(`ruleName`, queryParams.ruleName);
-      return this.resultAggregatorService.getAny(`/v1/aggregator/geojson/nocache`, params);
+      return this.resultAggregatorService.getAny(`/v1/aggregator/geojson/gzip`, params);
     } else {
       return this.companyService.getAny(`/v1/geo/geojson`);
     } 
@@ -98,8 +139,10 @@ export class CompanyMapComponent implements OnInit {
           let lat = coordinates[1];
           let lng = coordinates[0];
           element.properties.companies.forEach((company: any) => {
+            let status = company?.validazioni?.[queryParams.ruleName];
+            let iconColor = status ? ((status == 200 || status == 202) ? `success`: `danger` ) : `primary`;
             let description = `
-              <div>
+              <div class="border-${iconColor}">
                 <strong>
                   <a href="${environment.baseHref}#/search?workflowId=&codiceIpa=${company.codiceIpa}">${company.denominazioneEnte}</a>
                 </strong>
@@ -107,7 +150,7 @@ export class CompanyMapComponent implements OnInit {
             `;
             let icon = new Leaflet.divIcon({
               html: `
-                <svg class="icon icon-primary icon-sm">
+                <svg class="icon icon-white icon-sm bg-${iconColor}">
                   <use href="assets/vendor/sprite.svg#it-pa"></use>
                 </svg>
               `,
@@ -116,7 +159,8 @@ export class CompanyMapComponent implements OnInit {
             });
             let marker = new Leaflet.marker(new Leaflet.LatLng(lat, lng), {
               icon: icon,
-              codiceIpa: company.codiceIpa
+              codiceIpa: company.codiceIpa,
+              status: status
             } as Leaflet.MarkerOptions);
             marker.bindPopup(description);
             this.markerClusterData.push(marker);
