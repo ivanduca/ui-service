@@ -1,12 +1,13 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-
+import { Observable } from 'rxjs';
+import { HttpParams } from '@angular/common/http';
+import { ApiMessageService, MessageType } from '../api-message.service';
+import { formatNumber } from '@angular/common';
 import { CompanyService } from './company.service';
 import { ResultAggregatorService } from '../result-aggregator/result-aggregator.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
 import * as Leaflet from 'leaflet';
-import { Observable } from 'rxjs';
-import { HttpParams } from '@angular/common/http';
 
 @Component({
   selector: 'company-map',
@@ -63,7 +64,7 @@ export class CompanyMapComponent implements OnInit {
             style = percentOK > 50 ? `color:white; background-image: conic-gradient(green ${percentOK}%, red ${percentFail}%);` :
                 `color:white; background-image: conic-gradient(red ${percentFail}%, green ${percentOK}%)`;
             return new Leaflet.DivIcon({ 
-              html: `<div style="${style}"><span>${childCount}</span></div>`, 
+              html: `<div style="${style}"><span>${percentOK}%</span></div>`, 
               className: `marker-cluster`, 
               iconSize: new Leaflet.Point(40, 40) 
             });      
@@ -80,6 +81,7 @@ export class CompanyMapComponent implements OnInit {
   constructor(
     private companyService: CompanyService,
     private route: ActivatedRoute,
+    protected apiMessageService: ApiMessageService,
     private resultAggregatorService: ResultAggregatorService,
     protected router: Router) {
   }
@@ -98,21 +100,12 @@ export class CompanyMapComponent implements OnInit {
     }
     markerCluster.on('clustermouseover', function ($event) {
       var cluster = $event?.sourceTarget,
-        childCount = cluster.getChildCount(),
-        markers = cluster.getAllChildMarkers(),
-        markersOK = 0, statusPresent = false;
-      markers.forEach((element: any) => {
-        let status = element?.options?.status;
-        if (status) {
-          if (status == 200 || status == 202) {
-            markersOK++;
-          }
-          statusPresent = true;
-        }
-      });
-      var percentOK = Math.floor((markersOK * 100)/childCount), 
-        percentFail = 100 - percentOK;
-      $event.propagatedFrom.bindTooltip(`<span class="fw-bolder">Conforme ${percentOK}%</span>`, {sticky: true}).openTooltip();
+        childCount = formatNumber(cluster.getChildCount(), 'it-IT');
+      $event.propagatedFrom.bindTooltip(`
+        <span class="fw-bolder">
+          <span class="position-absolute top-0 start-100 translate-middle badge bg-primary fs-6 fw-lighter">${childCount} PA</span>
+        </span>
+      `, {sticky: false}).openTooltip();
     });
   }
 
@@ -131,52 +124,60 @@ export class CompanyMapComponent implements OnInit {
     this.center = new Leaflet.LatLng(42.00, 11.50);
     this.zoom = 6;
     this.route.queryParams.subscribe((queryParams) => {
-      this.getGeoJson(queryParams).subscribe((geo: any) => {
-        this.isGEOLoaded = true;
-        let codiceIpa = queryParams.codiceIpa;
-        geo.features.forEach((element: any) => {
-          let coordinates = element.geometry.coordinates;
-          let lat = coordinates[1];
-          let lng = coordinates[0];
-          element.properties.companies.forEach((company: any) => {
-            let status = company?.validazioni?.[queryParams.ruleName];
-            let iconColor = status ? ((status == 200 || status == 202) ? `success`: `danger` ) : `primary`;
-            let description = `
-              <div class="border-${iconColor}">
-                <strong>
-                  <a href="${environment.baseHref}#/search?workflowId=&codiceIpa=${company.codiceIpa}">${company.denominazioneEnte}</a>
-                </strong>
-              </div>
-            `;
-            let icon = new Leaflet.divIcon({
-              html: `
-                <svg class="icon icon-white icon-sm bg-${iconColor}">
-                  <use href="assets/vendor/sprite.svg#it-pa"></use>
-                </svg>
-              `,
-              iconSize: [25, 25],
-              iconAnchor: [13, 7]            
+      this.getGeoJson(queryParams)
+      .subscribe({
+        next: (geo: any) => {
+          this.isGEOLoaded = true;
+          let codiceIpa = queryParams.codiceIpa;
+          geo.features.forEach((element: any) => {
+            let coordinates = element.geometry.coordinates;
+            let lat = coordinates[1];
+            let lng = coordinates[0];
+            element.properties.companies.forEach((company: any) => {
+              let status = company?.validazioni?.[queryParams.ruleName];
+              let iconColor = status ? ((status == 200 || status == 202) ? `success`: `danger` ) : `primary`;
+              let description = `
+                <div class="border-${iconColor}">
+                  <strong>
+                    <a href="${environment.baseHref}#/search?workflowId=&codiceIpa=${company.codiceIpa}&sort=createdAt,desc">${company.denominazioneEnte}</a>
+                  </strong>
+                </div>
+              `;
+              let icon = new Leaflet.divIcon({
+                html: `
+                  <svg class="icon icon-white icon-sm bg-${iconColor}">
+                    <use href="assets/vendor/sprite.svg#it-pa"></use>
+                  </svg>
+                `,
+                iconSize: [25, 25],
+                iconAnchor: [13, 7]            
+              });
+              let marker = new Leaflet.marker(new Leaflet.LatLng(lat, lng), {
+                icon: icon,
+                codiceIpa: company.codiceIpa,
+                status: status
+              } as Leaflet.MarkerOptions);
+              marker.bindPopup(description);
+              this.markerClusterData.push(marker);
+              if (codiceIpa && codiceIpa == company.codiceIpa) {
+                this.center = new Leaflet.LatLng(lat, lng);
+                this.zoom = CompanyMapComponent.ZOOM;
+                this.currentMarker = marker;
+              }
             });
-            let marker = new Leaflet.marker(new Leaflet.LatLng(lat, lng), {
-              icon: icon,
-              codiceIpa: company.codiceIpa,
-              status: status
-            } as Leaflet.MarkerOptions);
-            marker.bindPopup(description);
-            this.markerClusterData.push(marker);
-            if (codiceIpa && codiceIpa == company.codiceIpa) {
-              this.center = new Leaflet.LatLng(lat, lng);
-              this.zoom = CompanyMapComponent.ZOOM;
-              this.currentMarker = marker;
-            }
           });
-        });
-        this.options = {
-          layers: this.getLayers(),
-          preferCanvas: true
-        };
-        if (!codiceIpa) {
-          this.getCurrentLocation();
+          this.options = {
+            layers: this.getLayers(),
+            preferCanvas: true
+          };
+          if (!codiceIpa) {
+            this.getCurrentLocation();
+          }
+        },
+        error: (err)=>{
+          this.apiMessageService.sendMessage(MessageType.ERROR,  `Dati non presenti, per il controllo con id ${queryParams.workflowId}!`);
+          this.isGEOLoaded = true;
+          this.router.navigate(['error/not-found-no-back']);
         }
       });
     });
