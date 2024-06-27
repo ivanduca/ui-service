@@ -9,12 +9,6 @@
         max-height: calc(100vh - 200px); 
         overflow-y: auto;
     }
-    /*
-    * Fix sticky header height
-    */
-    .bs-it-sticky-wrapper {
-        height: 58px !important;
-    }
 }
 
 .hmin-100 {
