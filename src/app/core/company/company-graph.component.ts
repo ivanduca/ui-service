@@ -249,7 +249,7 @@ export class CompanyGraphComponent implements OnInit, OnDestroy{
           <div class="card-wrapper card-space hmin-100">
             <div class="card card-bg shadow-lg border border-${d.data.color} border-5">
               <div class="card-body pb-0 ${ultraLarge}">
-                <span class="text-break d-flex ${classBox} pb-1">${d.data.term}</span>
+                <span class="text-break d-flex ${classBox}">${d.data.term}</span>
                 ${
                   d.data.status
                     ? `<span class="fst-italic text-${d.data.color}">${d.data.ruleStatus[d.data.status].ruletitle}</span>`

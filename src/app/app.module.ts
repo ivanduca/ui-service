@@ -21,6 +21,8 @@ import { environment } from '../environments/environment';
 import { APP_BASE_HREF } from '@angular/common';
 import { AuthModule, LogLevel } from 'angular-auth-oidc-client';
 import { registerLocaleData } from '@angular/common';
+import { AppRoutingEndModule } from './app-routing-end.module';
+
 import localeIt from '@angular/common/locales/it';
 
 @NgModule({
@@ -60,6 +62,7 @@ import localeIt from '@angular/common/locales/it';
     AppRoutingModule, // Routing
 
     CoreModule,        // Componenti moduli e servizi non Lazy
+    AppRoutingEndModule,
   ],
 
   providers: [

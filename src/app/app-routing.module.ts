@@ -18,8 +18,7 @@ const appRoutes: Routes = [
   { path: 'error/not-found', component: ItErrorPageComponent, data: { errorCode: 404 } },
   { path: 'error/forbidden', component: ItErrorPageComponent, data: { errorCode: 403 } },
   { path: 'error/server-error', component: ItErrorPageComponent, data: { errorCode: 500 } },    
-  { path: 'error/not-found-no-back', component: ItErrorPageComponent, data: { errorCode: 404, showBackButton: false } },
-  { path: '**', redirectTo: 'error/not-found'  },
+  { path: 'error/not-found-no-back', component: ItErrorPageComponent, data: { errorCode: 404, showBackButton: false } }
 ];
 
 @NgModule({

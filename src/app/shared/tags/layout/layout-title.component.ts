@@ -4,7 +4,7 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
   selector: 'app-layout-title',
   template: `
     <div 
-      class="d-flex justify-content-center shadow-none p-3 mb-4 bg-light pe-1 ps-1 pb-3 pt-3 mb-3 mt-n3 ms-n3 me-n3" 
+      class="d-flex justify-content-center shadow-none p-3 mb-4 bg-light pe-1 ps-1 pb-3 pt-3 mb-3" 
       (click)="toggle(!collapsediv)"
       [ngClass]="{'btn btn-link': isCollapsable}">
       <div [ngClass]="{'ms-auto': isCollapsable}">

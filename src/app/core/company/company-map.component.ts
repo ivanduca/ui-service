@@ -6,6 +6,7 @@ import { formatNumber } from '@angular/common';
 import { CompanyService } from './company.service';
 import { ResultAggregatorService } from '../result-aggregator/result-aggregator.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Rule } from '../rule/rule.model';
 import { environment } from '../../../environments/environment';
 import * as Leaflet from 'leaflet';
 
@@ -33,6 +34,9 @@ export class CompanyMapComponent implements OnInit {
   protected options: Leaflet.MapOptions
   protected center;
   protected zoom;
+  protected workflowId;
+  protected ruleName;
+  
   protected currentMarker: Leaflet.Marker;
   protected map: Leaflet.Map;
   
@@ -98,15 +102,15 @@ export class CompanyMapComponent implements OnInit {
       }
       this.currentMarker.openPopup();
     }
-    markerCluster.on('clustermouseover', function ($event) {
-      var cluster = $event?.sourceTarget,
-        childCount = formatNumber(cluster.getChildCount(), 'it-IT');
-      $event.propagatedFrom.bindTooltip(`
-        <span class="fw-bolder">
-          <span class="position-absolute top-0 start-100 translate-middle badge bg-primary fs-6 fw-lighter">${childCount} PA</span>
-        </span>
-      `, {sticky: false}).openTooltip();
-    });
+    if (this.workflowId) {
+      markerCluster.on('clustermouseover', function ($event) {
+        var cluster = $event?.sourceTarget,
+          childCount = formatNumber(cluster.getChildCount(), 'it-IT');
+        $event.propagatedFrom.bindTooltip(`
+            <span class="position-absolute top-0 start-100 translate-middle badge bg-primary fs-6 fw-lighter">${childCount} <strong>PA</strong></span>
+        `, {sticky: false}).openTooltip();
+      });  
+    }
   }
 
   public getGeoJson(queryParams: any): Observable<any> {
@@ -122,8 +126,10 @@ export class CompanyMapComponent implements OnInit {
 
   ngOnInit(): void {
     this.center = new Leaflet.LatLng(42.00, 11.50);
-    this.zoom = 6;
     this.route.queryParams.subscribe((queryParams) => {
+      this.workflowId = queryParams.workflowId;
+      this.ruleName = queryParams.ruleName || Rule.AMMINISTRAZIONE_TRASPARENTE;
+      this.zoom = queryParams.zoom || 6;
       this.getGeoJson(queryParams)
       .subscribe({
         next: (geo: any) => {
@@ -134,12 +140,12 @@ export class CompanyMapComponent implements OnInit {
             let lat = coordinates[1];
             let lng = coordinates[0];
             element.properties.companies.forEach((company: any) => {
-              let status = company?.validazioni?.[queryParams.ruleName];
-              let iconColor = status ? ((status == 200 || status == 202) ? `success`: `danger` ) : `primary`;
+              let status = this.workflowId ? company?.validazioni?.[queryParams.ruleName] || 500 : undefined;
+              let iconColor = this.workflowId ? ((status == 200 || status == 202) ? `success`: `danger` ) : `primary`;
               let description = `
                 <div class="border-${iconColor}">
                   <strong>
-                    <a href="${environment.baseHref}#/search?workflowId=&codiceIpa=${company.codiceIpa}&sort=createdAt,desc">${company.denominazioneEnte}</a>
+                    <a href="${environment.baseHref}#/search?workflowId=&codiceIpa=${company.codiceIpa}&ruleName=${this.ruleName}&sort=createdAt,desc">${company.denominazioneEnte}</a>
                   </strong>
                 </div>
               `;
@@ -170,7 +176,7 @@ export class CompanyMapComponent implements OnInit {
             layers: this.getLayers(),
             preferCanvas: true
           };
-          if (!codiceIpa) {
+          if (!codiceIpa && !queryParams.nolocation) {
             this.getCurrentLocation();
           }
         },

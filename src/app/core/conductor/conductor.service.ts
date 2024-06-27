@@ -9,6 +9,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Workflow } from './workflow.model';
 import { Rule } from '../rule/rule.model';
 import { SpringError } from '../../common/model/spring-error.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable()
 export class ConductorService extends CommonService<Workflow> {
@@ -97,7 +98,8 @@ export class ConductorService extends CommonService<Workflow> {
         connection_timeout: 15000,
         read_timeout: 15000,
         connection_timeout_max: 30000,
-        read_timeout_max: 30000  
+        read_timeout_max: 30000,
+        result_base_url: environment.apiUrl  
       }
     }
   }

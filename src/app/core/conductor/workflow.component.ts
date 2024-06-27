@@ -54,37 +54,37 @@ import * as saveAs from 'file-saver';
         </div>
         <div class="card-text">
             <it-list>
-            <it-list-item [routerLink]="['/search']" [queryParams]="{workflowId: workflow.workflowId, ruleName: 'amministrazione-trasparente'}" href="#" iconLeft="true">
+            <it-list-item [routerLink]="['/search']" [queryParams]="{workflowId: workflow.workflowId, ruleName: 'amministrazione-trasparente'}" href="." iconLeft="true">
                 <span class="fst-italic card-text">{{'it.rule.status.all' | translate}}</span>
                 <ng-container multiple>                     
                 <span @scale [itBadge]="'primary'" [rounded]="true" class="text-sm-left">{{ workflow.totalResult| number: undefined : 'it-IT' }}</span>
                 </ng-container>
             </it-list-item>
-            <it-list-item [routerLink]="['/search']" [queryParams]="{workflowId: workflow.workflowId, ruleName: 'amministrazione-trasparente', status: 200}" href="#" iconLeft="true">
+            <it-list-item [routerLink]="['/search']" [queryParams]="{workflowId: workflow.workflowId, ruleName: 'amministrazione-trasparente', status: 200}" href="." iconLeft="true">
                 <span class="fst-italic card-text">{{'it.rule.status.200.title' | translate}}</span>
                 <ng-container multiple>
                 <span @scale [itBadge]="'success'" [rounded]="true" class="text-sm-left">{{ workflow.getResultFromStatus('200') | number: undefined : 'it-IT' }}</span>
                 </ng-container>
             </it-list-item>
-            <it-list-item [routerLink]="['/search']" [queryParams]="{workflowId: workflow.workflowId, ruleName: 'amministrazione-trasparente', status: 202}" href="#" iconLeft="true">
+            <it-list-item [routerLink]="['/search']" [queryParams]="{workflowId: workflow.workflowId, ruleName: 'amministrazione-trasparente', status: 202}" href="." iconLeft="true">
                 <span class="fst-italic card-text">{{'it.rule.status.202.title' | translate}}</span>
                 <ng-container multiple>                    
                 <span @scale [itBadge]="'warning'" [rounded]="true" class="text-sm-left">{{ workflow.getResultFromStatus('202') | number: undefined : 'it-IT' }}</span>
                 </ng-container>
             </it-list-item>
-            <it-list-item [routerLink]="['/search']" [queryParams]="{workflowId: workflow.workflowId, ruleName: 'amministrazione-trasparente', status: 400}" href="#" iconLeft="true">
+            <it-list-item [routerLink]="['/search']" [queryParams]="{workflowId: workflow.workflowId, ruleName: 'amministrazione-trasparente', status: 400}" href="." iconLeft="true">
                 <span class="fst-italic card-text">{{'it.rule.status.400.title' | translate}}</span>
                 <ng-container multiple>
                 <span @scale [itBadge]="'danger'" [rounded]="true" class="text-sm-left">{{ workflow.getResultFromStatus('400') | number: undefined : 'it-IT' }}</span>
                 </ng-container>
             </it-list-item>
-            <it-list-item [routerLink]="['/search']" [queryParams]="{workflowId: workflow.workflowId, ruleName: 'amministrazione-trasparente', status: 407}" href="#" iconLeft="true">
+            <it-list-item [routerLink]="['/search']" [queryParams]="{workflowId: workflow.workflowId, ruleName: 'amministrazione-trasparente', status: 407}" href="." iconLeft="true">
                 <span class="fst-italic card-text">{{'it.rule.status.407.title' | translate}}</span>
                 <ng-container multiple>
                 <span @scale class="badge rounded-pill complementary-1-bg-b1 text-sm-left">{{ workflow.getResultFromStatus('407') | number: undefined : 'it-IT' }}</span>
                 </ng-container>
             </it-list-item>
-            <it-list-item [routerLink]="['/search']" [queryParams]="{workflowId: workflow.workflowId, ruleName: 'amministrazione-trasparente', status: 500}" href="#" iconLeft="true">
+            <it-list-item [routerLink]="['/search']" [queryParams]="{workflowId: workflow.workflowId, ruleName: 'amministrazione-trasparente', status: 500}" href="." iconLeft="true">
                 <span class="fst-italic card-text">{{'it.rule.status.500.title' | translate}}</span>
                 <ng-container multiple>
                 <span @scale class="badge rounded-pill complementary-1-bg-a12 text-sm-left">{{ workflow.getResultFromStatus('500') | number: undefined : 'it-IT' }}</span>
@@ -93,7 +93,7 @@ import * as saveAs from 'file-saver';
             </it-list>  
         </div>
         @if (workflow.status !== 'RUNNING') {
-          <a class="read-more" [routerLink]="['/company-map']" [queryParams]="{workflowId: workflow.workflowId, ruleName:'amministrazione-trasparente'}">
+          <a class="read-more" [routerLink]="['/company-map']" [queryParams]="{workflowId: workflow.workflowId, ruleName:'amministrazione-trasparente', zoom: 5, nolocation: true}">
               <span class="text">Leggi di più <span class="visually-hidden">Leggi di più ....</span></span>
               <it-icon name="arrow-right"></it-icon>
           </a>
