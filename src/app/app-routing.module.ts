@@ -7,6 +7,8 @@ import { CompanyMapComponent } from './core/company/company-map.component';
 import { CompanyGraphComponent } from './core/company/company-graph.component';
 import { CreditsComponent } from './core/credits/credits.component';
 import { ItErrorPageComponent } from 'design-angular-kit';
+import { PrivacyPolicyComponent } from './core/privacy-policy/privacy-policy.component';
+import { NoteLegaliComponent } from './core/note-legali/note-legali.component';
 
 const appRoutes: Routes = [
   { path: '', component: HomeComponent },
@@ -15,6 +17,8 @@ const appRoutes: Routes = [
   { path: 'company-map', component: CompanyMapComponent },
   { path: 'company-graph', component: CompanyGraphComponent },
   { path: 'credits', component: CreditsComponent },
+  { path: 'privacy-policy', component: PrivacyPolicyComponent },
+  { path: 'note-legali', component: NoteLegaliComponent },
   { path: 'error/not-found', component: ItErrorPageComponent, data: { errorCode: 404 } },
   { path: 'error/forbidden', component: ItErrorPageComponent, data: { errorCode: 403 } },
   { path: 'error/server-error', component: ItErrorPageComponent, data: { errorCode: 500 } },    
