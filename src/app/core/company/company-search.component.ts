@@ -52,6 +52,8 @@ export class CompanySearchComponent implements OnInit, OnDestroy{
         codiceCategoria: new FormControl(queryParams['codiceCategoria']),
         indirizzo: new FormControl(''),
         regione: new FormControl(''),
+        provincia: new FormControl(''),
+        comune: new FormControl(''),
         sort: new FormControl(''),
       });
     });

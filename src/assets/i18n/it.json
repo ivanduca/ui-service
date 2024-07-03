@@ -46,8 +46,12 @@
       "secondary-navigation": "Navigazione secondaria",
       "login": "Accedi",
       "website-search": "Cerca nel sito",
-      "navigation-path": "Percorso di navigazione"
-
+      "navigation-path": "Percorso di navigazione",
+      "grafici-mappe": {
+        "title": "Grafici e Mappe",
+        "grafico-regola": "Grafico per regola",
+        "mappa-regola": "Mappa per regola"
+      }
     },
     "search": {
       "title": "Filtra la tua ricerca"
@@ -62,6 +66,8 @@
       "tipologia": "Tipologia",
       "sitoIstituzionale": "Sito istituzionale",
       "indirizzo": "Indirizzo",
+      "comune": "Comune",
+      "provincia": "Provincia",
       "regione": "Regione",
       "responsabile": "Responsabile",
       "map": "Mappa",      
@@ -74,6 +80,9 @@
       "content": "Contenuto trovato",
       "screenshot": "Screenshot",
       "html": "Pagina HTML"
+    },
+    "map": {
+      "preserve-zoom": "Conserva Zoom e Posizione"
     },
     "rule": {
       "title": "Regole",
@@ -148,7 +157,7 @@
       "date": "Analisi del {{startTime}}",
       "last-execution": "Cronologia controlli sezione Amministrazione Trasparente siti PA",
       "text": "Controllo del {{startTime}}, stato {{status}}",
-      "textfull": "Controllo del {{startTime}}, stato {{status}}, concluso il {{endTime}} in {{duration}}",
+      "textfull": "Controllo del {{startTime}}, concluso in {{duration}}",
       "message": {
         "new": "Operazione sottomessa con successo."
       },
@@ -265,10 +274,8 @@
     "error": {
       "sistema.non.disponibile": "Il servizio è momentaneamente non disponibile. Riprovare fra alcuni secondi.",
       "permessi.non.sufficienti": "Permessi non sufficienti",
-      "domanda.inviata.accesso": "La domanda per il bando selezionato risulta inviata. Per visualizzarla accedere alla sezione <a href=\"my-applications\">Le mie domande</a>",
       "contentalredyexist": "Il file <b>{{filename}}</b> è già presente!",
       "maxuploadfilesize":"Il file <b>{{readableFileSize}}</b> supera la dimensione massima consentita <b>{{maxFileSize}}</b>",
-      "bando.tipologia.employees": "La tipologia del Bando selezionato consente la presentazione di domande solo a dipendenti dell'Ente. Operazione non possibile!",
       "codice": {
         "fiscale": {
           "nullo": "Codice fiscale non valido: codice fiscale nullo!",
@@ -294,19 +301,7 @@
       "download": {
         "success": "Il documento {{value}} è stato correttamente scaricato."
       }
-    },
-    "application": {
-      "reopen": "Con la riapertura della domanda la stessa si intenderà come mai inviata e quindi, in caso di mancato successivo invio, la stessa non sarà considerata valida ai fini della selezione. Desideri continuare?",
-      "send": "<p>La domanda é stata correttamente inviata.</p><p>Riceverà all'indirizzo {{email}} una email contenente la stampa della stessa.</p><p>La domanda sarà considerata valida ai fini della selezione anche in caso di mancata ricezione della email per motivi tecnici.</p>",
-      "delete": {
-        "question": "L'operazione comporta l'eliminazione della domanda. Vuoi continuare?",
-        "success": "La domanda relativa al bando <b>{{callcode}}</b> è stata correttamente cancellata."
-      },
-      "print": {
-        "last": "E' disponibile la stampa versione <b class=\"badge bg-primary h6\">{{versionLabel}}</b> eseguita il <b>{{lastModificationDate}}</b>",
-        "new": "La stampa richiesta sarà accodata e, al termine della sua esecuzione, il sistema invierà una e-mail con la stampa allegata."
-      }
-    }  
+    }
   },
   "placeholder": {
     "select": {
@@ -325,10 +320,6 @@
       "confirm": "Attenzione",
       "info": "Informazione"
     }
-  },
-  "protocollo": {
-    "data": "Data Protocollo",
-    "numero": "Numero Protocollo" 
   },
   "header": {
     "company": {
