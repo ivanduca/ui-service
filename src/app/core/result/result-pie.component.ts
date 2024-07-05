@@ -165,6 +165,15 @@ export class ResultPieComponent implements OnInit {
           "{category}: {value.formatNumber(',000')}"
       });
 
+      series.slices.template.events.on("click", function(ev) {
+        var status = ev.target.dataItem.dataContext.extra.key;
+        this.router.navigate(['/search'],  { queryParams: {
+          workflowId: this.filterFormSearch.value.workflowId,
+          ruleName: this.filterFormSearch.value.ruleName,
+          status: status 
+        }});
+      }, this);
+
       this.single = [];
       Object.keys(result).forEach((key) => {
         this.single.push({
