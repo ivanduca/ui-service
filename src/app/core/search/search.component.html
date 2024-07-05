@@ -19,7 +19,7 @@
             <div class="form-group col-md-3">
                 <ng-select formControlName="status"  [placeholder]="'it.rule.status-label'| translate">
                     @for (status of optionsStatus; track status.value) {
-                        <ng-option [value]="status.value">{{status.text}}</ng-option>
+                        <ng-option [value]="status.value" [disabled]="status.disabled">{{status.text}}</ng-option>
                     }
                 </ng-select>
             </div>
