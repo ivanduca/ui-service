@@ -9,6 +9,7 @@ import { CreditsComponent } from './core/credits/credits.component';
 import { ItErrorPageComponent } from 'design-angular-kit';
 import { PrivacyPolicyComponent } from './core/privacy-policy/privacy-policy.component';
 import { NoteLegaliComponent } from './core/note-legali/note-legali.component';
+import { ResultPieComponent } from './core/result/result-pie.component';
 
 const appRoutes: Routes = [
   { path: '', component: HomeComponent },
@@ -16,6 +17,7 @@ const appRoutes: Routes = [
   { path: 'company-search', component: CompanySearchComponent },
   { path: 'company-map', component: CompanyMapComponent },
   { path: 'company-graph', component: CompanyGraphComponent },
+  { path: 'result-pie', component: ResultPieComponent },
   { path: 'credits', component: CreditsComponent },
   { path: 'privacy-policy', component: PrivacyPolicyComponent },
   { path: 'note-legali', component: NoteLegaliComponent },

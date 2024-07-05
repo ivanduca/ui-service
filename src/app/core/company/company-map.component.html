@@ -1,3 +1,26 @@
+@if (filter) {
+    <form *ngIf="filterFormSearch" class="clearfix my-3 px-2 shadow" [formGroup]="filterFormSearch" >
+        <div class="row col-md-12">
+            <div class="form-group mb-1 col-md-5">
+                <ng-select [clearable]="false" formControlName="workflowId" [placeholder]="'it.workflow.id'| translate">
+                    @for (workflow of optionsWorkflow; track workflow.value) {
+                        <ng-option [value]="workflow.value">{{workflow.text}}</ng-option>
+                    }
+                </ng-select>
+            </div>
+            <div class="form-group mb-1 col-md-5">
+                <ng-select [clearable]="false" formControlName="ruleName" class="break-spaces" [placeholder]="'it.rule.name'| translate">
+                    @for (rule of optionsRule; track rule.value) {
+                        <ng-option [value]="rule.value">{{rule.text}}</ng-option>
+                    }
+                </ng-select>
+            </div>
+            <div class="form-group mb-1 col-md-2">
+                <it-checkbox formControlName="preserveZoom" [label]="'it.map.preserve-zoom'| translate" toggle="true"></it-checkbox>
+            </div>
+        </div>
+    </form>
+}
 @if (options) {
     <div #chartdiv leaflet 
         [leafletOptions]="options"
@@ -7,12 +30,12 @@
         [(leafletZoom)]="zoom"
         (leafletMapReady)="onMapReady($event)"
         (leafletMarkerClusterReady)="markerClusterReady($event)"        
-        style="height: 70vh;" 
-        class="my-3">
+        style="height: 80vh;" 
+        class="mb-n5">
     </div>
 }
 @if (!isGEOLoaded) {
-    <div style="height: 70vh;" class="my-3">
+    <div style="height: 80vh;" class="mb-n5">
         <div class="overlay-spinner">
             <div class="d-flex justify-content-center">
                 <it-spinner double="true"></it-spinner>

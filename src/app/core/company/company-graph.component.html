@@ -55,7 +55,7 @@
                   <it-select [options]="optionsWorkflow" formControlName="workflowId"></it-select>        
               </div>
           </div>
-        </form>        
+        </form>
       }
       @if (!data) {
         <div class="h-100 align-content-md-center">
@@ -67,7 +67,7 @@
       <div #chartContainer id="chartContainer" class="bg-secondary"></div>
     </div>
     <div class="col-md-3 px-1">
-      <it-tab-container #tab dark="true" (onTabSelected)="onTabSelected($event)">
+      <it-tab-container #tab dark="true" (tabSelected)="tabSelected($event)">
         @if (company) {
           <it-tab-item #tabPA label="PA" icon="pa" [active]="tabPAActive">
             <it-list>

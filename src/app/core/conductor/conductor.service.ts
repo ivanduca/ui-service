@@ -56,11 +56,22 @@ export class ConductorService extends CommonService<Workflow> {
     return this.getAll({
       includeClosed: true,
       includeTasks: false
-    }).pipe(switchMap((workflows: Workflow[]) => {
+    }).pipe(switchMap((workflows: Workflow[]) => {      
       return observableOf(workflows[0]);
     }));
   }
-  
+
+  public lastWorflowCompleted(): Observable<Workflow> {
+    return this.getAll({
+      includeClosed: true,
+      includeTasks: false
+    }).pipe(switchMap((workflows: Workflow[]) => {      
+      return observableOf(workflows.filter((workflow: Workflow) => {
+        return workflow.status === 'COMPLETED';
+      })[0]);
+    }));
+  }
+
   public startMainWorkflow(codiceIpa?: string): Observable<string> {
     return this.configService.getGateway()
       .pipe(

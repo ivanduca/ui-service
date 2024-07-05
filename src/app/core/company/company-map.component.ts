@@ -1,19 +1,27 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, debounceTime } from 'rxjs';
 import { HttpParams } from '@angular/common/http';
 import { ApiMessageService, MessageType } from '../api-message.service';
-import { formatNumber } from '@angular/common';
+import { DatePipe, formatNumber } from '@angular/common';
 import { CompanyService } from './company.service';
 import { ResultAggregatorService } from '../result-aggregator/result-aggregator.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Rule } from '../rule/rule.model';
+import { Rule, SelectRule } from '../rule/rule.model';
 import { environment } from '../../../environments/environment';
+import { ConductorService } from '../conductor/conductor.service';
+import { Workflow } from '../conductor/workflow.model';
+import { SelectControlOption } from 'design-angular-kit';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { RuleService } from '../rule/rule.service';
+import { TranslateService } from '@ngx-translate/core';
+import { DurationFormatPipe } from '../../shared/pipes/durationFormat.pipe';
 import * as Leaflet from 'leaflet';
 
 @Component({
   selector: 'company-map',
   templateUrl: './company-map.component.html',
   encapsulation: ViewEncapsulation.None,
+  providers: [DatePipe, DurationFormatPipe],  
   styles: `
     .marker-cluster-small, .marker-cluster-small div{
       background-color: lightblue
@@ -25,7 +33,6 @@ import * as Leaflet from 'leaflet';
     .marker-cluster-large, .marker-cluster-large div {
       background-color: violet
     }
-
   `
 })
 export class CompanyMapComponent implements OnInit {
@@ -36,10 +43,29 @@ export class CompanyMapComponent implements OnInit {
   protected zoom;
   protected workflowId;
   protected ruleName;
+  protected filter: boolean = false;
   
   protected currentMarker: Leaflet.Marker;
   protected map: Leaflet.Map;
   
+  protected filterFormSearch: FormGroup;
+  protected optionsWorkflow: Array<SelectControlOption> = [];
+  protected optionsRule: Array<SelectControlOption> = [];
+
+  constructor(
+    private formBuilder: FormBuilder,
+    private translateService: TranslateService,
+    private companyService: CompanyService,
+    private ruleService: RuleService,
+    private route: ActivatedRoute,
+    private apiMessageService: ApiMessageService,
+    private resultAggregatorService: ResultAggregatorService,
+    private conductorService: ConductorService,
+    private datepipe: DatePipe,
+    private durationFormatPipe: DurationFormatPipe,
+    private router: Router) {
+  }
+
   markerClusterData: Leaflet.Marker[] = [];
   markerClusterOptions: Leaflet.MarkerClusterGroupOptions = {
     iconCreateFunction: function(cluster) {
@@ -82,13 +108,6 @@ export class CompanyMapComponent implements OnInit {
     }
   };
 
-  constructor(
-    private companyService: CompanyService,
-    private route: ActivatedRoute,
-    protected apiMessageService: ApiMessageService,
-    private resultAggregatorService: ResultAggregatorService,
-    protected router: Router) {
-  }
 
   onMapReady(map: Leaflet.Map): void {
     this.map = map;
@@ -113,34 +132,104 @@ export class CompanyMapComponent implements OnInit {
     }
   }
 
-  public getGeoJson(queryParams: any): Observable<any> {
-    if (queryParams.workflowId && queryParams.ruleName) {
+  public getGeoJson(): Observable<any> {
+    if (this.workflowId && this.ruleName) {
       let params = new HttpParams()
-        .set(`workflowId`, queryParams.workflowId)
-        .set(`ruleName`, queryParams.ruleName);
+        .set(`workflowId`, this.workflowId)
+        .set(`ruleName`, this.ruleName);
       return this.resultAggregatorService.getAny(`/v1/aggregator/geojson/gzip`, params);
     } else {
       return this.companyService.getAny(`/v1/geo/geojson`);
     } 
   }
 
-  ngOnInit(): void {
-    this.center = new Leaflet.LatLng(42.00, 11.50);
+  private initMap(workflowId: string, queryParams: any) {
+    this.filterFormSearch = this.formBuilder.group({
+      workflowId: new FormControl(workflowId),
+      ruleName: new FormControl(this.ruleName),
+      preserveZoom: new FormControl(true),
+    });
+    this.filterFormSearch.valueChanges.pipe(
+      debounceTime(500)
+    ).subscribe((valueChanges: any) => {
+      if (valueChanges.workflowId !== this.workflowId || valueChanges.ruleName !== this.ruleName) {
+        this.workflowId = valueChanges.workflowId;
+        this.ruleName = valueChanges.ruleName;
+        if (!valueChanges.preserveZoom) {
+          this.center = new Leaflet.LatLng(42.00, 11.50);
+          this.zoom = queryParams.zoom || 6;
+        }
+        this.loadGeoJson(queryParams);  
+      }
+    });
+    this.workflowId = workflowId;
+    this.ruleService.getRules().subscribe((rule) => {
+      let rules: SelectRule[] = rule.getKeys(undefined, Rule.AMMINISTRAZIONE_TRASPARENTE, [], -1);
+      Object.keys(rules).forEach((index) => {
+        this.optionsRule.push({
+          value: rules[index].key,
+          text: rules[index].text,
+          selected: rules[index].key === this.ruleName
+        });
+      });
+    });
+    this.conductorService.getAll({
+      includeClosed: true,
+      includeTasks: false
+    }).subscribe((workflows: Workflow[]) => {
+      workflows.forEach((workflow: Workflow) => {
+        if (workflow.status === 'COMPLETED') {
+          this.optionsWorkflow.push({
+            value: workflow.workflowId,
+            text: this.translateService.instant('it.workflow.textfull', {
+              startTime: this.datepipe.transform(workflow.startTime, 'dd/MM/yyyy'),
+              duration: this.durationFormatPipe.transform(workflow.executionTime)
+            }),
+            selected: workflow.workflowId === workflow.workflowId
+          });
+        }
+      });
+    });
+    this.loadGeoJson(queryParams);
+
+  }
+
+  ngOnInit(): void {    
+    this.center = new Leaflet.LatLng(41.00, 12.50);
     this.route.queryParams.subscribe((queryParams) => {
+      this.filter = queryParams.filter;
+      this.zoom = queryParams.zoom || 6;
       this.workflowId = queryParams.workflowId;
       this.ruleName = queryParams.ruleName || Rule.AMMINISTRAZIONE_TRASPARENTE;
-      this.zoom = queryParams.zoom || 6;
-      this.getGeoJson(queryParams)
+      if (!this.filter) {
+        this.loadGeoJson(queryParams);
+      } else {
+        if (queryParams.workflowId) {
+          this.initMap(queryParams.workflowId, queryParams);
+        } else {
+          this.conductorService.lastWorflowCompleted().subscribe((workflow: Workflow) => {
+            this.initMap(workflow.workflowId, queryParams);
+          });
+        }
+      }
+    });
+  }
+
+  loadGeoJson(params: any) {
+    this.options = undefined;
+    this.isGEOLoaded = false;
+    this.markerClusterData = [];
+    this.getGeoJson()
       .subscribe({
         next: (geo: any) => {
           this.isGEOLoaded = true;
-          let codiceIpa = queryParams.codiceIpa;
+          let codiceIpa = params.codiceIpa;
           geo.features.forEach((element: any) => {
             let coordinates = element.geometry.coordinates;
             let lat = coordinates[1];
             let lng = coordinates[0];
             element.properties.companies.forEach((company: any) => {
-              let status = this.workflowId ? company?.validazioni?.[queryParams.ruleName] || 500 : undefined;
+              let status = this.workflowId ? company?.validazioni?.[this.ruleName] || 500 : undefined;
               let iconColor = this.workflowId ? ((status == 200 || status == 202) ? `success`: `danger` ) : `primary`;
               let description = `
                 <div class="border-${iconColor}">
@@ -176,17 +265,16 @@ export class CompanyMapComponent implements OnInit {
             layers: this.getLayers(),
             preferCanvas: true
           };
-          if (!codiceIpa && !queryParams.nolocation) {
+          if (!codiceIpa && !params.nolocation) {
             this.getCurrentLocation();
           }
         },
         error: (err)=>{
-          this.apiMessageService.sendMessage(MessageType.ERROR,  `Dati non presenti, per il controllo con id ${queryParams.workflowId}!`);
+          this.apiMessageService.sendMessage(MessageType.ERROR,  `Dati non presenti, per il controllo con id ${this.workflowId}!`);
           this.isGEOLoaded = true;
           this.router.navigate(['error/not-found-no-back']);
         }
       });
-    });
   }
 
   getLayers(): Leaflet.Layer[] {

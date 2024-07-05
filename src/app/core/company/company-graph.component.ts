@@ -12,7 +12,7 @@ import { ResultService } from '../result/result.service';
 import { Result } from '../result/result.model';
 import { Company } from './company.model';
 import { CompanyService } from './company.service';
-import { ItTabContainerComponent, SelectControlOption } from 'design-angular-kit';
+import { ItTabContainerComponent, ItTabItemComponent, SelectControlOption } from 'design-angular-kit';
 import { ApiMessageService, MessageType } from '../api-message.service';
 import { of as observableOf, Observable, map } from 'rxjs';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
@@ -43,6 +43,8 @@ export class CompanyGraphComponent implements OnInit, OnDestroy{
   tabRuleActive: boolean;
   protected ruleStatus = {};
   @ViewChild("tab") tab: ItTabContainerComponent;
+  @ViewChild("tabPA") tabPA: ItTabItemComponent;
+  @ViewChild("tabRule") tabRule: ItTabItemComponent;
   protected filterFormSearch: FormGroup;
   optionsWorkflow: Array<SelectControlOption>;
 
@@ -191,8 +193,8 @@ export class CompanyGraphComponent implements OnInit, OnDestroy{
     }));
   }
 
-  onTabSelected(tabLabel: string) {
-    if (tabLabel === 'PA') {
+  tabSelected(tab: ItTabItemComponent) {
+    if (tab.id === this.tabPA.id) {
       this.tabRuleActive = false;
       this.tabPAActive = true;
     }
@@ -222,7 +224,7 @@ export class CompanyGraphComponent implements OnInit, OnDestroy{
     this.chart
       .container(this.chartContainer.nativeElement)
       .imageName(this.codiceIpa || Rule.AMMINISTRAZIONE_TRASPARENTE)
-      .svgHeight(window.innerHeight - 300)  
+      .svgHeight(window.innerHeight)  
       .data(this.data)
       .layout('left')
       .onNodeClick(d => {

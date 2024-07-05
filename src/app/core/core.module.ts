@@ -32,6 +32,7 @@ import { WorkflowCardComponent } from './conductor/workflow.component';
 
 import { ResultService } from './result/result.service';
 import { ResultListComponent } from './result/result-list.component';
+import { ResultPieComponent } from './result/result-pie.component';
 
 import { ResultAggregatorService } from './result-aggregator/result-aggregator.service';
 
@@ -73,6 +74,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
         CompanyMapComponent,
         CompanyGraphComponent,
         ResultListComponent,
+        ResultPieComponent,
         WorkflowCardComponent,
         CreditsComponent
     ],
@@ -114,6 +116,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
         CompanyListComponent,
         CreditsComponent,
         ResultListComponent,
+        ResultPieComponent,
         CompanySearchComponent,
         CompanyMapComponent,
         CompanyGraphComponent,

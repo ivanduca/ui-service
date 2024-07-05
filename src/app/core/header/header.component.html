@@ -53,6 +53,34 @@
       </a>
     </it-navbar-item>
     <it-navbar-item>
+      <it-dropdown mode="nav">
+        <span button translate>it.navigation.grafici-mappe.title</span>
+        <ng-container list>
+          <it-dropdown-item>
+            <a href="#"  
+              translate 
+              (click)="toggleCollapse()" 
+              [routerLinkActive]="['active']" 
+              routerLink="/result-pie">
+              <it-icon size="sm" name="chart-line"></it-icon>
+              <span translate>it.navigation.grafici-mappe.grafico-regola</span>      
+            </a>
+          </it-dropdown-item>
+          <it-dropdown-item>
+            <a href="#"  
+            translate 
+            (click)="toggleCollapse()" 
+            [routerLinkActive]="['active']"
+            [queryParams]="{filter: true, nolocation: true}"
+            routerLink="/company-map">
+            <it-icon size="sm" name="map-marker-circle"></it-icon>
+            <span translate>it.navigation.grafici-mappe.mappa-regola</span>              
+          </a>
+          </it-dropdown-item>
+        </ng-container>
+      </it-dropdown>
+    </it-navbar-item>    
+    <it-navbar-item>
       <it-dropdown mode="nav" [megamenu]="true">
         <span button translate>it.navigation.sezioni</span>
         <ng-container list>

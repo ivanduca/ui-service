@@ -10,9 +10,11 @@ import { debounceTime } from 'rxjs';
 import { DurationFormatPipe } from '../../shared/pipes/durationFormat.pipe';
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
+import { StatusColor } from '../../common/model/status-color.enum';
 
 import * as am5 from '@amcharts/amcharts5';
 import * as am5percent from "@amcharts/amcharts5/percent";
+import am5locales_it_IT from "@amcharts/amcharts5/locales/it_IT";
 
 import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
 
@@ -113,6 +115,7 @@ export class HomeComponent implements OnInit {
     if (this.chartdiv) {
       let chartDiv: HTMLElement = this.chartdiv.nativeElement;
       let root = am5.Root.new(chartDiv);
+      root.locale = am5locales_it_IT;
       root.setThemes([
         am5themes_Animated.new(root)
       ]);
@@ -130,33 +133,36 @@ export class HomeComponent implements OnInit {
       series.states.create("hidden", {
         endAngle: -90
       });
-      series.get("colors").set("colors", [
-        am5.color('#008055'),
-        am5.color('#995c00'),
-        am5.color('#cc334d'),
-        am5.color('#f73e5a'),
-        am5.color('#330d12'),
-      ]);
-      root.numberFormatter.setAll({
-        numberFormat: "#,###.00",
-        numericFields: ["value"]
-      });       
+
       series.labels.template.setAll({
         fontSize: 28,
         fontWeight: 'bold',
-        text: "{valuePercentTotal}%",
+        text: "{valuePercentTotal.formatNumber('0.00')}%",
       });      
       series.ticks.template.setAll({
         strokeWidth: 2,
         fill: am5.color('#000000'),
         strokeOpacity: 1
       })
-    
+      series.slices.template.setAll({
+        templateField: "sliceSettings"
+      });
+
+      series.slices.template.setAll({
+        strokeWidth: 2,
+        tooltipText:
+          "{category}: {value.formatNumber(',000')}"
+      });
+
       this.single = [];
       Object.keys(result).forEach((key) => {
         this.single.push({
           name: this.translateService.instant(`it.rule.status.${key}.title`),
           value: result[key],
+          sliceSettings: {
+            fill: am5.color(StatusColor[`STATUS_${key}`]),
+            stroke: am5.color(StatusColor[`STATUS_${key}`])
+          },
           extra: {
             key: key,
             workflowId: workflowId  
@@ -164,7 +170,7 @@ export class HomeComponent implements OnInit {
         });
       });
       series.data.setAll(this.single);
-
+      series.appear(1000, 100);
       this.series = series;
       this.pieChartLabels();      
     }

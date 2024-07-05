@@ -33,8 +33,9 @@
 .ng-select-searchable {
     margin-top: -0.70em;
 }
-.ng-placeholder {
-    color: unset !important;
+
+.ng-select .ng-has-value .ng-placeholder, .ng-select.ng-select-opened .ng-placeholder {
+    transform: translateY(-1.28125em) perspective(100px) !important;
 }
 
 ng-select.break-spaces .ng-option {

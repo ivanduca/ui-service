@@ -93,7 +93,7 @@ import * as saveAs from 'file-saver';
             </it-list>  
         </div>
         @if (workflow.status !== 'RUNNING') {
-          <a class="read-more" [routerLink]="['/company-map']" [queryParams]="{workflowId: workflow.workflowId, ruleName:'amministrazione-trasparente', zoom: 5, nolocation: true}">
+          <a class="read-more" [routerLink]="['/company-map']" [queryParams]="{workflowId: workflow.workflowId, ruleName:'amministrazione-trasparente', zoom: 5, nolocation: true, filter: true}">
               <span class="text">Leggi di più <span class="visually-hidden">Leggi di più ....</span></span>
               <it-icon name="arrow-right"></it-icon>
           </a>
