@@ -64,9 +64,6 @@ export class SearchComponent implements OnInit {
   manageOptionStatus(ruleName: string) {
     this.optionsStatus.forEach((option: any) => {
       option.disabled = this.isStatusDisabled(option.value, ruleName);
-      if (this.filterFormSearch.value.status === option.value && option.disabled) {
-        this.filterFormSearch.controls.status.patchValue('');
-      }
     });    
     this.changeDetectorRef.detectChanges();
   }
@@ -86,7 +83,9 @@ export class SearchComponent implements OnInit {
         sort: new FormControl(queryParams.sort),
       });
       this.filterFormSearch.valueChanges.subscribe((value: any) => {
-        this.manageOptionStatus(value.ruleName);
+        if (this.filterFormSearch.controls.ruleName.touched) {
+          this.manageOptionStatus(value.ruleName);
+        }
       });  
 
       Object.values(Status).filter(key => !isNaN(Number(key))).forEach((key: number) => {
