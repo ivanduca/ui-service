@@ -68,11 +68,9 @@ export class HomeComponent implements OnInit {
   @HostListener("window:resize", []) 
   pieChartLabels() {
     this.responsive.observe([Breakpoints.Small, Breakpoints.XSmall]).subscribe(result => {
-      if (result?.matches) {
-        this.series?.labels?.template?.set("forceHidden", true);
-        this.series?.ticks?.template?.set("visible", false);
-        this.chartDivStyle = 'height:30vh !important';
-      }
+        this.series?.labels?.template?.set("forceHidden", result?.matches);
+        this.series?.ticks?.template?.set("visible", !result?.matches);
+        this.chartDivStyle = `height:${result?.matches ? '30' : '75'}vh !important`;
     });
   }
 

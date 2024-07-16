@@ -21,6 +21,11 @@ import { HttpClient } from '@angular/common/http';
             <button itButton="outline-primary" class="my-1" size="xs" translate routerLink="/company-graph" [queryParams]="{codiceIpa: item.company.codiceIpa, workflowId: item.workflowId}">
               <it-icon name="chart-line" color="primary"></it-icon>it.rule.title
             </button>
+            @if (!codiceIpa) {
+              <button itButton="outline-warning" size="xs" class="my-1" translate routerLink="/search" [queryParams]="{workflowId: '',status: '',ruleName: item.ruleName, codiceIpa: item?.company?.codiceIpa, sort: 'createdAt,desc'}">
+                <it-icon name="chart-line" color="warning"></it-icon>it.company.history
+              </button>
+            }
             @if (!item?.storageData?.objectId && item.status != 407 && item.status != 500 && item.workflowChildId) {
               <app-show-html-page
                 [workflowChildId]="item.workflowChildId" 
@@ -66,6 +71,8 @@ export class ListItemResultComponent {
   }
 
   @Input() item: Result = null;
+
+  @Input() codiceIpa: string;
 
   @Output() onDelete = new EventEmitter();
 

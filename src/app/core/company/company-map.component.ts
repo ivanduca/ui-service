@@ -43,6 +43,8 @@ export class CompanyMapComponent implements OnInit {
   protected zoom;
   protected workflowId;
   protected ruleName;
+  protected cache = false;
+
   protected filter: boolean = false;
   
   protected currentMarker: Leaflet.Marker;
@@ -137,7 +139,7 @@ export class CompanyMapComponent implements OnInit {
       let params = new HttpParams()
         .set(`workflowId`, this.workflowId)
         .set(`ruleName`, this.ruleName);
-      return this.resultAggregatorService.getAny(`/v1/aggregator/geojson/gzip`, params);
+      return this.resultAggregatorService.getAny(`/v1/aggregator/geojson${this.filterFormSearch.value.cache ? `/gzip`: `/nocache`}`, params);
     } else {
       return this.companyService.getAny(`/v1/geo/geojson`);
     } 
@@ -148,13 +150,17 @@ export class CompanyMapComponent implements OnInit {
       workflowId: new FormControl(workflowId),
       ruleName: new FormControl(this.ruleName),
       preserveZoom: new FormControl(true),
+      cache: new FormControl(false)
     });
     this.filterFormSearch.valueChanges.pipe(
       debounceTime(500)
     ).subscribe((valueChanges: any) => {
-      if (valueChanges.workflowId !== this.workflowId || valueChanges.ruleName !== this.ruleName) {
+      if (this.workflowId != valueChanges.workflowId ||
+          this.ruleName != valueChanges.ruleName ||
+          this.cache != valueChanges.cache) {
         this.workflowId = valueChanges.workflowId;
         this.ruleName = valueChanges.ruleName;
+        this.cache = valueChanges.cache;
         if (!valueChanges.preserveZoom) {
           this.center = new Leaflet.LatLng(42.00, 11.50);
           this.zoom = queryParams.zoom || 6;
@@ -164,7 +170,7 @@ export class CompanyMapComponent implements OnInit {
     });
     this.workflowId = workflowId;
     this.ruleService.getRules().subscribe((rule) => {
-      let rules: SelectRule[] = rule.getKeys(undefined, Rule.AMMINISTRAZIONE_TRASPARENTE, [], -1);
+      let rules: SelectRule[] = rule.getKeys(undefined, undefined, Rule.AMMINISTRAZIONE_TRASPARENTE, [], -1);
       Object.keys(rules).forEach((index) => {
         this.optionsRule.push({
           value: rules[index].key,
@@ -224,7 +230,8 @@ export class CompanyMapComponent implements OnInit {
         next: (geo: any) => {
           this.isGEOLoaded = true;
           let codiceIpa = params.codiceIpa;
-          geo.features.forEach((element: any) => {
+          let result = geo.features || geo;
+          result.forEach((element: any) => {
             let coordinates = element.geometry.coordinates;
             let lat = coordinates[1];
             let lng = coordinates[0];

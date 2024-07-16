@@ -42,7 +42,7 @@
     "core-js": "^2.4.1",
     "d3": "^7.9.0",
     "d3-org-chart": "^3.1.1",
-    "design-angular-kit": "design-angular-kit/dist/design-angular-kit",
+    "design-angular-kit": "1.0.3",
     "enhanced-resolve": "^3.3.0",
     "file-saver": "^2.0.2",
     "flag-icon-css": "^3.4.6",

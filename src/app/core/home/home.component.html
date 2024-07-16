@@ -111,41 +111,43 @@
   <div class="it-timeline-wrapper">
     <div class="row mx-0">
       @for (workflow of workflows; track workflow) {
-        <div class="col-12">
-          <div class="timeline-element">
-            <div class="it-pin-wrapper" [class]="workflow.workflowId === currentWorkflow.workflowId ? 'it-now' : 'it-evidence'">
-              <div class="pin-icon">
-                <it-icon name="code-circle"></it-icon>
+        @if(workflow?.status == 'COMPLETED') {
+          <div class="col-12">
+            <div class="timeline-element">
+              <div class="it-pin-wrapper" [class]="workflow.workflowId === currentWorkflow.workflowId ? 'it-now' : 'it-evidence'">
+                <div class="pin-icon">
+                  <it-icon name="code-circle"></it-icon>
+                </div>
+                <div class="pin-text"><span>{{'it.workflow.label' | translate: { startTime: workflow.startTime | date:'dd/MM/yyyy'} }}</span></div>
               </div>
-              <div class="pin-text"><span>{{'it.workflow.label' | translate: { startTime: workflow.startTime | date:'dd/MM/yyyy'} }}</span></div>
-            </div>
-            <div class="card-wrapper">
-              <div class="card">
-                <div class="card-body">
-                  <div class="category-top">
-                    <a class="category" [routerLink]="['/company-map']" [queryParams]="{workflowId: workflow.workflowId, ruleName:'amministrazione-trasparente', zoom: 5, nolocation: true, filter: true}">
-                      <it-icon size="sm" color="primary" name="map-marker-circle"></it-icon>
-                      <span translate>it.navigation.map-result</span>
+              <div class="card-wrapper">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="category-top">
+                      <a class="category" [routerLink]="['/company-map']" [queryParams]="{workflowId: workflow.workflowId, ruleName:'amministrazione-trasparente', zoom: 5, nolocation: true, filter: true}">
+                        <it-icon size="sm" color="primary" name="map-marker-circle"></it-icon>
+                        <span translate>it.navigation.map-result</span>
+                      </a>
+                    </div>
+                    <h5 class="card-title">Concluso il {{workflow.endTime | date:'dd/MM/yyyy HH:mm:ss'}} in {{workflow.executionTime | durationFormat}}</h5>
+                    <p class="card-text font-monospace">
+                      <span>Sono state analizzate <span class="fw-semibold">{{ workflow.totalResult| number: undefined : 'it-IT' }}</span> amministrazioni,</span> 
+                      <span> di queste <span class="fw-semibold">{{ workflow.getResultFromStatus('200') | number: undefined : 'it-IT' }}</span> sono risultate conformi</span>
+                      <span> mentre <span class="fw-semibold">{{ workflow.getResultFromStatus('202') | number: undefined : 'it-IT' }}</span> solo parzialmente,</span>
+                      <span>&nbsp;<span class="fw-semibold">{{ workflow.getResultFromStatus('400') | number: undefined : 'it-IT' }}</span> sono risultate invece non conformi</span>
+                      <span> e <span class="fw-semibold">{{ workflow.getResultFromStatus('407') | number: undefined : 'it-IT' }}</span> non raggiungibili,</span> 
+                      <span> infine <span class="fw-semibold">{{ workflow.getResultFromStatus('500') | number: undefined : 'it-IT' }}</span> non hanno fornito l'indirizzo del sito istituzionale</span>
+                    </p>
+                    <a class="read-more" [routerLink]="['/search']" [queryParams]="{workflowId: workflow.workflowId, ruleName: 'amministrazione-trasparente'}">
+                      <span class="text">Leggi di più</span>
+                      <it-icon size="sm" color="primary" name="arrow-right"></it-icon>
                     </a>
                   </div>
-                  <h5 class="card-title">Concluso il {{workflow.endTime | date:'dd/MM/yyyy HH:mm:ss'}} in {{workflow.executionTime | durationFormat}}</h5>
-                  <p class="card-text font-monospace">
-                    <span>Sono state analizzate <span class="fw-semibold">{{ workflow.totalResult| number: undefined : 'it-IT' }}</span> amministrazioni,</span> 
-                    <span> di queste <span class="fw-semibold">{{ workflow.getResultFromStatus('200') | number: undefined : 'it-IT' }}</span> sono risultate conformi</span>
-                    <span> mentre <span class="fw-semibold">{{ workflow.getResultFromStatus('202') | number: undefined : 'it-IT' }}</span> solo parzialmente,</span>
-                    <span>&nbsp;<span class="fw-semibold">{{ workflow.getResultFromStatus('400') | number: undefined : 'it-IT' }}</span> sono risultate invece non conformi</span>
-                    <span> e <span class="fw-semibold">{{ workflow.getResultFromStatus('407') | number: undefined : 'it-IT' }}</span> non raggiungibili,</span> 
-                    <span> infine <span class="fw-semibold">{{ workflow.getResultFromStatus('500') | number: undefined : 'it-IT' }}</span> non hanno fornito l'indirizzo del sito istituzionale</span>
-                  </p>
-                  <a class="read-more" [routerLink]="['/search']" [queryParams]="{workflowId: workflow.workflowId, ruleName: 'amministrazione-trasparente'}">
-                    <span class="text">Leggi di più</span>
-                    <it-icon size="sm" color="primary" name="arrow-right"></it-icon>
-                  </a>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        }
       }
     </div>
   </div>  

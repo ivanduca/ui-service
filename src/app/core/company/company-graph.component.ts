@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, ViewChild, ElementRef, OnChanges } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { OrgChart } from "d3-org-chart";
@@ -24,12 +24,22 @@ import { DatePipe } from '@angular/common';
   templateUrl: './company-graph.component.html',
   providers: [DatePipe],
   styles: `
+    #chartContainer {
+      min-height: 40vh;
+      height: 100%;
+    }  
+
+    @media screen and (min-width: 992px) {
+      #chartContainer {
+        min-height: 60vh;
+      }  
+    }
     .select-wrapper {
       margin-bottom: 1rem !important;
     }  
   `
 })
-export class CompanyGraphComponent implements OnInit, OnDestroy{
+export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
   
   index: number = 3;
   compact: number = 0;
@@ -194,6 +204,9 @@ export class CompanyGraphComponent implements OnInit, OnDestroy{
   }
 
   tabSelected(tab: ItTabItemComponent) {
+    setTimeout(() => {
+      this.chart?.svgHeight(this.chartContainer.nativeElement.offsetHeight).render();
+    }, 1000);
     if (tab.id === this.tabPA.id) {
       this.tabRuleActive = false;
       this.tabPAActive = true;
@@ -205,6 +218,9 @@ export class CompanyGraphComponent implements OnInit, OnDestroy{
       this.chart = new OrgChart();
     }
     this.updateChart();
+    setTimeout(() => {
+      this.chart?.svgHeight(this.chartContainer.nativeElement.offsetHeight).render();
+    }, 1000);
   }
 
   ngOnChanges() {
@@ -224,7 +240,7 @@ export class CompanyGraphComponent implements OnInit, OnDestroy{
     this.chart
       .container(this.chartContainer.nativeElement)
       .imageName(this.codiceIpa || Rule.AMMINISTRAZIONE_TRASPARENTE)
-      .svgHeight(window.innerHeight)  
+      .svgHeight(this.chartContainer.nativeElement.offsetHeight)  
       .data(this.data)
       .layout('left')
       .onNodeClick(d => {

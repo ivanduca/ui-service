@@ -32,7 +32,7 @@ import { ResultService } from './result.service';
           [infiniteScrollDistance]="1"
           (scrolled)="onScroll()">
           <div *ngFor="let item of items" class="col-sm-12 px-md-2 pb-2" @scale [ngClass]="classForDisplayCard()">
-            <app-list-item-result [item]="item" [filterForm]="filterForm">
+            <app-list-item-result [item]="item" [codiceIpa]="codiceIpa" [filterForm]="filterForm">
               <it-callout [appearance]="'highlight'" [icon]="'pa'" [color]="item.color" [label]="item.company.denominazioneEnte">
                 <div class="col-sm-12">
                   <app-show-text [label]="'it.company.codiceIpa'" [value]="item.company.codiceIpa"></app-show-text>
@@ -103,6 +103,10 @@ export class ResultListComponent extends CommonListComponent<Result> implements 
     super(service, route, router, changeDetector, navigationService);
   }
   
+  protected get codiceIpa() {
+    return this.filterForm?.value?.codiceIpa;
+  }
+
   public setItems(items: Result[]) {
     this.items = items;
   }

@@ -3,10 +3,12 @@ import { Base } from '../../common/model/base.model';
 import { StorageData } from '../result/result.model';
 
 export class SelectRule {
+    public parentKey: string;
     public key: string;
     public text: string;
 
-    constructor(key: string, label: string, level: number) {
+    constructor(parentKey: string, key: string, label: string, level: number) {
+        this.parentKey = parentKey;
         this.key = key;
         this.text = `    `.repeat(level) + `${label}`;
     }
@@ -58,20 +60,21 @@ export class Rule implements Base {
     @JsonProperty('childs')
     public childs: Map<String, Rule>;    
 
-    public getKeys(rule: Rule, key: string, array: SelectRule[], leveli: number): SelectRule[] {
+    public getKeys(parentKey: string, rule: Rule, key: string, array: SelectRule[], leveli: number): SelectRule[] {
         let level = leveli + 1;
         let result = array || [];        
         let childs : Map<String, Rule> = rule ? rule.childs : this.childs;
         if (key) {
             result.push(new SelectRule(
+                parentKey,
                 key,
                 rule ? rule.term.filter(key => key.code == 200)[0].key : Rule.AMMINISTRAZIONE_TRASPARENTE_TERM, 
                 level
             ));
         }
         if (childs) {
-            Object.keys(childs).forEach((key) => {
-                this.getKeys(childs[key], key, result, level);
+            Object.keys(childs).forEach((childkey) => {
+                this.getKeys(key, childs[childkey], childkey, result, level);
             });
         } 
         return result;

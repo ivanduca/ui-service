@@ -83,7 +83,8 @@
       "html": "Pagina HTML"
     },
     "map": {
-      "preserve-zoom": "Conserva Zoom e Posizione"
+      "preserve-zoom": "Conserva Zoom e Posizione",
+      "cache": "Dati memorizzati"
     },
     "rule": {
       "title": "Regole",
@@ -161,6 +162,9 @@
       "textfull": "Controllo del {{startTime}}, concluso in {{duration}}",
       "message": {
         "new": "Operazione sottomessa con successo."
+      },
+      "rule": {
+        "total": "Totale:"
       },
       "status": {
         "RUNNING": "IN ESECUZIONE",

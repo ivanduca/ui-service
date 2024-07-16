@@ -46,17 +46,15 @@
       </it-dropdown>
     </div>
   </div>
+  @if (company) {
+    <form *ngIf="filterFormSearch" [formGroup]="filterFormSearch">
+      <div class="form-group mb-0">
+          <it-select [options]="optionsWorkflow" formControlName="workflowId"></it-select>        
+      </div>
+    </form>  
+  }
   <div class="row mx-0 bg-light">  
     <div class="col-md-9 ps-md-1 pe-md-0">
-      @if (company) {
-        <form *ngIf="filterFormSearch" [formGroup]="filterFormSearch">
-          <div class="row">
-              <div class="form-group mb-0">
-                  <it-select [options]="optionsWorkflow" formControlName="workflowId"></it-select>        
-              </div>
-          </div>
-        </form>
-      }
       @if (!data) {
         <div class="h-100 align-content-md-center">
           <div class="d-flex justify-content-center">
@@ -66,7 +64,7 @@
       }
       <div #chartContainer id="chartContainer" class="bg-secondary"></div>
     </div>
-    <div class="col-md-3 px-1">
+    <div class="col-md-3 px-md-1">
       <it-tab-container #tab dark="true" (tabSelected)="tabSelected($event)">
         @if (company) {
           <it-tab-item #tabPA label="PA" icon="pa" [active]="tabPAActive">

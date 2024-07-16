@@ -35,7 +35,7 @@ import * as saveAs from 'file-saver';
                 <span 
                     itPopover="Concluso il {{workflow.endTime | date:'dd/MM/yyyy HH:mm:ss'}} in {{workflow.executionTime | durationFormat}}"  
                     popoverPlacement="top"
-                    popoverTrigger="hover" 
+                    [popoverTrigger]="workflow.status == 'COMPLETED' ? 'hover' : 'manual'" 
                     [itBadge]="workflow.badge" 
                     class="h6 align-top">
                     <div class="d-flex">

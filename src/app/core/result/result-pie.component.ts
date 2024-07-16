@@ -39,12 +39,13 @@ export class ResultPieComponent implements OnInit {
   root;
   chartDivStyle: string = 'height:75vh !important';
   protected isPieLoaded = false;
+  protected total: number;
 
   protected filterFormSearch: FormGroup;
 
   protected optionsWorkflow: Array<SelectControlOption> = [];
   protected optionsRule: Array<SelectControlOption> = [];
-
+  protected rules: SelectRule[];
 
   @ViewChild('chartdiv', {static: true}) chartdiv: ElementRef;
   @ViewChild('columnchartdiv', {static: true}) columnchartdiv: ElementRef;
@@ -67,23 +68,21 @@ export class ResultPieComponent implements OnInit {
   @HostListener("window:resize", []) 
   pieChartLabels() {
     this.responsive.observe([Breakpoints.Small, Breakpoints.XSmall]).subscribe(result => {
-      if (result?.matches) {
-        this.series?.labels?.template?.set("forceHidden", true);
-        this.series?.ticks?.template?.set("visible", false);
-        this.chartDivStyle = 'height:30vh !important';
-      }
-    });
+      this.series?.labels?.template?.set("forceHidden", result?.matches);
+      this.series?.ticks?.template?.set("visible", !result?.matches);
+      this.chartDivStyle = `height:${result?.matches ? '30' : '75'}vh !important`;
+  });
   }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((queryParams) => {
       this.ruleService.getRules().subscribe((rule) => {
-        let rules: SelectRule[] = rule.getKeys(undefined, Rule.AMMINISTRAZIONE_TRASPARENTE, [], -1);
-        Object.keys(rules).forEach((index) => {
+        this.rules = rule.getKeys(undefined, undefined, Rule.AMMINISTRAZIONE_TRASPARENTE, [], -1);
+        Object.keys(this.rules).forEach((index) => {
           this.optionsRule.push({
-            value: rules[index].key,
-            text: rules[index].text,
-            selected: rules[index].key === queryParams.ruleName
+            value: this.rules[index].key,
+            text: this.rules[index].text,
+            selected: this.rules[index].key === queryParams.ruleName
           });
         });
       });
@@ -125,16 +124,30 @@ export class ResultPieComponent implements OnInit {
 
   loadResult() : void {
     this.isPieLoaded = false;
-    this.resultService.getWorkflowMap(this.filterFormSearch.value.ruleName, [this.filterFormSearch.value.workflowId]).subscribe((result: any) => {
-      if (!result[this.filterFormSearch.value.workflowId]) {
+    let wokflowId = this.filterFormSearch.value.workflowId;
+    let parentKey = this.rules.filter((rule: SelectRule) => {
+      return rule.key === this.filterFormSearch.value.ruleName
+    })[0].parentKey;
+    this.resultService.getWorkflowMap(this.filterFormSearch.value.ruleName, [wokflowId]).subscribe((result: any) => {
+      if (!result[wokflowId]) {
         this.router.navigate(['error/not-found']);
       }
-      this.isPieLoaded = true;
-      this.loadChart(result[this.filterFormSearch.value.workflowId]);
+      let chart = result[wokflowId];
+      if (parentKey) {
+        this.resultService.getWorkflowMap(parentKey, [wokflowId]).subscribe((result: any) => {
+          let total = Number(result[wokflowId][200]||0) + Number(result[wokflowId][202]||0); 
+          chart[500] = total - Number(Object.values(chart).reduce((a: number, b: number) => a + b, 0)); 
+          this.loadChart(chart);
+        });
+      } else {
+        this.loadChart(chart);
+      }
     });; 
   }
 
   loadChart(result: any) {
+    this.isPieLoaded = true;
+    this.total = Number(Object.values(result).reduce((a: number, b: number) => a + b, 0)); 
     if (this.chartdiv) {
       this.root.setThemes([
         am5themes_Animated.new(this.root)
@@ -179,11 +192,13 @@ export class ResultPieComponent implements OnInit {
 
       series.slices.template.events.on("click", function(ev) {
         var status = ev.target.dataItem.dataContext.extra.key;
-        this.router.navigate(['/search'],  { queryParams: {
-          workflowId: this.filterFormSearch.value.workflowId,
-          ruleName: this.filterFormSearch.value.ruleName,
-          status: status 
-        }});
+        if (status != 500) {
+          this.router.navigate(['/search'],  { queryParams: {
+            workflowId: this.filterFormSearch.value.workflowId,
+            ruleName: this.filterFormSearch.value.ruleName,
+            status: status 
+          }});  
+        }
       }, this);
 
       this.single = [];

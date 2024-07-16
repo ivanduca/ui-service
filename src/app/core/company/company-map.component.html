@@ -1,14 +1,14 @@
 @if (filter) {
     <form *ngIf="filterFormSearch" class="clearfix my-3 px-2 shadow" [formGroup]="filterFormSearch" >
         <div class="row col-md-12">
-            <div class="form-group mb-1 col-md-5">
+            <div class="form-group mb-1 col-md-4">
                 <ng-select [clearable]="false" formControlName="workflowId" [placeholder]="'it.workflow.id'| translate">
                     @for (workflow of optionsWorkflow; track workflow.value) {
                         <ng-option [value]="workflow.value">{{workflow.text}}</ng-option>
                     }
                 </ng-select>
             </div>
-            <div class="form-group mb-1 col-md-5">
+            <div class="form-group mb-1 col-md-4">
                 <ng-select [clearable]="false" formControlName="ruleName" class="break-spaces" [placeholder]="'it.rule.name'| translate">
                     @for (rule of optionsRule; track rule.value) {
                         <ng-option [value]="rule.value">{{rule.text}}</ng-option>
@@ -17,6 +17,9 @@
             </div>
             <div class="form-group mb-1 col-md-2">
                 <it-checkbox formControlName="preserveZoom" [label]="'it.map.preserve-zoom'| translate" toggle="true"></it-checkbox>
+            </div>
+            <div class="form-group mb-1 col-md-2">
+                <it-checkbox formControlName="cache" [label]="'it.map.cache'| translate" toggle="true"></it-checkbox>
             </div>
         </div>
     </form>

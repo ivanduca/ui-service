@@ -51,7 +51,7 @@ export class SearchComponent implements OnInit {
     });
     Object.keys(CodiceCategoria).forEach((key) => {
       this.optionsCategoria.push({ value: key, text: CodiceCategoria[key]});
-    });
+    });    
   }
 
   isStatusDisabled(status: number, ruleName: string): boolean {
@@ -72,21 +72,29 @@ export class SearchComponent implements OnInit {
     this.route.queryParams.subscribe((queryParams) => {
       let ruleName = queryParams.ruleName == '' ? '': queryParams.ruleName||Rule.AMMINISTRAZIONE_TRASPARENTE;
       let workflowId = queryParams.workflowId;
-      this.filterFormSearch = this.formBuilder.group({
-        workflowId: new FormControl(workflowId),
-        ruleName: new FormControl(ruleName),
-        status: new FormControl(queryParams.status||''),
-        denominazioneEnte: new FormControl(),
-        codiceFiscaleEnte: new FormControl(),
-        codiceIpa: new FormControl(queryParams.codiceIpa),
-        codiceCategoria: new FormControl(),
-        sort: new FormControl(queryParams.sort),
-      });
-      this.filterFormSearch.valueChanges.subscribe((value: any) => {
-        if (this.filterFormSearch.controls.ruleName.touched) {
-          this.manageOptionStatus(value.ruleName);
-        }
-      });  
+      if (this.filterFormSearch) {
+        this.filterFormSearch.controls['workflowId'].patchValue(workflowId);
+        this.filterFormSearch.controls['ruleName'].patchValue(ruleName);
+        this.filterFormSearch.controls['codiceIpa'].patchValue(queryParams.codiceIpa);
+        this.filterFormSearch.controls['status'].patchValue(queryParams.status||'');
+        this.filterFormSearch.controls['sort'].patchValue(queryParams.sort);
+      } else {
+        this.filterFormSearch = this.formBuilder.group({
+          workflowId: new FormControl(workflowId),
+          ruleName: new FormControl(ruleName),
+          status: new FormControl(queryParams.status||''),
+          denominazioneEnte: new FormControl(),
+          codiceFiscaleEnte: new FormControl(),
+          codiceIpa: new FormControl(queryParams.codiceIpa),
+          codiceCategoria: new FormControl(),
+          sort: new FormControl(queryParams.sort),
+        });
+        this.filterFormSearch.valueChanges.subscribe((value: any) => {
+          if (this.filterFormSearch.controls.ruleName.touched) {
+            this.manageOptionStatus(value.ruleName);
+          }
+        });          
+      }
 
       Object.values(Status).filter(key => !isNaN(Number(key))).forEach((key: number) => {
         let status = String(key);
@@ -99,7 +107,7 @@ export class SearchComponent implements OnInit {
         });
       });      
       this.ruleService.getRules().subscribe((rule) => {
-        let rules: SelectRule[] = rule.getKeys(undefined, Rule.AMMINISTRAZIONE_TRASPARENTE, [], -1);
+        let rules: SelectRule[] = rule.getKeys(undefined, undefined, Rule.AMMINISTRAZIONE_TRASPARENTE, [], -1);
         Object.keys(rules).forEach((index) => {
           this.optionsRule.push({
             value: rules[index].key,
