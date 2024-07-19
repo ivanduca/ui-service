@@ -52,7 +52,7 @@ export class CompanyMapComponent implements OnInit {
   
   protected filterFormSearch: FormGroup;
   protected optionsWorkflow: Array<SelectControlOption> = [];
-  protected optionsRule: Array<SelectControlOption> = [];
+  protected optionsRule: Array<any>;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -170,12 +170,14 @@ export class CompanyMapComponent implements OnInit {
     });
     this.workflowId = workflowId;
     this.ruleService.getRules().subscribe((rule) => {
+      this.optionsRule = [];
       let rules: SelectRule[] = rule.getKeys(undefined, undefined, Rule.AMMINISTRAZIONE_TRASPARENTE, [], -1);
       Object.keys(rules).forEach((index) => {
         this.optionsRule.push({
           value: rules[index].key,
           text: rules[index].text,
-          selected: rules[index].key === this.ruleName
+          level: rules[index].level,
+          class: `ps-${rules[index].level} fs-${rules[index].level + 3}`
         });
       });
     });

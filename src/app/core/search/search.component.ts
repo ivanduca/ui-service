@@ -25,10 +25,11 @@ export class SearchComponent implements OnInit {
   protected filterFormSearch: FormGroup;
   protected collapse: boolean = false;
   protected isLoadingCsv: boolean = false;
+  protected ruleName: string;
   options: Array<SelectControlOption> = [];
   optionsWorkflow: Array<SelectControlOption> = [];
   optionsStatus: Array<SelectControlOption> = [];
-  optionsRule: Array<SelectControlOption> = [];
+  optionsRule: Array<any>;
   optionsCategoria: Array<SelectControlOption> = [];
 
   constructor(private formBuilder: FormBuilder,
@@ -45,7 +46,6 @@ export class SearchComponent implements OnInit {
       this.options.push({ value: 'company.denominazioneEnte', text: labels.company.denominazioneEnte });
       this.options.push({ value: 'createdAt,desc', text: labels.order.createdAt.desc });
       this.optionsStatus.push({value: '', text: '*', disabled: false});
-      this.optionsRule.push({value: '', text: '*', selected: false});
       this.optionsWorkflow.push({value: '', text: '*', selected: false});
       this.optionsCategoria.push({ value: '', text: '*', selected: true});
     });
@@ -70,18 +70,18 @@ export class SearchComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((queryParams) => {
-      let ruleName = queryParams.ruleName == '' ? '': queryParams.ruleName||Rule.AMMINISTRAZIONE_TRASPARENTE;
+      this.ruleName = queryParams.ruleName == '' ? '': queryParams.ruleName||Rule.AMMINISTRAZIONE_TRASPARENTE;
       let workflowId = queryParams.workflowId;
       if (this.filterFormSearch) {
         this.filterFormSearch.controls['workflowId'].patchValue(workflowId);
-        this.filterFormSearch.controls['ruleName'].patchValue(ruleName);
+        this.filterFormSearch.controls['ruleName'].patchValue(this.ruleName);
         this.filterFormSearch.controls['codiceIpa'].patchValue(queryParams.codiceIpa);
         this.filterFormSearch.controls['status'].patchValue(queryParams.status||'');
         this.filterFormSearch.controls['sort'].patchValue(queryParams.sort);
       } else {
         this.filterFormSearch = this.formBuilder.group({
           workflowId: new FormControl(workflowId),
-          ruleName: new FormControl(ruleName),
+          //ruleName: new FormControl(ruleName),
           status: new FormControl(queryParams.status||''),
           denominazioneEnte: new FormControl(),
           codiceFiscaleEnte: new FormControl(),
@@ -102,17 +102,20 @@ export class SearchComponent implements OnInit {
           this.optionsStatus.push({
             value: status,
             text: label.ruletitle,
-            disabled: this.isStatusDisabled(key, ruleName)
+            disabled: this.isStatusDisabled(key, this.ruleName)
           });
         });
       });      
       this.ruleService.getRules().subscribe((rule) => {
+        this.optionsRule = [];
+        this.optionsRule.push({value: '', text: '*', selected: false});
         let rules: SelectRule[] = rule.getKeys(undefined, undefined, Rule.AMMINISTRAZIONE_TRASPARENTE, [], -1);
         Object.keys(rules).forEach((index) => {
           this.optionsRule.push({
             value: rules[index].key,
             text: rules[index].text,
-            selected: rules[index].key === ruleName
+            level: rules[index].level,
+            class: `ps-${rules[index].level} fs-${rules[index].level + 3}`
           });
         });
       });

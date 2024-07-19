@@ -37,6 +37,8 @@ import { ResultPieComponent } from './result/result-pie.component';
 import { ResultAggregatorService } from './result-aggregator/result-aggregator.service';
 
 import { RuleService } from './rule/rule.service';
+import { RuleSelectComponent } from './rule/rule-select.component';
+
 
 import { FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { CollapseModule } from 'ngx-bootstrap/collapse';
@@ -76,7 +78,8 @@ import { NgSelectModule } from '@ng-select/ng-select';
         ResultListComponent,
         ResultPieComponent,
         WorkflowCardComponent,
-        CreditsComponent
+        CreditsComponent,
+        RuleSelectComponent,
     ],
     imports: [
         AppRoutingModule,
@@ -121,6 +124,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
         CompanyMapComponent,
         CompanyGraphComponent,
         WorkflowCardComponent,
+        RuleSelectComponent,
         DesignAngularKitModule
     ],
     providers: [

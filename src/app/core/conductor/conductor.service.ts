@@ -97,7 +97,7 @@ export class ConductorService extends CommonService<Workflow> {
       version: 1,
       correlationId: codiceIpa || ConductorService.AMMINISTRAZIONE_TRASPARENTE_FLOW,
       input: {
-        page_size: 1000,
+        page_size: 10,
         codice_categoria: ``,
         codice_ipa: codiceIpa,
         id_ipa_from: 0,
@@ -110,7 +110,8 @@ export class ConductorService extends CommonService<Workflow> {
         read_timeout: 15000,
         connection_timeout_max: 30000,
         read_timeout_max: 30000,
-        result_base_url: environment.apiUrl  
+        result_base_url: environment.apiUrl,
+        crawler_child_type: `SUB_WORKFLOW`  
       }
     }
   }

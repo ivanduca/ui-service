@@ -6,11 +6,13 @@ export class SelectRule {
     public parentKey: string;
     public key: string;
     public text: string;
+    public level: number;
 
     constructor(parentKey: string, key: string, label: string, level: number) {
+        this.level = level;
         this.parentKey = parentKey;
         this.key = key;
-        this.text = `    `.repeat(level) + `${label}`;
+        this.text = label;
     }
 }
 

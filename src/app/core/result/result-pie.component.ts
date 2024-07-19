@@ -40,11 +40,12 @@ export class ResultPieComponent implements OnInit {
   chartDivStyle: string = 'height:75vh !important';
   protected isPieLoaded = false;
   protected total: number;
+  protected ruleName: string;
 
   protected filterFormSearch: FormGroup;
 
   protected optionsWorkflow: Array<SelectControlOption> = [];
-  protected optionsRule: Array<SelectControlOption> = [];
+  protected optionsRule: Array<any>;
   protected rules: SelectRule[];
 
   @ViewChild('chartdiv', {static: true}) chartdiv: ElementRef;
@@ -76,13 +77,16 @@ export class ResultPieComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((queryParams) => {
+      this.ruleName = queryParams.ruleName || Rule.AMMINISTRAZIONE_TRASPARENTE;
       this.ruleService.getRules().subscribe((rule) => {
+        this.optionsRule = [];
         this.rules = rule.getKeys(undefined, undefined, Rule.AMMINISTRAZIONE_TRASPARENTE, [], -1);
         Object.keys(this.rules).forEach((index) => {
           this.optionsRule.push({
             value: this.rules[index].key,
             text: this.rules[index].text,
-            selected: this.rules[index].key === queryParams.ruleName
+            level: this.rules[index].level,
+            class: `ps-${this.rules[index].level} fs-${this.rules[index].level + 3}`
           });
         });
       });
@@ -107,8 +111,7 @@ export class ResultPieComponent implements OnInit {
           }
         });
         this.filterFormSearch = this.formBuilder.group({
-          workflowId: new FormControl(queryParams.workflowId || lastWorkflowId),
-          ruleName: new FormControl(queryParams.ruleName || Rule.AMMINISTRAZIONE_TRASPARENTE),
+          workflowId: new FormControl(queryParams.workflowId || lastWorkflowId)
         });
         this.filterFormSearch.valueChanges.pipe(
           debounceTime(500)
