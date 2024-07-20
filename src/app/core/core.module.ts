@@ -49,12 +49,12 @@ import { AccordionModule } from 'ngx-bootstrap/accordion';
 
 // import ngx-translate and the http loader
 import { TranslateCompiler, TranslateLoader, TranslateModule} from '@ngx-translate/core';
-import { HttpClient} from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { CustomTranslationCompiler } from '../common/helpers/translation-compiler';
 
 import { DesignAngularKitModule } from 'design-angular-kit';
-import { LeafletModule } from '@asymmetrik/ngx-leaflet';
-import { LeafletMarkerClusterModule } from '@asymmetrik/ngx-leaflet-markercluster';
+import { LeafletModule } from '@bluehalo/ngx-leaflet';
+import { LeafletMarkerClusterModule } from '@bluehalo/ngx-leaflet-markercluster';
 import { NgSelectModule } from '@ng-select/ng-select';
 
 /**

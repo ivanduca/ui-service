@@ -14,7 +14,7 @@ import {ButtonsModule} from 'ngx-bootstrap/buttons'
 
 // import ngx-translate and the http loader
 import {TranslateCompiler, TranslateLoader, TranslateModule} from '@ngx-translate/core';
-import {HttpClient} from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { CustomTranslationCompiler } from '../common/helpers/translation-compiler';
 import { ConfigService } from '../core/config.service';
 import { DesignAngularKitModule } from 'design-angular-kit';

@@ -11,8 +11,8 @@ import { RuleService } from '../rule/rule.service';
 import { Rule, SelectRule } from '../rule/rule.model';
 import { HttpParams } from '@angular/common/http';
 import { ResultService } from '../result/result.service';
-import * as saveAs from 'file-saver';
 import { CodiceCategoria } from '../../common/model/codice-categoria.enum';
+import saveAs from 'file-saver';
 
 @Component({
   selector: 'app-search',

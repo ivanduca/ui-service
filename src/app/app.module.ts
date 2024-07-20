@@ -2,7 +2,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {ErrorHandler, NgModule} from '@angular/core';
 
 import {AppComponent} from './app.component';
-import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import {AuthInterceptor} from './auth/auth.interceptor';
 
 import {CoreModule} from './core/core.module';
@@ -25,55 +25,44 @@ import { AppRoutingEndModule } from './app-routing-end.module';
 
 import localeIt from '@angular/common/locales/it';
 
-@NgModule({
-
-  declarations: [
-    AppComponent
-  ],
-
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    HttpClientModule,
-    AuthModule.forRoot({
-      config: {
-        authority: environment.oidc.authority || window.location.origin,
-        redirectUrl: environment.oidc.redirectUrl || window.location.origin,
-        postLogoutRedirectUri: environment.oidc.postLogoutRedirectUri || window.location.origin,
-        clientId: environment.oidc.clientId || 'clientId',
-        scope: 'openid profile email offline_access',
-        responseType: 'code',
-        silentRenew: true,
-        useRefreshToken: true,
-        ignoreNonceAfterRefresh: true,
-        autoUserInfo: false,
-        maxIdTokenIatOffsetAllowedInSeconds: 300,
-        logLevel: LogLevel.None,
-      },
-    }),
-    TranslateModule.forRoot({
-        compiler: {provide: TranslateCompiler, useClass: CustomTranslationCompiler},
-        loader: {
-            provide: TranslateLoader,
-            useFactory: CustomHttpLoaderFactory,
-            deps: [HttpClient]
-        }
-    }),
-    AppRoutingModule, // Routing
-
-    CoreModule,        // Componenti moduli e servizi non Lazy
-    AppRoutingEndModule,
-  ],
-
-  providers: [
-    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
-    {provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true},
-    {provide: APP_BASE_HREF, useValue: environment.baseHref},
-    {provide: ErrorHandler, useClass: GlobalErrorHandler}
-  ],
-
-  bootstrap: [AppComponent]
-})
+@NgModule({ declarations: [
+        AppComponent
+    ],
+    bootstrap: [AppComponent], imports: [BrowserModule,
+        BrowserAnimationsModule,
+        AuthModule.forRoot({
+            config: {
+                authority: environment.oidc.authority || window.location.origin,
+                redirectUrl: environment.oidc.redirectUrl || window.location.origin,
+                postLogoutRedirectUri: environment.oidc.postLogoutRedirectUri || window.location.origin,
+                clientId: environment.oidc.clientId || 'clientId',
+                scope: 'openid profile email offline_access',
+                responseType: 'code',
+                silentRenew: true,
+                useRefreshToken: true,
+                ignoreNonceAfterRefresh: true,
+                autoUserInfo: false,
+                maxIdTokenIatOffsetAllowedInSeconds: 300,
+                logLevel: LogLevel.None,
+            },
+        }),
+        TranslateModule.forRoot({
+            compiler: { provide: TranslateCompiler, useClass: CustomTranslationCompiler },
+            loader: {
+                provide: TranslateLoader,
+                useFactory: CustomHttpLoaderFactory,
+                deps: [HttpClient]
+            }
+        }),
+        AppRoutingModule, // Routing
+        CoreModule, // Componenti moduli e servizi non Lazy
+        AppRoutingEndModule], providers: [
+        { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+        { provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true },
+        { provide: APP_BASE_HREF, useValue: environment.baseHref },
+        { provide: ErrorHandler, useClass: GlobalErrorHandler },
+        provideHttpClient(withInterceptorsFromDi())
+    ] })
 export class AppModule { 
   constructor() {
     registerLocaleData(localeIt, 'it-IT', localeIt);

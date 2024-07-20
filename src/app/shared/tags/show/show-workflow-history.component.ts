@@ -8,7 +8,7 @@ import { ItModalComponent } from 'design-angular-kit';
 import { Workflow } from '../../../core/conductor/workflow.model';
 import { HttpParams } from '@angular/common/http';
 import { ResultService } from '../../../core/result/result.service';
-import * as saveAs from 'file-saver';
+import saveAs from 'file-saver';
 
 
 @Component({

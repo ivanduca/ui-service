@@ -4,7 +4,7 @@ import { HttpParams } from '@angular/common/http';
 import { animate, keyframes, style, transition, trigger } from '@angular/animations';
 import { Rule } from '../rule/rule.model';
 import { ResultService } from '../result/result.service';
-import * as saveAs from 'file-saver';
+import saveAs from 'file-saver';
 
 @Component({
   selector: 'app-workflow-card',

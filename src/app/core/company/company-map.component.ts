@@ -15,7 +15,8 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { RuleService } from '../rule/rule.service';
 import { TranslateService } from '@ngx-translate/core';
 import { DurationFormatPipe } from '../../shared/pipes/durationFormat.pipe';
-import * as Leaflet from 'leaflet';
+import Leaflet from 'leaflet';
+import 'leaflet.markercluster';
 
 @Component({
   selector: 'company-map',
@@ -110,14 +111,13 @@ export class CompanyMapComponent implements OnInit {
     }
   };
 
-
   onMapReady(map: Leaflet.Map): void {
     this.map = map;
   }
   
   markerClusterReady(markerCluster: Leaflet.MarkerClusterGroup) {
     if (this.currentMarker) {
-      const parent = this.currentMarker.__parent;
+      const parent = this.currentMarker['__parent'];
       if (parent && parent._zoom == CompanyMapComponent.ZOOM){
         parent.spiderfy();
       }
@@ -247,7 +247,7 @@ export class CompanyMapComponent implements OnInit {
                   </strong>
                 </div>
               `;
-              let icon = new Leaflet.divIcon({
+              let icon = Leaflet.divIcon({
                 html: `
                   <svg class="icon icon-white icon-sm bg-${iconColor}">
                     <use href="assets/vendor/sprite.svg#it-pa"></use>
@@ -256,7 +256,7 @@ export class CompanyMapComponent implements OnInit {
                 iconSize: [25, 25],
                 iconAnchor: [13, 7]            
               });
-              let marker = new Leaflet.marker(new Leaflet.LatLng(lat, lng), {
+              let marker = Leaflet.marker(new Leaflet.LatLng(lat, lng), {
                 icon: icon,
                 codiceIpa: company.codiceIpa,
                 status: status

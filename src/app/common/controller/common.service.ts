@@ -1,7 +1,7 @@
 
 import {throwError as observableThrowError, of as observableOf, Observable} from 'rxjs';
 import {catchError, map, switchMap} from 'rxjs/operators';
-import {HttpClient, HttpErrorResponse, HttpParams} from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import {ApiMessageService, MessageType} from '../../core/api-message.service';
 import {SpringError} from '../model/spring-error.model';
 import {Page} from '../model/page.model';

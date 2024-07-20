@@ -1,7 +1,7 @@
 import {throwError as observableThrowError,  Observable } from 'rxjs';
 import {switchMap, take, catchError} from 'rxjs/operators';
 import { Injectable, Injector } from '@angular/core';
-import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
+import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { ApiMessageService, MessageType } from '../core/api-message.service';
 import { ConfigService} from '../core/config.service';
 import { Router } from '@angular/router';
