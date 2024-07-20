@@ -15,7 +15,7 @@ WORKDIR /ng-app
 COPY . .
 
 ## Build the angular app in production mode and store the artifacts in dist folder
-RUN node_modules/.bin/ng build --configuration production --aot --build-optimizer --output-hashing=all --base-href /
+RUN node_modules/.bin/ng build --configuration production --aot --output-hashing=all --base-href /
 
 
 ### STAGE 2: Setup ###
