@@ -68,11 +68,14 @@ export class ResultPieComponent implements OnInit {
 
   @HostListener("window:resize", []) 
   pieChartLabels() {
-    this.responsive.observe([Breakpoints.Small, Breakpoints.XSmall]).subscribe(result => {
-      this.series?.labels?.template?.set("forceHidden", result?.matches);
-      this.series?.ticks?.template?.set("visible", !result?.matches);
+    this.responsive.observe([Breakpoints.Small, Breakpoints.XSmall]).subscribe(result => {      
+      this.series?.labels.template.setAll({
+        fontSize: result?.matches ? 12 : 28,
+        fontWeight: result?.matches ? 'normal': 'bold',
+        text: "{valuePercentTotal.formatNumber('0.00')}%",
+      });      
       this.chartDivStyle = `height:${result?.matches ? '30' : '75'}vh !important`;
-  });
+    });
   }
 
   ngOnInit(): void {
@@ -176,7 +179,7 @@ export class ResultPieComponent implements OnInit {
         fontSize: 28,
         fontWeight: 'bold',
         text: "{valuePercentTotal.formatNumber('0.00')}%",
-      });      
+      });
       series.ticks.template.setAll({
         strokeWidth: 2,
         fill: am5.color('#000000'),
