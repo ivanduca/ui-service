@@ -32,6 +32,12 @@ RUN rm -rf /usr/share/nginx/html/*
 COPY --from=builder /ng-app/dist/browser /usr/share/nginx/html
 
 ENV API_URL=https://dica33.ba.cnr.it/
+ENV COMPANY_API_URL=$API_URL
+ENV CONDUCTOR_API_URL=$API_URL
+ENV RESULT_API_URL=$API_URL
+ENV RESULT_AGGREGATOR_API_URL=$API_URL
+ENV RULE_API_URL=$API_URL
+
 ENV BASE_HREF=/
 ENV OIDC_ENABLE=false
 ENV OIDC_FORCE=false

@@ -3,6 +3,12 @@
   
     // Environment variables
     window["env"]["apiUrl"] = "https://dica33.ba.cnr.it/";
+    window["env"]["companyApiUrl"] = window["env"]["apiUrl"];
+    window["env"]["conductorApiUrl"] = window["env"]["apiUrl"];
+    window["env"]["resultApiUrl"] = window["env"]["apiUrl"];
+    window["env"]["resultAggregatorapiUrl"] = window["env"]["apiUrl"];
+    window["env"]["ruleApiUrl"] = "https://monitorai.ba.cnr.it/";
+
     window["env"]["baseHref"] = "/";
     window["env"]["production"] = false;
     window["env"]["oidc.enable"] = false;

@@ -1,3 +1,4 @@
+import { of as observableOf, throwError as observableThrowError, Observable, map, catchError} from 'rxjs';
 import { Injectable} from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { CommonService} from '../../common/controller/common.service';
@@ -6,9 +7,9 @@ import { Router} from '@angular/router';
 import { ConfigService} from '../config.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Result } from './result.model';
-import { of as observableOf, throwError as observableThrowError, Subject, Observable, pipe, map, catchError} from 'rxjs';
 import { switchMap} from 'rxjs/operators';
 import { SpringError } from '../../common/model/spring-error.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable()
 export class ResultService extends CommonService<Result> {
@@ -40,8 +41,12 @@ export class ResultService extends CommonService<Result> {
     return ResultService.PAGE_OFFSET;
   }
 
+  getGateway(): Observable<string> {
+    return observableOf(environment.resultApiUrl);
+  }
+
   public getCSVUrl(workflowId: string, sort: string, terse: boolean): Observable<string> {
-    return this.configService.getApiBase()
+    return this.getApiBase()
     .pipe(
       switchMap((apiBase) => {
         return observableOf(apiBase + this.getRequestMapping() + `/csv?workflowId=${workflowId}&terse=${terse}&sort=${sort}`);
@@ -49,7 +54,7 @@ export class ResultService extends CommonService<Result> {
   }
 
   public downloadCSV(params: HttpParams): Observable<any> {
-    return this.configService.getApiBase()
+    return this.getApiBase()
       .pipe(
         switchMap((apiBase) => {
           return this.httpClient.get( apiBase + this.getRequestMapping() + `/csv`, {params: params, responseType: `blob`}).pipe(
@@ -77,7 +82,7 @@ export class ResultService extends CommonService<Result> {
     if (noCache) {
       params = params.set('noCache', noCache);
     }
-    return this.configService.getApiBase().pipe(
+    return this.getApiBase().pipe(
       switchMap((apiBase) => {
         return this.httpClient.get<any>( apiBase + this.getRequestMapping() + `/countAndGroupByWorkflowIdAndStatus`, {params: params})
         .pipe(

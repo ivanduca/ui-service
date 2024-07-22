@@ -190,9 +190,7 @@ export abstract class CommonService<T extends Base> {
     }));
   }
 
-  getGateway(): Observable<string> {
-    return this.configService.getGateway();
-  }
+  abstract getGateway(): Observable<string>;
 
   /**
    * For Select end point.
@@ -249,7 +247,7 @@ export abstract class CommonService<T extends Base> {
   public create(entity: T): Observable<T> {
 
     // return observableThrowError(null);
-    return this.configService.getGateway()
+    return this.getGateway()
       .pipe(
         switchMap((gateway) => {
           return this.httpClient.post<T>(this.getCreateURL(gateway), this.serializeInstance(entity))
@@ -283,7 +281,7 @@ export abstract class CommonService<T extends Base> {
       return this.create(entity);
     }    
 
-    return this.configService.getGateway()
+    return this.getGateway()
       .pipe(
         switchMap((gateway) => {
           return this.httpClient.put<T>(this.getSaveURL(gateway), this.serializeInstance(entity))
@@ -560,7 +558,7 @@ export abstract class CommonService<T extends Base> {
 
   public getBlob(endpoint: string, filename: string) {
 
-    return this.configService.getGateway().pipe(switchMap((gateway) => {
+    return this.getGateway().pipe(switchMap((gateway) => {
 
       return this.httpClient.get(gateway + endpoint, {responseType: 'blob'}).pipe(map( (res) => {
 

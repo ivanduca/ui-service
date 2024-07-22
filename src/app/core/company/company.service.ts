@@ -1,11 +1,13 @@
-import {Injectable} from '@angular/core';
-import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
-import {CommonService} from '../../common/controller/common.service';
-import {ApiMessageService, MessageType} from '../../core/api-message.service';
-import {Router} from '@angular/router';
-import {ConfigService} from '../../core/config.service';
+import { of as observableOf, Observable } from 'rxjs';
+import { Injectable} from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { CommonService } from '../../common/controller/common.service';
+import { ApiMessageService } from '../../core/api-message.service';
+import { Router } from '@angular/router';
+import { ConfigService } from '../../core/config.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Company } from './company.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable()
 export class CompanyService extends CommonService<Company> {
@@ -37,5 +39,8 @@ export class CompanyService extends CommonService<Company> {
     return CompanyService.PAGE_OFFSET;
   }
 
+  getGateway(): Observable<string> {
+    return observableOf(environment.companyApiUrl);
+  }
   
 }

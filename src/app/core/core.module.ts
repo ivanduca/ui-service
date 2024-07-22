@@ -6,7 +6,6 @@ import { FooterComponent} from './footer/footer.component';
 
 import { HomeComponent} from './home/home.component';
 import { SearchComponent} from './search/search.component';
-import { SearchService} from './search/search.service';
 
 import { AppRoutingModule} from '../app-routing.module';
 import { SharedModule} from '../shared/shared.module';
@@ -137,8 +136,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
         ResultService,
         ResultAggregatorService,
         ConductorService,
-        RuleService,
-        SearchService
+        RuleService
     ]
 })
 export class CoreModule {}

@@ -1,6 +1,6 @@
 
-import { of as observableOf, Observable, forkJoin } from 'rxjs';
-import { map, catchError, switchMap } from 'rxjs/operators';
+import { Observable, forkJoin } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Config } from './config.model';
@@ -22,16 +22,6 @@ export class ConfigService implements TranslateLoader{
   private config: Config = null;
 
   constructor(private httpClient: HttpClient) {}
-
-  getGateway(): Observable<string> {
-    return observableOf(environment.apiUrl);
-  }
-
-  getApiBase(): Observable<string> {
-    return this.getGateway().pipe(map( gateway => {
-      return gateway + ConfigService.API_BASE;
-    }));
-  }
 
   getTranslation(lang: string): Observable<any> {
     return forkJoin(

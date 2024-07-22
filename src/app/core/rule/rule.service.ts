@@ -1,13 +1,14 @@
-import {Injectable} from '@angular/core';
-import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
-import {CommonService} from '../../common/controller/common.service';
-import {ApiMessageService, MessageType} from '../api-message.service';
-import {Router} from '@angular/router';
-import {ConfigService} from '../config.service';
+import { of as observableOf, Observable, catchError, map, switchMap, throwError } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { CommonService } from '../../common/controller/common.service';
+import { ApiMessageService, MessageType } from '../api-message.service';
+import { Router } from '@angular/router';
+import { ConfigService } from '../config.service';
 import { TranslateService } from '@ngx-translate/core';
 import { Rule } from './rule.model';
-import { Observable, catchError, map, switchMap, throwError } from 'rxjs';
 import { SpringError } from '../../common/model/spring-error.model';
+import { environment } from '../../../environments/environment';
 
 @Injectable()
 export class RuleService extends CommonService<Rule> {
@@ -40,8 +41,12 @@ export class RuleService extends CommonService<Rule> {
     return 'results';
   }
 
+  getGateway(): Observable<string> {
+    return observableOf(environment.ruleApiUrl);
+  }
+
   public getRules(): Observable<Rule> {
-    return this.configService.getApiBase()
+    return this.getApiBase()
       .pipe(
         switchMap((apiBase) => {
           return this.httpClient.get<Rule>( apiBase + this.getRequestMapping())

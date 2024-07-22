@@ -1,6 +1,11 @@
 export const environment = {
   production: false,
-  apiUrl: window["env"]["apiUrl"] || "default",
+  apiUrl: window["env"]["apiUrl"],
+  companyApiUrl: window["env"]["companyApiUrl"],
+  conductorApiUrl: window["env"]["conductorApiUrl"],
+  resultApiUrl: window["env"]["resultApiUrl"],
+  resultAggregatorapiUrl: window["env"]["resultAggregatorapiUrl"],
+  ruleApiUrl: window["env"]["ruleApiUrl"],
   debug: window["env"]["debug"] || false,
   baseHref: window["env"]["baseHref"] || "/",
   oidc: {

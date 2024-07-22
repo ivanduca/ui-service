@@ -39,10 +39,14 @@ export class ConductorService extends CommonService<Workflow> {
     return `/api/workflow`;
   }
 
+  getGateway(): Observable<string> {
+    return observableOf(environment.conductorApiUrl);
+  }
+  
   protected get nameOfResults(): string {
     return undefined;
   }
-
+  
   public getAll(filter?: {}, path?: string): Observable<Workflow[]> {
     if (!path) {
       path = `/${ConductorService.AMMINISTRAZIONE_TRASPARENTE_FLOW}/correlated/${ConductorService.AMMINISTRAZIONE_TRASPARENTE_FLOW}`;
@@ -73,7 +77,7 @@ export class ConductorService extends CommonService<Workflow> {
   }
 
   public startMainWorkflow(codiceIpa?: string): Observable<string> {
-    return this.configService.getGateway()
+    return this.getGateway()
       .pipe(
         switchMap((gateway) => {
           return this.httpClient.post(`${gateway}${this.getApiService()}/api/workflow`, this.inputParamter(codiceIpa), {responseType: 'text'})
