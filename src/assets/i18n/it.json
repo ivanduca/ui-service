@@ -80,7 +80,8 @@
       "updatedAt": "Aggiornato al",
       "content": "Contenuto trovato",
       "screenshot": "Screenshot",
-      "html": "Pagina HTML"
+      "html": "Pagina HTML",
+      "errorMessage": "Errore"
     },
     "map": {
       "preserve-zoom": "Conserva Zoom e Posizione",

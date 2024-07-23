@@ -35,6 +35,8 @@ export class Result implements Base {
     public status: number; 
     @JsonProperty('ruleName')
     public ruleName: string;
+    @JsonProperty('errorMessage')
+    public errorMessage: string;
     @JsonProperty('destinationUrl')
     public destinationUrl: string;
     @JsonProperty('term')

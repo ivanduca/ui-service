@@ -53,7 +53,19 @@ import { ResultService } from './result.service';
                 </div>
               </it-callout>
               <div class="col-sm-12">
-                <app-show-text [label]="'it.rule.status-label'" [value]="'it.rule.status.' + item.status + '.ruletitle'| translate"></app-show-text>
+                @if (item.errorMessage) {
+                  <app-show-text-popover 
+                    [label]="'it.rule.status-label'" 
+                    [value]="'it.rule.status.' + item.status + '.ruletitle'| translate" 
+                    [icon]="'error'"
+                    [color]="'danger'"
+                    [popover_title]="'it.result.errorMessage'|translate" 
+                    [popover_text]="item.errorMessage">
+                  </app-show-text-popover>                
+                }
+                @if (!item.errorMessage) {
+                  <app-show-text [label]="'it.rule.status-label'" [value]="'it.rule.status.' + item.status + '.ruletitle'| translate"></app-show-text>                
+                }
               </div>
               <div class="col-sm-12">
                 <app-show-text [label]="'it.result.updatedAt'" [value]="item.updatedAt| date: 'dd/MM/yyyy HH:mm:ss'"></app-show-text>

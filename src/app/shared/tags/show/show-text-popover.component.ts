@@ -14,9 +14,9 @@ import {Component, Input} from '@angular/core';
           [popoverPlacement]="popover_placement">
           <it-icon 
             size="sm"
-            name="info-circle" 
+            [name]="icon" 
             class="ms-2 bg-light" 
-            color="primary">
+            [color]="color">
           </it-icon>
           </span>  
       }
@@ -31,6 +31,9 @@ export class ShowTextPopoverComponent {
   @Input() popover_text;
   @Input() popover_placement = 'right';
   @Input() strong = true;
+  @Input() icon = "info-circle";
+  @Input() color = "primary";
+
   constructor() {}
  
 }
