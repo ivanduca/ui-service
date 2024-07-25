@@ -150,7 +150,7 @@ export class CompanyMapComponent implements OnInit {
       workflowId: new FormControl(workflowId),
       ruleName: new FormControl(this.ruleName),
       preserveZoom: new FormControl(true),
-      cache: new FormControl(false)
+      cache: new FormControl(this.cache)
     });
     this.filterFormSearch.valueChanges.pipe(
       debounceTime(500)
