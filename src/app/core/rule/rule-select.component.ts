@@ -39,9 +39,6 @@ export class RuleSelectComponent implements OnInit{
   @Input() value: string;
 
   ngOnInit(): void {
-    console.log(this.controlName);
-    console.log(this.value);
-
     this.form?.addControl(this.controlName, new FormControl(this.value));
   }
 }

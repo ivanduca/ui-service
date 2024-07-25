@@ -30,16 +30,14 @@ import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
 })
 export class ResultPieComponent implements OnInit {
 
-  single = undefined;
-
   // options
   isWorkflowLoaded: boolean = false;
 
   series: any;
+  series2: any;
   root;
   chartDivStyle: string = 'height:75vh !important';
   protected isPieLoaded = false;
-  protected total: number;
   protected ruleName: string;
 
   protected filterFormSearch: FormGroup;
@@ -47,6 +45,8 @@ export class ResultPieComponent implements OnInit {
   protected optionsWorkflow: Array<SelectControlOption> = [];
   protected optionsRule: Array<any>;
   protected rules: SelectRule[];
+
+  protected small: boolean = false;
 
   @ViewChild('chartdiv', {static: true}) chartdiv: ElementRef;
   @ViewChild('columnchartdiv', {static: true}) columnchartdiv: ElementRef;
@@ -69,12 +69,8 @@ export class ResultPieComponent implements OnInit {
   @HostListener("window:resize", []) 
   pieChartLabels() {
     this.responsive.observe([Breakpoints.Small, Breakpoints.XSmall]).subscribe(result => {      
-      this.series?.labels.template.setAll({
-        fontSize: result?.matches ? 12 : 28,
-        fontWeight: result?.matches ? 'normal': 'bold',
-        text: "{valuePercentTotal.formatNumber('0.00')}%",
-      });      
-      this.chartDivStyle = `height:${result?.matches ? '30' : '75'}vh !important`;
+      this.small = result?.matches;
+      this.chartDivStyle = `height:${result?.matches ? '40' : '75'}vh !important`;
     });
   }
 
@@ -123,7 +119,6 @@ export class ResultPieComponent implements OnInit {
         });
         this.root = am5.Root.new(this.chartdiv.nativeElement);
         this.root.locale = am5locales_it_IT;
-        this.loadResult();
       });
     });
   }
@@ -143,25 +138,45 @@ export class ResultPieComponent implements OnInit {
         this.resultService.getWorkflowMap(parentKey, [wokflowId]).subscribe((result: any) => {
           let total = Number(result[wokflowId][200]||0) + Number(result[wokflowId][202]||0); 
           chart[500] = total - Number(Object.values(chart).reduce((a: number, b: number) => a + b, 0)); 
-          this.loadChart(chart);
+          this.resultService.getWorkflowMap(Rule.AMMINISTRAZIONE_TRASPARENTE, [wokflowId]).subscribe((result2: any) => {
+            let chart2 = {
+              200: chart[200],
+              404: chart[404]
+            }
+            let totalGlobal = Number(Object.values(result2[wokflowId]).reduce((a: number, b: number) => a + b, 0));
+            chart2[500] = totalGlobal - Number(Object.values(chart2).reduce((a: number, b: number) => a + b, 0)); 
+            console.log(chart);
+            console.log(chart2);
+            this.loadChart(chart2, true, chart);
+          });
         });
       } else {
-        this.loadChart(chart);
+        this.loadChart(chart, false);
       }
-    });; 
+    }); 
   }
 
-  loadChart(result: any) {
+  loadChart(result: any, double: boolean, result2?: any) {
     this.isPieLoaded = true;
-    this.total = Number(Object.values(result).reduce((a: number, b: number) => a + b, 0)); 
     if (this.chartdiv) {
       this.root.setThemes([
         am5themes_Animated.new(this.root)
       ]);
       this.root.container.children.clear();
-      let chart = this.root.container.children.push(
+
+      this.root.container.set("layout", this.root.verticalLayout);
+
+      // Create container to hold charts
+      let chartContainer = this.root.container.children.push(am5.Container.new(this.root, {
+        layout: this.small ? this.root.verticalLayout : this.root.horizontalLayout,
+        width: am5.p100,
+        height: am5.p100
+      }));
+
+      let chart = chartContainer.children.push(
         am5percent.PieChart.new(this.root, {
-          endAngle: 180        
+          endAngle: double ? 270 : 180,
+          innerRadius: double ? am5.percent(60) : undefined
         })
       );
       let series = chart.series.push(
@@ -176,10 +191,11 @@ export class ResultPieComponent implements OnInit {
       });
 
       series.labels.template.setAll({
-        fontSize: 28,
-        fontWeight: 'bold',
+        fontSize: this.small ? 12 : 24,
+        fontWeight: this.small ? 'normal': 'bold',
         text: "{valuePercentTotal.formatNumber('0.00')}%",
       });
+
       series.ticks.template.setAll({
         strokeWidth: 2,
         fill: am5.color('#000000'),
@@ -195,6 +211,81 @@ export class ResultPieComponent implements OnInit {
         tooltipText:
           "{category}: {value.formatNumber(',000')}"
       });
+      
+      if (double) {
+        series.children.push(am5.Label.new(this.root, {
+          centerX: am5.percent(50),
+          centerY: am5.percent(50),
+          fontWeight: 'bold',
+          text: this.small? "{valueSum}" : "Totale PA {valueSum}",
+          populateText: true,
+          fontSize: this.small? "1em": "1.5em"
+        }));
+        
+        let chart2 = chartContainer.children.push(
+          am5percent.PieChart.new(this.root, {
+            endAngle: 270,
+            innerRadius: am5.percent(60)
+          })
+        );
+        let series2 = chart2.series.push(
+          am5percent.PieSeries.new(this.root, {
+            valueField: "value",
+            categoryField: "name"
+          })
+        );
+        series2.states.create("hidden", {
+          endAngle: -90
+        });
+  
+        series2.labels.template.setAll({
+          fontSize: this.small ? 12 : 24,
+          fontWeight: this.small ? 'normal': 'bold',
+          text: "{valuePercentTotal.formatNumber('0.00')}%",
+        });
+        series2.ticks.template.setAll({
+          strokeWidth: 2,
+          fill: am5.color('#000000'),
+          strokeOpacity: 1
+        })
+  
+        series2.slices.template.setAll({
+          templateField: "sliceSettings"
+        });
+  
+        series2.slices.template.setAll({
+          strokeWidth: 2,
+          tooltipText:
+            "{category}: {value.formatNumber(',000')}"
+        });
+
+        series2.children.push(am5.Label.new(this.root, {
+          centerX: am5.percent(50),
+          centerY: am5.percent(50),
+          fontWeight: 'bold',
+          text: this.small? "{valueSum}" : "Totale regola padre {valueSum}",
+          populateText: true,
+          fontSize: this.small? "1em": "1.5em"
+        }));
+
+        let single = [];
+        Object.keys(result2).forEach((key) => {
+          single.push({
+            name: this.translateService.instant(`it.rule.status.${key}.ruletitle`),
+            value: result2[key],
+            sliceSettings: {
+              fill: am5.color(StatusColor[`STATUS_${key}`]),
+              stroke: am5.color(StatusColor[`STATUS_${key}`])
+            },
+            extra: {
+              key: key  
+            }
+          });
+        });
+        series2.data.setAll(single);
+        series2.appear(1000, 100);
+        this.series2 = series2;
+      }
 
       series.slices.template.events.on("click", function(ev) {
         var status = ev.target.dataItem.dataContext.extra.key;
@@ -207,9 +298,9 @@ export class ResultPieComponent implements OnInit {
         }
       }, this);
 
-      this.single = [];
+      let single = [];
       Object.keys(result).forEach((key) => {
-        this.single.push({
+        single.push({
           name: this.translateService.instant(`it.rule.status.${key}.ruletitle`),
           value: result[key],
           sliceSettings: {
@@ -221,8 +312,8 @@ export class ResultPieComponent implements OnInit {
           }
         });
       });
-      series.data.setAll(this.single);
-      series.appear(1000, 100);      
+      series.data.setAll(single);
+      series.appear(1000, 100);
       this.series = series;
       this.pieChartLabels();
     }

@@ -44,7 +44,7 @@ export class CompanyMapComponent implements OnInit {
   protected zoom;
   protected workflowId;
   protected ruleName;
-  protected cache = false;
+  protected cache = true;
 
   protected filter: boolean = false;
   

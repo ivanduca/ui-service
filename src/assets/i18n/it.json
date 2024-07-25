@@ -165,7 +165,8 @@
         "new": "Operazione sottomessa con successo."
       },
       "rule": {
-        "total": "Totale:"
+        "total": "Totale:",
+        "global_total": "Totale generale:"
       },
       "status": {
         "RUNNING": "IN ESECUZIONE",
