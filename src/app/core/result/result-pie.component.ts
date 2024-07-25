@@ -65,7 +65,6 @@ export class ResultPieComponent implements OnInit {
     private resultService: ResultService) {
   }
 
-
   @HostListener("window:resize", []) 
   pieChartLabels() {
     this.responsive.observe([Breakpoints.Small, Breakpoints.XSmall]).subscribe(result => {      
@@ -75,6 +74,7 @@ export class ResultPieComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.pieChartLabels();
     this.route.queryParams.subscribe((queryParams) => {
       this.ruleName = queryParams.ruleName || Rule.AMMINISTRAZIONE_TRASPARENTE;
       this.ruleService.getRules().subscribe((rule) => {
@@ -315,7 +315,6 @@ export class ResultPieComponent implements OnInit {
       series.data.setAll(single);
       series.appear(1000, 100);
       this.series = series;
-      this.pieChartLabels();
     }
   }
 }
