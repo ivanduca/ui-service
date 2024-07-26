@@ -213,6 +213,21 @@ export class ResultPieComponent implements OnInit {
       });
       
       if (double) {
+        // Adding gradients
+        series.slices.template.set("strokeOpacity", 0);
+        series.slices.template.set("fillGradient", am5.RadialGradient.new(this.root, {
+          stops: [{
+            brighten: -0.8
+          }, {
+            brighten: -0.8
+          }, {
+            brighten: -0.5
+          }, {
+            brighten: 0
+          }, {
+            brighten: -0.5
+          }]
+        }));
         series.children.push(am5.Label.new(this.root, {
           centerX: am5.percent(50),
           centerY: am5.percent(50),
@@ -282,6 +297,21 @@ export class ResultPieComponent implements OnInit {
             }
           });
         });
+        // Adding gradients
+        series2.slices.template.set("strokeOpacity", 0);
+        series2.slices.template.set("fillGradient", am5.RadialGradient.new(this.root, {
+          stops: [{
+            brighten: -0.8
+          }, {
+            brighten: -0.8
+          }, {
+            brighten: -0.5
+          }, {
+            brighten: 0
+          }, {
+            brighten: -0.5
+          }]
+        }));
         series2.data.setAll(single);
         series2.appear(1000, 100);
         this.series2 = series2;
