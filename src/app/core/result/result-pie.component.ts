@@ -145,8 +145,6 @@ export class ResultPieComponent implements OnInit {
             }
             let totalGlobal = Number(Object.values(result2[wokflowId]).reduce((a: number, b: number) => a + b, 0));
             chart2[500] = totalGlobal - Number(Object.values(chart2).reduce((a: number, b: number) => a + b, 0)); 
-            console.log(chart);
-            console.log(chart2);
             this.loadChart(chart2, true, chart);
           });
         });
@@ -312,6 +310,18 @@ export class ResultPieComponent implements OnInit {
             brighten: -0.5
           }]
         }));
+        
+        series2.slices.template.events.on("click", function(ev) {
+          var status = ev.target.dataItem.dataContext.extra.key;
+          if (status != 500) {
+            this.router.navigate(['/search'],  { queryParams: {
+              workflowId: this.filterFormSearch.value.workflowId,
+              ruleName: this.filterFormSearch.value.ruleName,
+              status: status 
+            }});  
+          }
+        }, this);
+  
         series2.data.setAll(single);
         series2.appear(1000, 100);
         this.series2 = series2;

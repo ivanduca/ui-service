@@ -86,6 +86,7 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
         }).subscribe((company: Company[]) => {
           this.company = company[0];
           this.tabRuleActive = true;
+          this.tabPAActive = false;
           if (!this.company) {
             this.apiMessageService.sendMessage(MessageType.ERROR,  `PA non presente!`);
           }
