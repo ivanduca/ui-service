@@ -8,9 +8,6 @@ import {SigninComponent} from './signin/signin.component';
 
 import {AuthRoutingModule} from './auth-routing.module';
 import {AuthGuard} from './auth-guard.service';
-import {TooltipModule} from 'ngx-bootstrap/tooltip'
-import {PopoverModule} from 'ngx-bootstrap/popover'
-import {ButtonsModule} from 'ngx-bootstrap/buttons'
 
 // import ngx-translate and the http loader
 import {TranslateCompiler, TranslateLoader, TranslateModule} from '@ngx-translate/core';
@@ -36,9 +33,6 @@ export enum ServiceReg {
     ReactiveFormsModule,
     AuthRoutingModule,
     CommonModule,
-    TooltipModule,
-    PopoverModule,
-    ButtonsModule.forRoot(),
     TranslateModule.forChild({
       compiler: {provide: TranslateCompiler, useClass: CustomTranslationCompiler},
       loader: {

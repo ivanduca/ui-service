@@ -1,6 +1,5 @@
 import {Component, EventEmitter, Input, Output, OnInit} from '@angular/core';
 import {CommonService} from '../../../common/controller/common.service';
-import {PageChangedEvent} from 'ngx-bootstrap/pagination'; 
 
 @Component({
   selector: 'app-list-pagination',
@@ -9,7 +8,7 @@ import {PageChangedEvent} from 'ngx-bootstrap/pagination';
         <div class="d-flex pt-1">
           <!-- Paging -->
           <div>
-            <pagination 
+           <it-pagination
                 *ngIf="showPage && count > page_offset"
                 [boundaryLinks]="true" 
                 [totalItems]="count" 
@@ -22,7 +21,7 @@ import {PageChangedEvent} from 'ngx-bootstrap/pagination';
                 [(ngModel)]="currentPage"
                 [rotate]="true" 
                 [maxSize]="5">
-            </pagination>
+            </it-pagination>
           </div>
           <div class="ms-auto">
             <!-- Recap -->
@@ -56,9 +55,9 @@ export class ListPaginationComponent implements OnInit{
     this.currentPage = this.page + 1;
   }
 
-  pageChanged(event: PageChangedEvent): void {
-    if (this.currentPage != event.page) {
-      this.onChangePage.emit(event.page - 1);
+  pageChanged(page: number): void {
+    if (this.currentPage != page) {
+      this.onChangePage.emit(page - 1);
     }
   }
 
