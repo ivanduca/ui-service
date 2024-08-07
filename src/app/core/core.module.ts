@@ -11,7 +11,6 @@ import { AppRoutingModule} from '../app-routing.module';
 import { SharedModule} from '../shared/shared.module';
 import { TagsModule} from '../shared/tags/tags.module';
 
-import { NotificationsService, SimpleNotificationsModule} from 'angular2-notifications';
 import { ApiMessageService} from './api-message.service';
 import { ConfigService} from './config.service';
 import { NavigationService} from './navigation.service';
@@ -93,7 +92,6 @@ import { NgSelectModule } from '@ng-select/ng-select';
                 deps: [HttpClient]
             }
         }),
-        SimpleNotificationsModule.forRoot(), // Le notifiche (per ora) vengono tutte generate nell'header component.
         DesignAngularKitModule.forRoot(),
         LeafletModule,
         LeafletMarkerClusterModule,
@@ -121,7 +119,6 @@ import { NgSelectModule } from '@ng-select/ng-select';
     providers: [
         // Capire il discorso del root-injector e child-injector.
         ApiMessageService,
-        NotificationsService,
         ConfigService,
         NavigationService,
         CompanyService,

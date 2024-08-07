@@ -1,11 +1,10 @@
 import { Component, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ApiMessage, ApiMessageService, MessageType} from '../api-message.service';
-import { NotificationsService} from 'angular2-notifications';
 import { TranslateService, LangChangeEvent} from '@ngx-translate/core';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
-import { ItHeaderComponent } from 'design-angular-kit';
+import { ItHeaderComponent, ItNotificationService, NotificationPosition } from 'design-angular-kit';
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 import { environment } from '../../../environments/environment';
 
@@ -49,7 +48,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
               private titleService: Title,
               private router: Router,
               private responsive: BreakpointObserver,
-              private notificationService: NotificationsService) {
+              private notificationService: ItNotificationService) {
     this.searchHREF = `${environment.baseHref}#/company-search`;
   }  
 
@@ -124,11 +123,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   private showNotification(messageType: MessageType, message: string) {
     if (messageType === MessageType.SUCCESS) {
-      this.notificationService.info('<h4 class="alert-heading">Informazione</h4>', message, this.notice('alert-info'));
+      this.notificationService.info('Informazione', message);
     } else if (messageType === MessageType.ERROR) {
-      this.notificationService.error('<h4 class="alert-heading">Errore!</h4>', message, this.notice('alert-danger', 15000));
+      this.notificationService.error('Errore!', message, true , 15000);
     } else if (messageType === MessageType.WARNING) {
-      this.notificationService.warn('<h4 class="alert-heading">Avvertimento!</h4>', message, this.notice('alert-warning', 10000));
+      this.notificationService.warning('Avvertimento!', message, true, 10000);
     }
   }
 

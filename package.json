@@ -39,7 +39,6 @@
     "@types/leaflet": "^1.9.12",
     "@types/leaflet.markercluster": "^1.5.4",
     "angular-auth-oidc-client": "^15.0.3",
-    "angular2-notifications": "^16.0.1",
     "bootstrap-italia": "^2.8.8",
     "core-js": "^2.4.1",
     "d3": "^7.9.0",
