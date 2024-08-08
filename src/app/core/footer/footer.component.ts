@@ -7,7 +7,7 @@ import { Component } from '@angular/core';
     .logo {
       width: auto;
       height: auto;
-      max-height: 95px;
+      max-height: 150px;
       max-width: 100%;
     }
   `
