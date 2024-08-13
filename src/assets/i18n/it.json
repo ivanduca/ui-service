@@ -81,7 +81,8 @@
       "content": "Contenuto trovato",
       "screenshot": "Screenshot",
       "html": "Pagina HTML",
-      "errorMessage": "Errore"
+      "errorMessage": "Errore",
+      "errorNotFound": "Regola non trovata"
     },
     "map": {
       "preserve-zoom": "Conserva Zoom e Posizione",

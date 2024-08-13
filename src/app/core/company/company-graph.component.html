@@ -109,19 +109,28 @@
               @if (currentNode?.data?.storageData?.screenshotId || currentNode?.data?.storageData?.objectId) {
                 <it-list-item>
                   <div class="w-100 d-flex justify-content-around">
-                    <app-show-storage-result class="w-100" [screenshot]="true" [storageData]="currentNode?.data?.storageData" [denominazione]="company.denominazioneEnte"></app-show-storage-result>
+                    @if (currentNode?.data?.storageData?.screenshotId) {
+                      <app-show-storage-result class="w-100" [screenshot]="true" [storageData]="currentNode?.data?.storageData" [denominazione]="company.denominazioneEnte"></app-show-storage-result>
+                    }
                     <app-show-storage-result class="w-100" [html]="true" [storageData]="currentNode?.data?.storageData" [denominazione]="company.denominazioneEnte"></app-show-storage-result>
                   </div>
                 </it-list-item>  
               }
-              @if (!currentNode?.data?.storageData?.objectId && currentNode?.data?.status != 407 && currentNode?.data?.status != 500 && currentNode?.data?.workflowChildId) {
+              @if (!currentNode?.data?.storageData?.objectId) {
                 <it-list-item>
                   <div class="w-100 d-flex justify-content-around">
-                    <app-show-html-page
-                      [workflowChildId]="currentNode?.data?.workflowChildId" 
-                      [denominazione]="company.denominazioneEnte"
-                      [searchText]="currentNode?.data?.term">
-                    </app-show-html-page>
+                    @if (currentNode?.data?.status == 404) {
+                      <a itButton="outline-danger" class="mt-1" (click)="showErrorMessage(currentNode?.data?.parentNodeId)">
+                        <it-icon name="error" color="danger"></it-icon><span class="ms-1" translate>it.result.errorMessage</span>
+                      </a>
+                    }
+                    @if (currentNode?.data?.status != 407 && currentNode?.data?.status != 500 && currentNode?.data?.workflowChildId) {
+                      <app-show-html-page
+                        [workflowChildId]="currentNode?.data?.workflowChildId" 
+                        [denominazione]="company.denominazioneEnte"
+                        [searchText]="currentNode?.data?.term">
+                      </app-show-html-page>
+                    }
                   </div>
                 </it-list-item>  
               }

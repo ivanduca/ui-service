@@ -12,7 +12,7 @@ import { ResultService } from '../result/result.service';
 import { Result } from '../result/result.model';
 import { Company } from './company.model';
 import { CompanyService } from './company.service';
-import { ItTabContainerComponent, ItTabItemComponent, SelectControlOption } from 'design-angular-kit';
+import { ItTabContainerComponent, ItTabItemComponent, NotificationPosition, SelectControlOption } from 'design-angular-kit';
 import { ApiMessageService, MessageType } from '../api-message.service';
 import { of as observableOf, Observable, map } from 'rxjs';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
@@ -374,6 +374,21 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
     return false;
   }
 
+  showErrorMessage(ruleName: string) {
+    this.resultService.getAll({
+      workflowId: this.filterFormSearch.value.workflowId,
+      codiceIpa: this.codiceIpa,
+      ruleName: `${ruleName}/child`, 
+      size: 1,
+      noCache: true
+    }).subscribe((results: Result[]) => {
+      if (results.length == 1 && results[0].errorMessage) {
+        this.apiMessageService.sendMessage(MessageType.ERROR, results[0].errorMessage, NotificationPosition.Right);
+      } else {
+        this.apiMessageService.sendMessage(MessageType.ERROR, `it.result.errorNotFound`, NotificationPosition.Right);
+      }
+    });
+  }
   // -------------------------------
   // On Destroy.
   // -------------------------------

@@ -60,7 +60,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.language(this.lang || localStorage.getItem('lang'), false);
     this.apiMessageService.onApiMessage.subscribe(
       (message: ApiMessage) => {
-        this.showNotification(message.type, message.message);
+        this.showNotification(message.type, message.message, message.position);
       }
     );
     this.apiMessageService.onLoad.subscribe((value) => {
@@ -121,13 +121,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
     return notice;
   }
 
-  private showNotification(messageType: MessageType, message: string) {
+  private showNotification(messageType: MessageType, message: string, position?: NotificationPosition) {
     if (messageType === MessageType.SUCCESS) {
-      this.notificationService.info('Informazione', message);
+      this.notificationService.info('Informazione', message, true, 5000, position);
     } else if (messageType === MessageType.ERROR) {
-      this.notificationService.error('Errore!', message, true , 15000);
+      this.notificationService.error('Errore!', message, true , 15000, position);
     } else if (messageType === MessageType.WARNING) {
-      this.notificationService.warning('Avvertimento!', message, true, 10000);
+      this.notificationService.warning('Avvertimento!', message, true, 10000, position);
     }
   }
 
