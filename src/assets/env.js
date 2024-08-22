@@ -13,7 +13,7 @@
     window["env"]["production"] = false;
     window["env"]["oidc.enable"] = true;
     window["env"]["oidc.force"] = true;    
-    window["env"]["oidc.authority"] = "http://localhost:9990/realms/trasparenzai/.well-known/openid-configuration";
+    window["env"]["oidc.authority"] = "https://dica33.ba.cnr.it/keycloak/realms/trasparenzai/.well-known/openid-configuration";
     window["env"]["oidc.redirectUrl"] = "http://localhost:4200/#/";
     window["env"]["oidc.clientId"] = "angular-public";
     window["env"]["oidc.postLogoutRedirectUri"] = "http://localhost:4200/#/";

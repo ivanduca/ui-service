@@ -14,7 +14,7 @@ export class AuthInterceptor implements HttpInterceptor {
   ) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    if (environment.oidc.enable && environment.oidc.force) {
+    if (environment.oidc.enable && req.url !== environment.oidc.authority) {
       if (req.url.indexOf(environment.apiUrl) != -1 || 
           req.url.indexOf(environment.companyApiUrl) != -1 || 
           req.url.indexOf(environment.conductorApiUrl) != -1 ||
