@@ -22,13 +22,14 @@ export class ConductorService extends CommonService<Workflow> {
     super(httpClient, apiMessageService, translateService, router, configService);
   }
   public static AMMINISTRAZIONE_TRASPARENTE_FLOW: string = 'crawler_amministrazione_trasparente';
+  public static API_SERVICE = `conductor-server`;
 
   protected createNewInstance(): new () => any {
     return Workflow;
   }
 
   public getApiService(): string {
-    return `conductor-server`;
+    return ConductorService.API_SERVICE;
   }
   
   public getRoute(): string {

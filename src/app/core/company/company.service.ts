@@ -14,6 +14,7 @@ export class CompanyService extends CommonService<Company> {
 
   public static ROUTE = 'companies';
   static PAGE_OFFSET = 24;
+  public static API_SERVICE = 'public-sites-service';
 
   public constructor(protected httpClient: HttpClient,
                      protected apiMessageService: ApiMessageService,
@@ -28,7 +29,7 @@ export class CompanyService extends CommonService<Company> {
   }
 
   public getApiService(): string {
-    return 'public-sites-service';
+    return CompanyService.API_SERVICE;
   }
 
   public getRoute(): string {
