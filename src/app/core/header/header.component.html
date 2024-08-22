@@ -12,12 +12,33 @@
   </ul>
   <ng-container slimRightZone>
     <it-language-switcher mode="nav"></it-language-switcher>
-    <a itButton="primary" class="btn-full btn-icon" routerLink="auth/signin">
-      <span class="rounded-icon">
-        <it-icon name="user" color="primary"></it-icon>
-      </span>
-      <span class="d-none d-lg-block">{{ 'it.navigation.full-login' | translate }}</span>
-    </a>
+    @if (!authenticated) {
+      <a itButton="primary" class="btn-full btn-icon" routerLink="auth/signin">
+        <span class="rounded-icon">
+          <it-icon name="user" color="primary"></it-icon>
+        </span>
+        <span class="d-none d-lg-block">{{ 'it.navigation.full-login' | translate }}</span>
+      </a>  
+    }
+    @if (authenticated && userData) {
+      <div itAvatar size="lg">
+        <p aria-hidden="true">{{userData.given_name| firstLetter}}{{userData.family_name| firstLetter}}</p>
+        <span class="visually-hidden">{{userData.name}}</span>
+      </div>
+      <it-dropdown mode="nav">
+        <span class="d-none d-md-block" button>{{userData.name}}</span>
+        <ng-container list>
+          <it-dropdown-item>
+            <a href="#"  
+              translate 
+              (click)="logout()">
+              <it-icon size="md" color="primary" name="logout"></it-icon>
+              <span translate>it.navigation.logout</span>      
+            </a>
+          </it-dropdown-item>
+        </ng-container>
+      </it-dropdown>
+    }
   </ng-container>
   <ng-container brand>
     <a routerLink="/">

@@ -7,7 +7,7 @@ import {TagsModule} from '../shared/tags/tags.module';
 import {SigninComponent} from './signin/signin.component';
 
 import {AuthRoutingModule} from './auth-routing.module';
-import {AuthGuard} from './auth-guard.service';
+import {AuthGuardService} from './auth-guard.service';
 
 // import ngx-translate and the http loader
 import {TranslateCompiler, TranslateLoader, TranslateModule} from '@ngx-translate/core';
@@ -44,7 +44,7 @@ export enum ServiceReg {
     DesignAngularKitModule.forRoot()
   ],
   providers: [
-    AuthGuard,
+    AuthGuardService,
   ]
 })
 export class AuthModule {}

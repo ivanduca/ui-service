@@ -35,6 +35,7 @@
     },    
     "navigation" : {
       "full-login": "Accedi all'area riservata",
+      "logout": "Esci",
       "search": "Cerca...",
       "project": "Il Progetto",
       "map": "Mappa delle Amministrazioni",

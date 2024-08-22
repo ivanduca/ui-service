@@ -10,15 +10,19 @@ import { ItErrorPageComponent } from 'design-angular-kit';
 import { PrivacyPolicyComponent } from './core/privacy-policy/privacy-policy.component';
 import { NoteLegaliComponent } from './core/note-legali/note-legali.component';
 import { ResultPieComponent } from './core/result/result-pie.component';
+import { environment } from '../environments/environment';
+import { AutoLoginAllRoutesGuard } from 'angular-auth-oidc-client';
 
 const appRoutes: Routes = [
-  { path: '', component: HomeComponent },
-  { path: 'search', component: SearchComponent },
-  { path: 'company-search', component: CompanySearchComponent },
-  { path: 'company-map', component: CompanyMapComponent },
-  { path: 'company-graph', component: CompanyGraphComponent },
-  { path: 'result-pie', component: ResultPieComponent },
-  { path: 'credits', component: CreditsComponent },
+  {path: '', canActivateChild:(environment.oidc.enable && environment.oidc.force)?[AutoLoginAllRoutesGuard]:[], children: [
+    { path: '', component: HomeComponent },
+    { path: 'search', component: SearchComponent },
+    { path: 'company-search', component: CompanySearchComponent },
+    { path: 'company-map', component: CompanyMapComponent },
+    { path: 'company-graph', component: CompanyGraphComponent },
+    { path: 'result-pie', component: ResultPieComponent },
+    { path: 'credits', component: CreditsComponent },
+  ]},
   { path: 'privacy-policy', component: PrivacyPolicyComponent },
   { path: 'note-legali', component: NoteLegaliComponent },
   { path: 'error/not-found', component: ItErrorPageComponent, data: { errorCode: 404 } },

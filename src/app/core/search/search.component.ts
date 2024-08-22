@@ -12,6 +12,8 @@ import { Rule, SelectRule } from '../rule/rule.model';
 import { HttpParams } from '@angular/common/http';
 import { ResultService } from '../result/result.service';
 import { CodiceCategoria } from '../../common/model/codice-categoria.enum';
+import { AuthGuard } from '../../auth/auth-guard';
+import { RoleEnum } from '../../auth/role.enum';
 import saveAs from 'file-saver';
 
 @Component({
@@ -31,6 +33,7 @@ export class SearchComponent implements OnInit {
   optionsStatus: Array<SelectControlOption> = [];
   optionsRule: Array<any>;
   optionsCategoria: Array<SelectControlOption> = [];
+  isCSVVisible: boolean = false;
 
   constructor(private formBuilder: FormBuilder,
               private route: ActivatedRoute,
@@ -39,6 +42,7 @@ export class SearchComponent implements OnInit {
               private resultService: ResultService,
               private translateService: TranslateService,
               private changeDetectorRef: ChangeDetectorRef,
+              private authGuard: AuthGuard,
               private datepipe: DatePipe,
               protected router: Router) {
     this.translateService.get('it').subscribe((labels: any) => {
@@ -69,6 +73,9 @@ export class SearchComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.authGuard.hasRole([RoleEnum.ADMIN, RoleEnum.SUPERUSER]).subscribe((hasRole: boolean) => {
+      this.isCSVVisible = hasRole;
+    });
     this.route.queryParams.subscribe((queryParams) => {
       this.ruleName = queryParams.ruleName == '' ? '': queryParams.ruleName||Rule.AMMINISTRAZIONE_TRASPARENTE;
       let workflowId = queryParams.workflowId;

@@ -1,9 +1,11 @@
-import {Component, Input } from '@angular/core';
+import {Component, Input, OnInit } from '@angular/core';
 import { Workflow } from './workflow.model';
 import { HttpParams } from '@angular/common/http';
 import { animate, keyframes, style, transition, trigger } from '@angular/animations';
 import { Rule } from '../rule/rule.model';
 import { ResultService } from '../result/result.service';
+import { AuthGuard } from '../../auth/auth-guard';
+import { RoleEnum } from '../../auth/role.enum';
 import saveAs from 'file-saver';
 
 @Component({
@@ -26,7 +28,7 @@ import saveAs from 'file-saver';
             }
             @if (workflow.status !== 'RUNNING') {
                 <div class="ms-auto">
-                @if (workflow.status == 'COMPLETED') {
+                @if (workflow.status == 'COMPLETED' && isCSVVisible) {
                     <a href="" (click)="downloadCsv(workflow.workflowId)" class="align-top me-1">
                     <it-icon *ngIf="!isLoadingCsv" name="file-csv" class="bg-light" color="success"></it-icon>
                     <it-spinner *ngIf="isLoadingCsv" small="true" double="true"></it-spinner>
@@ -109,15 +111,23 @@ import saveAs from 'file-saver';
     ])
   ]
 })
-export class WorkflowCardComponent {
+export class WorkflowCardComponent implements OnInit{
 
   constructor(
-    private resultService: ResultService
+    private resultService: ResultService,
+    private authGuard: AuthGuard
   ) {}
   isLoadingCsv: boolean = false;
+  isCSVVisible: boolean = false;
 
   @Input() workflow: Workflow;
   @Input() title: boolean = true;
+
+  ngOnInit(): void {
+    this.authGuard.hasRole([RoleEnum.ADMIN, RoleEnum.SUPERUSER]).subscribe((hasRole: boolean) => {
+      this.isCSVVisible = hasRole;
+    });
+  }
 
   downloadCsv(workflowId: string) {
     this.isLoadingCsv = true;

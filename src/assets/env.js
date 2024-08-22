@@ -11,10 +11,10 @@
 
     window["env"]["baseHref"] = "/";
     window["env"]["production"] = false;
-    window["env"]["oidc.enable"] = false;
-    window["env"]["oidc.force"] = false;    
-    window["env"]["oidc.authority"] = "http://dockerwebtest02.si.cnr.it:8110/auth/realms/cnr/.well-known/openid-configuration";
-    window["env"]["oidc.redirectUrl"] = "http://localhost:4200/auth/signin";
+    window["env"]["oidc.enable"] = true;
+    window["env"]["oidc.force"] = true;    
+    window["env"]["oidc.authority"] = "http://localhost:9990/realms/trasparenzai/.well-known/openid-configuration";
+    window["env"]["oidc.redirectUrl"] = "http://localhost:4200/#/";
     window["env"]["oidc.clientId"] = "angular-public";
-    window["env"]["oidc.postLogoutRedirectUri"] = "https://apps.cnr.it";
+    window["env"]["oidc.postLogoutRedirectUri"] = "http://localhost:4200/#/";
   })(this);

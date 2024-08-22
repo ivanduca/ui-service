@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { ItHeaderComponent, ItNotificationService, NotificationPosition } from 'design-angular-kit';
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 import { environment } from '../../../environments/environment';
+import { OidcSecurityService } from 'angular-auth-oidc-client';
 
 @Component({
   selector: 'app-header1',
@@ -32,6 +33,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
   searchHREF: string;
   companylabel: string = 'header.company.title';
 
+  authenticated = false;
+  userData: any;
+  
   public notificationOptions = {
     timeOut: 5000,
     pauseOnHover: true,
@@ -48,6 +52,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
               private titleService: Title,
               private router: Router,
               private responsive: BreakpointObserver,
+              private oidcSecurityService: OidcSecurityService,
               private notificationService: ItNotificationService) {
     this.searchHREF = `${environment.baseHref}#/company-search`;
   }  
@@ -71,6 +76,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
         this.titleService.setTitle(title);
       });
     });
+    if (environment.oidc.enable) {
+      this.authenticated = true;
+      this.oidcSecurityService.checkAuth().subscribe(({ isAuthenticated, userData, accessToken, idToken }) => {
+        this.authenticated = isAuthenticated;
+        this.userData = userData;
+      });
+    }
     this.responsiveFn();
   }
 
@@ -141,6 +153,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
       if (result?.matches) {
         this.itHeaderComponent?.toggleCollapse();
       }
+    });
+  }
+
+  logout() {
+    this.oidcSecurityService.logoffAndRevokeTokens().subscribe(() => {
+
     });
   }
 }

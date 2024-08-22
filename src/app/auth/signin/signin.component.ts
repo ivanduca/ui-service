@@ -18,7 +18,6 @@ export class SigninComponent implements OnInit {
     oidcForce = environment.oidc.force;
     authenticated = false;
     
-
     constructor(private formBuilder: FormBuilder,
                 private router: Router,
                 protected configService: ConfigService,
@@ -33,6 +32,7 @@ export class SigninComponent implements OnInit {
             this.authenticated = true;
             this.oidcSecurityService.checkAuth().subscribe(({ isAuthenticated, userData, accessToken, idToken }) => {
                 this.authenticated = isAuthenticated;
+                this.router.navigate(['/']);
             });
         }
     }

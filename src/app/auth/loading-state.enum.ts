@@ -5,6 +5,7 @@ export enum LoadingStateEnum {
     ERORR
 }
 
+
 export class LoadingState {
     public url: string;
     public state: LoadingStateEnum;

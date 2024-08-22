@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, ViewChild} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, ViewChild} from '@angular/core';
 import { Observable, interval } from 'rxjs';
 import { map, takeWhile } from 'rxjs/operators';
 import { ConductorService } from '../../../core/conductor/conductor.service';
@@ -8,6 +8,9 @@ import { ItModalComponent } from 'design-angular-kit';
 import { Workflow } from '../../../core/conductor/workflow.model';
 import { HttpParams } from '@angular/common/http';
 import { ResultService } from '../../../core/result/result.service';
+import { AuthGuard } from '../../../auth/auth-guard';
+import { RoleEnum } from '../../../auth/role.enum';
+
 import saveAs from 'file-saver';
 
 
@@ -50,7 +53,7 @@ import saveAs from 'file-saver';
                       <div>{{'it.workflow.status.'+ workflow.status | translate}}</div>
                       </div>
                   </a>
-                  @if (workflow.status == 'COMPLETED') {
+                  @if (workflow.status == 'COMPLETED' && isCSVVisible) {
                     <a href="" (click)="downloadCsv(workflow, codiceIpa)" class="align-top me-1 pull-right">
                       <it-icon *ngIf="!workflow.isLoadingCsv" name="file-csv" class="bg-light" color="success"></it-icon>
                       <it-spinner *ngIf="workflow.isLoadingCsv" small="true" double="true"></it-spinner>
@@ -78,23 +81,26 @@ import saveAs from 'file-saver';
           </it-list-item>
         }
       </it-list>
-      <ng-container footer>
-        <button itButton="primary" size="sm" type="button" (click)="startMainWorkflow()">
-          <it-icon name="plus-circle" color="white"></it-icon><span translate class="ps-2">it.workflow.new</span>
-        </button>
-      </ng-container>
+      @if (isAbleToStartWorkflow) {
+        <ng-container footer>
+          <button itButton="primary" size="sm" type="button" (click)="startMainWorkflow()">
+            <it-icon name="plus-circle" color="white"></it-icon><span translate class="ps-2">it.workflow.new</span>
+          </button>
+        </ng-container>
+      }
     </it-modal>
 
     `
 })
-export class ShowWorkflowHistoryComponent {
+export class ShowWorkflowHistoryComponent implements OnInit{
 
   constructor(
     protected apiMessageService: ApiMessageService, 
     protected translateService: TranslateService,                    
     private conductorService: ConductorService,
     private resultService: ResultService,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    private authGuard: AuthGuard
   ) {
   }
   @Input() codiceIpa: string;
@@ -102,6 +108,15 @@ export class ShowWorkflowHistoryComponent {
   @ViewChild(`workflowModal`) workflowModal: ItModalComponent;
   workflows: Workflow[];
   isRefreshing: boolean = false;
+  isAbleToStartWorkflow: boolean = false;
+  isCSVVisible: boolean = false;
+
+  ngOnInit(): void {
+    this.authGuard.hasRole([RoleEnum.ADMIN, RoleEnum.SUPERUSER]).subscribe((hasRole: boolean) => {
+      this.isAbleToStartWorkflow = hasRole;
+      this.isCSVVisible = hasRole;
+    });
+  }
 
   openWorkflowList() {
     this.conductorService.getAll({
