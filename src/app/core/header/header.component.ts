@@ -77,11 +77,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
       });
     });
     if (environment.oidc.enable) {
-      this.authenticated = true;
-      this.oidcSecurityService.checkAuth().subscribe(({ isAuthenticated, userData, accessToken, idToken }) => {
-        this.authenticated = isAuthenticated;
-        this.userData = userData;
-      });
+      this.oidcSecurityService.isAuthenticated$.subscribe(
+        ({ isAuthenticated }) => {
+          this.authenticated = isAuthenticated;
+          this.oidcSecurityService.userData$.subscribe(({ userData }) => {
+            this.userData = userData;
+          });    
+        }
+      );
     }
     this.responsiveFn();
   }

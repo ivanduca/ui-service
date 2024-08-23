@@ -38,6 +38,8 @@ import localeIt from '@angular/common/locales/it';
                 clientId: environment.oidc.clientId || 'clientId',
                 scope: 'openid profile roles email offline_access',
                 responseType: 'code',
+                renewTimeBeforeTokenExpiresInSeconds: 10,
+                tokenRefreshInSeconds: 10,
                 silentRenew: true,
                 useRefreshToken: true,
                 ignoreNonceAfterRefresh: true,
@@ -56,13 +58,16 @@ import localeIt from '@angular/common/locales/it';
         }),
         AppRoutingModule, // Routing
         CoreModule, // Componenti moduli e servizi non Lazy
-        AppRoutingEndModule], providers: [
+        AppRoutingEndModule
+      ], 
+      providers: [
         { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true },
         { provide: APP_BASE_HREF, useValue: environment.baseHref },
         { provide: ErrorHandler, useClass: GlobalErrorHandler },
         provideHttpClient(withInterceptorsFromDi())
-    ] })
+      ] 
+    })
 export class AppModule { 
   constructor() {
     registerLocaleData(localeIt, 'it-IT', localeIt);

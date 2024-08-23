@@ -19,7 +19,6 @@ export class AuthInterceptor implements HttpInterceptor {
     if (environment.oidc.enable) {
       if (req.url.indexOf(CompanyService.API_SERVICE) != -1 || 
           req.url.indexOf(ConductorService.API_SERVICE) != -1) {
-        console.log(req.url);    
         return this.oidcSecurityService.checkAuth().pipe(          
           switchMap((isAuthenticated) => {
             if(!isAuthenticated) {
