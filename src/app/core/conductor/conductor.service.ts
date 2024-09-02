@@ -10,6 +10,8 @@ import { Workflow } from './workflow.model';
 import { Rule } from '../rule/rule.model';
 import { SpringError } from '../../common/model/spring-error.model';
 import { environment } from '../../../environments/environment';
+import { AuthGuard } from '../../auth/auth-guard';
+import { RoleEnum } from '../../auth/role.enum';
 
 @Injectable()
 export class ConductorService extends CommonService<Workflow> {
@@ -17,7 +19,8 @@ export class ConductorService extends CommonService<Workflow> {
   public constructor(protected httpClient: HttpClient,
                      protected apiMessageService: ApiMessageService,
                      protected router: Router,
-                     protected translateService: TranslateService,                     
+                     protected translateService: TranslateService,
+                     private authGuard: AuthGuard,
                      protected configService: ConfigService) {
     super(httpClient, apiMessageService, translateService, router, configService);
   }
@@ -52,8 +55,19 @@ export class ConductorService extends CommonService<Workflow> {
     if (!path) {
       path = `/${ConductorService.AMMINISTRAZIONE_TRASPARENTE_FLOW}/correlated/${ConductorService.AMMINISTRAZIONE_TRASPARENTE_FLOW}`;
     }
-    return super.getAll(filter, path).pipe(switchMap((workflows: Workflow[]) => {
-      return observableOf(workflows.sort((a,b) => (a.startTime < b.startTime)? 1 : -1));
+    return this.authGuard.hasRole([RoleEnum.ADMIN, RoleEnum.SUPERUSER]).pipe(switchMap((hasRole: boolean) => {
+      return super.getAll(filter, path).pipe(switchMap((workflows: Workflow[]) => {
+        return observableOf(
+          workflows
+            .filter((workflow: Workflow) => {       
+              if (!hasRole) {
+                return workflow.status === 'COMPLETED';
+              }
+              return true;
+            })
+            .sort((a,b) => (a.startTime < b.startTime)? 1 : -1)
+        );
+      }));  
     }));
   }
 

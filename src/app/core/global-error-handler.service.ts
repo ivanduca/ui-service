@@ -1,17 +1,16 @@
 import { ErrorHandler, Injectable} from '@angular/core';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class GlobalErrorHandler implements ErrorHandler {
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   handleError(error: any) {
-
-
-     console.log(error);
-
-     // IMPORTANT: Rethrow the error otherwise it gets swallowed
-     throw error;
+    console.error(error);
+    this.router.navigate([""]);
+    // IMPORTANT: Rethrow the error otherwise it gets swallowed
+    throw error;
   }
 
 }
