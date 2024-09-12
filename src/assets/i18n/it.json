@@ -91,6 +91,7 @@
     },
     "rule": {
       "title": "Regole",
+      "satisfy": "Regole soddisfatte {{okRules}} su {{allRules}}",      
       "parent": {
         "name": "Nome della Regola Padre"
       },

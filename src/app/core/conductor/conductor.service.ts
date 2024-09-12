@@ -61,7 +61,7 @@ export class ConductorService extends CommonService<Workflow> {
           workflows
             .filter((workflow: Workflow) => {       
               if (!hasRole) {
-                return workflow.status === 'COMPLETED';
+                return workflow.isCompleted;
               }
               return true;
             })
@@ -86,7 +86,7 @@ export class ConductorService extends CommonService<Workflow> {
       includeTasks: false
     }).pipe(switchMap((workflows: Workflow[]) => {      
       return observableOf(workflows.filter((workflow: Workflow) => {
-        return workflow.status === 'COMPLETED';
+        return workflow.isCompleted;
       })[0]);
     }));
   }

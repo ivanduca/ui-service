@@ -26,9 +26,9 @@ import saveAs from 'file-saver';
                     @if (!workflow.isTotalCompleted()) {<div class="ps-2"><it-spinner small="true"></it-spinner></div>}    
                 </div>
             }
-            @if (workflow.status !== 'RUNNING') {
+            @if (!workflow.isRunning) {
                 <div class="ms-auto">
-                @if (workflow.status == 'COMPLETED' && isCSVVisible) {
+                @if (workflow.isCompleted && isCSVVisible) {
                     <a href="" (click)="downloadCsv(workflow.workflowId)" class="align-top me-1">
                     <it-icon *ngIf="!isLoadingCsv" name="file-csv" class="bg-light" color="success"></it-icon>
                     <it-spinner *ngIf="isLoadingCsv" small="true" double="true"></it-spinner>
@@ -37,7 +37,7 @@ import saveAs from 'file-saver';
                 <span 
                     itPopover="Concluso il {{workflow.endTime | date:'dd/MM/yyyy HH:mm:ss'}} in {{workflow.executionTime | durationFormat}}"  
                     popoverPlacement="top"
-                    [popoverTrigger]="workflow.status == 'COMPLETED' ? 'hover' : 'manual'" 
+                    [popoverTrigger]="workflow.isCompleted ? 'hover' : 'manual'" 
                     [itBadge]="workflow.badge" 
                     class="h6 align-top">
                     <div class="d-flex">
@@ -46,7 +46,7 @@ import saveAs from 'file-saver';
                 </span>
                 </div>
             } 
-            @if (workflow.status == 'RUNNING'){
+            @if (workflow.isRunning){
                 <button [itButton]="'outline-primary'" size="xs" class="ms-auto align-top" (click)="workflowTotalElements(workflow)">
                 <span>{{'it.workflow.status.'+ workflow.status | translate}}</span>
                 <span class="visually-hidden">Aggiorna i dati</span>
@@ -94,7 +94,7 @@ import saveAs from 'file-saver';
             </it-list-item>
             </it-list>  
         </div>
-        @if (workflow.status !== 'RUNNING') {
+        @if (!workflow.isRunning) {
           <a class="read-more" [routerLink]="['/company-map']" [queryParams]="{workflowId: workflow.workflowId, ruleName:'amministrazione-trasparente', zoom: 5, nolocation: true, filter: true}">
               <span class="text">Leggi di più <span class="visually-hidden">Leggi di più ....</span></span>
               <it-icon name="arrow-right"></it-icon>

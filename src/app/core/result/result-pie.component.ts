@@ -96,7 +96,7 @@ export class ResultPieComponent implements OnInit {
         this.isWorkflowLoaded = true;
         let lastWorkflowId;
         workflows.forEach((workflow: Workflow) => {
-          if (workflow.status === 'COMPLETED') {
+          if (workflow.isCompleted) {
             if (!lastWorkflowId) {
               lastWorkflowId = workflow.workflowId;
             }

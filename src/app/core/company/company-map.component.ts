@@ -186,7 +186,7 @@ export class CompanyMapComponent implements OnInit {
       includeTasks: false
     }).subscribe((workflows: Workflow[]) => {
       workflows.forEach((workflow: Workflow) => {
-        if (workflow.status === 'COMPLETED') {
+        if (workflow.isCompleted) {
           this.optionsWorkflow.push({
             value: workflow.workflowId,
             text: this.translateService.instant('it.workflow.textfull', {

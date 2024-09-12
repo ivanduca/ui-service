@@ -44,6 +44,7 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
   index: number = 3;
   compact: number = 0;
   data: any[];
+  rulesOK: number;
   currentNode: any;
   @ViewChild("chartContainer") chartContainer: ElementRef;
   chart;
@@ -146,6 +147,7 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
       if (results.length === 0) {
         this.apiMessageService.sendMessage(MessageType.WARNING, `Risultati non presenti per la PA: ${this.company.denominazioneEnte}!`);
       }
+      this.rulesOK = results.filter(result => result.status == 200 || result.status == 202).length;
       this.ruleService.getRules().subscribe((rule: Rule) => {
         this.data = rule.getCharts(undefined, Rule.AMMINISTRAZIONE_TRASPARENTE, []);
         this.data.forEach((ruleChart: RuleChart) => {

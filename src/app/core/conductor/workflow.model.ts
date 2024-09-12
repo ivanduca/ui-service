@@ -1,6 +1,22 @@
 import { JsonProperty, JsonObject } from 'json2typescript';
 import { DateTimeConverter } from '../../common/helpers/DateTimeConverter';
 import { Base } from '../../common/model/base.model';
+import { EnumConverter } from '../../common/helpers/EnumConverter';
+
+export enum Status {
+    COMPLETED = 'COMPLETED', 
+    RUNNING = 'RUNNING', 
+    FAILED = 'FAILED', 
+    TERMINATED = 'TERMINATED',
+    PAUSED = 'PAUSED'
+}
+
+export class PropertyStatusConverter extends EnumConverter<Status> {
+    constructor() {
+        super(Status);
+    }
+}
+
 
 @JsonObject("Task")
 export class Task {
@@ -24,8 +40,8 @@ export class Workflow implements Base {
     public updateTime: Date;
     @JsonProperty('endTime', DateTimeConverter)
     public endTime: Date;    
-    @JsonProperty('status')
-    public status: string;
+    @JsonProperty('status', PropertyStatusConverter, true)
+    public status: Status;
     @JsonProperty('tasks')
     public tasks: Task[];
 
@@ -46,11 +62,11 @@ export class Workflow implements Base {
 
     public get badge() : string {
         switch(this.status) {
-            case 'RUNNING': return 'primary';
-            case 'COMPLETED': return 'success';
-            case 'FAILED': return 'danger';
-            case 'TERMINATED': return 'danger';
-            case 'PAUSED': return 'warning';
+            case Status.RUNNING: return 'primary';
+            case Status.COMPLETED: return 'success';
+            case Status.FAILED: return 'danger';
+            case Status.TERMINATED: return 'danger';
+            case Status.PAUSED: return 'warning';
             default: return 'primary';
         }
     }
@@ -82,9 +98,7 @@ export class Workflow implements Base {
             return 0;
         }
         return undefined;
-    } 
-
-
+    }
 
     getId(): string {
         return this.workflowId;
@@ -93,5 +107,13 @@ export class Workflow implements Base {
     hasId(): boolean {
         return this.getId() !== undefined;
     }
-  
+
+    public get isCompleted(): boolean {
+        return this.status === Status.COMPLETED;
+    }
+
+    public get isRunning(): boolean {
+        return this.status === Status.RUNNING;
+    }
+
 }

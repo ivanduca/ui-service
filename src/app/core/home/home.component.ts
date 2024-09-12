@@ -97,7 +97,7 @@ export class HomeComponent implements OnInit {
       this.resultService.getWorkflowMap(Rule.AMMINISTRAZIONE_TRASPARENTE, workflows.map(a => a.workflowId)).subscribe((result: any) => {
         this.workflows = workflows;
         workflows.forEach((workflow, i) => {
-          if (workflow.status === 'COMPLETED') {
+          if (workflow.isCompleted) {
             if (!this.currentWorkflow) {
               this.currentWorkflow = workflow;
             }

@@ -5,7 +5,7 @@ import { ConductorService } from '../../../core/conductor/conductor.service';
 import { ApiMessageService, MessageType } from '../../../core/api-message.service';
 import { TranslateService } from '@ngx-translate/core';
 import { ItModalComponent } from 'design-angular-kit';
-import { Workflow } from '../../../core/conductor/workflow.model';
+import { Status, Workflow } from '../../../core/conductor/workflow.model';
 import { HttpParams } from '@angular/common/http';
 import { ResultService } from '../../../core/result/result.service';
 import { AuthGuard } from '../../../auth/auth-guard';
@@ -33,16 +33,16 @@ import saveAs from 'file-saver';
             <div class="d-flex justify-content-start w-100">
               <div class="d-flex">
                 <span class="text-monospace">
-                  @if (workflow.status !== 'RUNNING') {
+                  @if (!workflow.isRunning) {
                     {{'it.workflow.full_label' | translate: { startTime: workflow.startTime | date:'dd/MM/yyyy', endTime: workflow.endTime | date:'dd/MM/yyyy HH:mm:ss', executionTime: workflow.executionTime | durationFormat} }}                  
                   }
-                  @if (workflow.status == 'RUNNING'){
+                  @if (workflow.isRunning){
                     {{'it.workflow.label' | translate: { startTime: workflow.startTime | date:'dd/MM/yyyy'} }}                                    
                   }
                 </span>
               </div>
               <div class="w-100 ms-auto">
-                @if (workflow.status !== 'RUNNING') {
+                @if (!workflow.isRunning) {
                   <a 
                       (click)="workflowModal.toggle()" 
                       [routerLink]="['/company-graph']" 
@@ -53,14 +53,14 @@ import saveAs from 'file-saver';
                       <div>{{'it.workflow.status.'+ workflow.status | translate}}</div>
                       </div>
                   </a>
-                  @if (workflow.status == 'COMPLETED' && isCSVVisible) {
+                  @if (workflow.isCompleted && isCSVVisible) {
                     <a href="" (click)="downloadCsv(workflow, codiceIpa)" class="align-top me-1 pull-right">
                       <it-icon *ngIf="!workflow.isLoadingCsv" name="file-csv" class="bg-light" color="success"></it-icon>
                       <it-spinner *ngIf="workflow.isLoadingCsv" small="true" double="true"></it-spinner>
                     </a>
                   }
                 } 
-                @if (workflow.status == 'RUNNING'){
+                @if (workflow.isRunning){
                   <a 
                       (click)="refresh(workflow)"
                       itButton="primary"
@@ -139,9 +139,9 @@ export class ShowWorkflowHistoryComponent implements OnInit{
       this.conductorService.getById(workflowId).subscribe((result: Workflow) => {
         this.workflows.unshift(result);
         this.changeDetectorRef.detectChanges();
-        let status = 'RUNNING'
+        let status = Status.RUNNING
         interval(5000)
-          .pipe(takeWhile(() => status == 'RUNNING'))
+          .pipe(takeWhile(() => status == Status.RUNNING))
           .subscribe(() => {
             this.isRefreshing = true;
             this.changeDetectorRef.detectChanges();

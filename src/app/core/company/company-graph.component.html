@@ -69,6 +69,9 @@
         @if (company) {
           <it-tab-item #tabPA label="PA" icon="pa" [active]="tabPAActive">
             <it-list>
+              <it-list-item>
+                <div class="h6 text-primary font-monospace">{{'it.rule.satisfy' | translate: { okRules: rulesOK, allRules: data?.length} }}</div>
+              </it-list-item>      
               <app-show-list-text [label]="'it.company.codiceIpa'" [value]="company.codiceIpa"></app-show-list-text>
               <app-show-list-text [label]="'it.company.denominazioneEnte'" [value]="company.denominazioneEnte"></app-show-list-text>
               <app-show-list-text [label]="'it.company.acronimo'" [value]="company.acronimo"></app-show-list-text>
