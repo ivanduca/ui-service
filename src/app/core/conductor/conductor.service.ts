@@ -125,10 +125,10 @@ export class ConductorService extends CommonService<Workflow> {
         crawler_save_object: false,
         crawler_save_screenshot: false,
         rule_name: Rule.AMMINISTRAZIONE_TRASPARENTE,
-        connection_timeout: 30000,
-        read_timeout: 30000,
-        connection_timeout_max: 60000,
-        read_timeout_max: 60000,
+        connection_timeout: 60000,
+        read_timeout: 60000,
+        connection_timeout_max: 120000,
+        read_timeout_max: 120000,
         result_base_url: environment.apiUrl,
         crawler_child_type: `SUB_WORKFLOW`  
       }
