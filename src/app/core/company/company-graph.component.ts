@@ -43,6 +43,7 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
   
   index: number = 3;
   compact: number = 0;
+  rating: number;
   data: any[];
   rulesOK: number;
   currentNode: any;
@@ -150,6 +151,8 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
       this.rulesOK = results.filter(result => result.status == 200 || result.status == 202).length;
       this.ruleService.getRules().subscribe((rule: Rule) => {
         this.data = rule.getCharts(undefined, Rule.AMMINISTRAZIONE_TRASPARENTE, []);
+        this.rating = Math.trunc((this.rulesOK * 100 / this.data.length) / 20);
+        console.log(this.rating);  
         this.data.forEach((ruleChart: RuleChart) => {
           let childStatus : Number[] = [];
           this.data.filter(result => result.parentNodeId == ruleChart.nodeId).forEach((childRule: RuleChart) => {
