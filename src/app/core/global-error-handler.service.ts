@@ -8,7 +8,7 @@ export class GlobalErrorHandler implements ErrorHandler {
 
   handleError(error: any) {
     console.error(error);
-    this.router.navigate([""]);
+    this.router.navigate(['error/server-error']);
     // IMPORTANT: Rethrow the error otherwise it gets swallowed
     throw error;
   }
