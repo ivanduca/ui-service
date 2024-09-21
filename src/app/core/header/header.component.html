@@ -21,23 +21,25 @@
       </a>  
     }
     @if (authenticated && userData) {
-      <div itAvatar size="lg" color="green">
-        <p aria-hidden="true">{{userData.given_name| firstLetter}}{{userData.family_name| firstLetter}}</p>
-        <span class="visually-hidden">{{userData.name}}</span>
+      <div class="d-flex border-start border-end border-light border-thin px-3">
+        <div itAvatar size="lg" color="green">
+          <p aria-hidden="true">{{userData.given_name| firstLetter}}{{userData.family_name| firstLetter}}</p>
+          <span class="visually-hidden">{{userData.name}}</span>
+        </div>
+        <it-dropdown mode="nav">
+          <span class="d-none d-md-block" button>{{userData.name}}</span>
+          <ng-container list>
+            <it-dropdown-item>
+              <a href="#"  
+                translate 
+                (click)="logout()">
+                <it-icon size="md" color="primary" name="logout"></it-icon>
+                <span translate>it.navigation.logout</span>      
+              </a>
+            </it-dropdown-item>
+          </ng-container>
+        </it-dropdown>  
       </div>
-      <it-dropdown mode="nav">
-        <span class="d-none d-md-block" button>{{userData.name}}</span>
-        <ng-container list>
-          <it-dropdown-item>
-            <a href="#"  
-              translate 
-              (click)="logout()">
-              <it-icon size="md" color="primary" name="logout"></it-icon>
-              <span translate>it.navigation.logout</span>      
-            </a>
-          </it-dropdown-item>
-        </ng-container>
-      </it-dropdown>
     }
   </ng-container>
   <ng-container brand>

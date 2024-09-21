@@ -11,7 +11,12 @@ import { OidcSecurityService } from 'angular-auth-oidc-client';
 
 @Component({
   selector: 'app-header1',
-  templateUrl: './header.component.html'
+  templateUrl: './header.component.html',
+  styles: `
+    .border-thin {
+      border-color: rgba(255, 255, 255, 0.2) !important;
+    }
+  `
 })
 export class HeaderComponent implements OnInit, OnDestroy {
 
