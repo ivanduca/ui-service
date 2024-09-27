@@ -9,6 +9,7 @@
     window["env"]["resultApiUrl"] = "${RESULT_API_URL}";
     window["env"]["resultAggregatorapiUrl"] = "${RESULT_AGGREGATOR_API_URL}";
     window["env"]["ruleApiUrl"] = "${RULE_API_URL}";
+    window["env"]["crawlerApiUrl"] = "${CRAWLER_API_URL}";
 
     window["env"]["baseHref"] = "${BASE_HREF}";
     window["env"]["oidc.enable"] = ${OIDC_ENABLE};

@@ -8,6 +8,7 @@
     window["env"]["resultApiUrl"] = window["env"]["apiUrl"];
     window["env"]["resultAggregatorapiUrl"] = window["env"]["apiUrl"];
     window["env"]["ruleApiUrl"] = "https://monitorai.ba.cnr.it/";
+    window["env"]["crawlerApiUrl"] = "http://150.145.95.77:8080/crawl";
 
     window["env"]["baseHref"] = "/";
     window["env"]["production"] = false;

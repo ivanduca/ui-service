@@ -21,7 +21,7 @@
       </a>  
     }
     @if (authenticated && userData) {
-      <div class="d-flex border-start border-end border-light border-thin px-3">
+      <div class="d-flex border-start border-end border-light border-thin ps-2 pe-1">
         <div itAvatar size="lg" color="green">
           <p aria-hidden="true">{{userData.given_name| firstLetter}}{{userData.family_name| firstLetter}}</p>
           <span class="visually-hidden">{{userData.name}}</span>
