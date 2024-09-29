@@ -130,7 +130,8 @@ export class ConductorService extends CommonService<Workflow> {
         connection_timeout_max: 120000,
         read_timeout_max: 120000,
         result_base_url: environment.apiUrl,
-        crawler_child_type: `SUB_WORKFLOW`  
+        crawler_child_type: `SUB_WORKFLOW`,
+        crawler_uri: environment.crawlerApiUrl  
       }
     }
   }
