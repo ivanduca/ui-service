@@ -273,7 +273,7 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
       centerX: am5.percent(50),
       textAlign: "center",
       centerY: am5.percent(50),
-      fontSize: "2em"
+      fontSize: "1.5em"
     }));
     
     axisDataItem.set("value", this.rulesOK);

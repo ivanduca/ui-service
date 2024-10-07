@@ -136,22 +136,26 @@ export class ResultPieComponent implements OnInit {
       let chart = result[wokflowId];
       if (parentKey) {
         this.resultService.getWorkflowMap(parentKey, [wokflowId]).subscribe((result: any) => {
-          let total = Number(result[wokflowId][200]||0) + Number(result[wokflowId][202]||0); 
-          chart[500] = total - Number(Object.values(chart).reduce((a: number, b: number) => a + b, 0)); 
-          this.resultService.getWorkflowMap(Rule.AMMINISTRAZIONE_TRASPARENTE, [wokflowId]).subscribe((result2: any) => {
-            let chart2 = {
-              200: chart[200],
-              404: chart[404]
-            }
-            let totalGlobal = Number(Object.values(result2[wokflowId]).reduce((a: number, b: number) => a + b, 0));
-            chart2[500] = totalGlobal - Number(Object.values(chart2).reduce((a: number, b: number) => a + b, 0)); 
-            this.loadChart(chart2, true, chart);
-          });
+          this.chart(chart, result, wokflowId);
         });
       } else {
         this.loadChart(chart, false);
       }
     }); 
+  }
+
+  chart(chart: any, result: any, wokflowId: string) {
+    let total = Number(result[wokflowId][200]||0) + Number(result[wokflowId][202]||0); 
+    chart[500] = total - Number(Object.values(chart).reduce((a: number, b: number) => a + b, 0)); 
+    this.resultService.getWorkflowMap(Rule.AMMINISTRAZIONE_TRASPARENTE, [wokflowId]).subscribe((result2: any) => {
+      let chart2 = {
+        200: chart[200],
+        404: chart[404]
+      }
+      let totalGlobal = Number(Object.values(result2[wokflowId]).reduce((a: number, b: number) => a + b, 0));
+      chart2[500] = totalGlobal - Number(Object.values(chart2).reduce((a: number, b: number) => a + b, 0)); 
+      this.loadChart(chart2, true, chart);
+    });
   }
 
   loadChart(result: any, double: boolean, result2?: any) {

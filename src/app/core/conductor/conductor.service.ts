@@ -116,7 +116,7 @@ export class ConductorService extends CommonService<Workflow> {
       version: 1,
       correlationId: codiceIpa || ConductorService.AMMINISTRAZIONE_TRASPARENTE_FLOW,
       input: {
-        page_size: 10,
+        page_size: 1,
         codice_categoria: ``,
         codice_ipa: codiceIpa,
         id_ipa_from: 0,
