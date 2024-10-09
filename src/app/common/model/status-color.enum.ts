@@ -6,6 +6,7 @@ export enum StatusColor {
   STATUS_400='#cc334d',
   STATUS_407='#f73e5a',
   STATUS_404='#cc334d',
+  STATUS_408='#f73e5a',
   STATUS_500='#330d12'
 }
 
