@@ -129,36 +129,31 @@ export class ResultPieComponent implements OnInit {
     let parentKey = this.rules.filter((rule: SelectRule) => {
       return rule.key === this.filterFormSearch.value.ruleName
     })[0].parentKey;
+    let title = this.rules.filter((rule: SelectRule) => {
+      return rule.key === this.filterFormSearch.value.ruleName
+    })[0].text;
+    
     this.resultService.getWorkflowMap(this.filterFormSearch.value.ruleName, [wokflowId]).subscribe((result: any) => {
       if (!result[wokflowId]) {
         this.router.navigate(['error/not-found']);
       }
       let chart = result[wokflowId];
       if (parentKey) {
+        let titleParent = this.rules.filter((rule: SelectRule) => {
+          return rule.key === parentKey
+        })[0].text;
         this.resultService.getWorkflowMap(parentKey, [wokflowId]).subscribe((result: any) => {
-          this.chart(chart, result, wokflowId);
+          let total = Number(result[wokflowId][200]||0) + Number(result[wokflowId][202]||0); 
+          chart[500] = total - Number(Object.values(chart).reduce((a: number, b: number) => a + b, 0)); 
+          this.loadChart(result[wokflowId], true, chart, titleParent, title);
         });
       } else {
         this.loadChart(chart, false);
       }
     }); 
   }
-
-  chart(chart: any, result: any, wokflowId: string) {
-    let total = Number(result[wokflowId][200]||0) + Number(result[wokflowId][202]||0); 
-    chart[500] = total - Number(Object.values(chart).reduce((a: number, b: number) => a + b, 0)); 
-    this.resultService.getWorkflowMap(Rule.AMMINISTRAZIONE_TRASPARENTE, [wokflowId]).subscribe((result2: any) => {
-      let chart2 = {
-        200: chart[200],
-        404: chart[404]
-      }
-      let totalGlobal = Number(Object.values(result2[wokflowId]).reduce((a: number, b: number) => a + b, 0));
-      chart2[500] = totalGlobal - Number(Object.values(chart2).reduce((a: number, b: number) => a + b, 0)); 
-      this.loadChart(chart2, true, chart);
-    });
-  }
-
-  loadChart(result: any, double: boolean, result2?: any) {
+  
+  loadChart(result: any, double: boolean, result2?: any, titleParent?: string, title?: string) {
     this.isPieLoaded = true;
     if (this.chartdiv) {
       this.root.setThemes([
@@ -177,8 +172,7 @@ export class ResultPieComponent implements OnInit {
 
       let chart = chartContainer.children.push(
         am5percent.PieChart.new(this.root, {
-          endAngle: double ? 270 : 180,
-          innerRadius: double ? am5.percent(60) : undefined
+          endAngle: 180
         })
       );
       let series = chart.series.push(
@@ -215,34 +209,31 @@ export class ResultPieComponent implements OnInit {
       });
       
       if (double) {
-        // Adding gradients
-        series.slices.template.set("strokeOpacity", 0);
-        series.slices.template.set("fillGradient", am5.RadialGradient.new(this.root, {
-          stops: [{
-            brighten: -0.8
-          }, {
-            brighten: -0.8
-          }, {
-            brighten: -0.5
-          }, {
-            brighten: 0
-          }, {
-            brighten: -0.5
-          }]
-        }));
-        series.children.push(am5.Label.new(this.root, {
+
+        chart.children.push(am5.Label.new(this.root, {
           centerX: am5.percent(50),
-          centerY: am5.percent(50),
+          x: am5.percent(50),
           fontWeight: 'bold',
-          text: this.small? "{valueSum}" : "Totale PA {valueSum}",
+          maxChars: 40,
+          text: titleParent,
           populateText: true,
           fontSize: this.small? "1em": "1.5em"
         }));
-        
+
+        series.children.push(am5.Label.new(this.root, {
+          centerX: am5.percent(50),
+          y: am5.percent(-45),
+          fontWeight: 'bold',
+          text: "{valueSum}",
+          populateText: true,
+          fontSize: this.small? "1em": "1.5em"
+        }));
+
+
         let chart2 = chartContainer.children.push(
           am5percent.PieChart.new(this.root, {
-            endAngle: 270,
-            innerRadius: am5.percent(60)
+            radius: am5.percent(70),
+            endAngle: 180
           })
         );
         let series2 = chart2.series.push(
@@ -276,14 +267,25 @@ export class ResultPieComponent implements OnInit {
             "{category}: {value.formatNumber(',000')}"
         });
 
-        series2.children.push(am5.Label.new(this.root, {
+        chart2.children.push(am5.Label.new(this.root, {
           centerX: am5.percent(50),
-          centerY: am5.percent(50),
+          x: am5.percent(50),
           fontWeight: 'bold',
-          text: this.small? "{valueSum}" : "Totale regola padre {valueSum}",
+          maxChars: 40,
+          text: title,
           populateText: true,
           fontSize: this.small? "1em": "1.5em"
         }));
+
+        series2.children.push(am5.Label.new(this.root, {
+          centerX: am5.percent(50),
+          y: am5.percent(-45),
+          fontWeight: 'bold',
+          text: "{valueSum}",
+          populateText: true,
+          fontSize: this.small? "1em": "1.5em"
+        }));
+
 
         let single = [];
         Object.keys(result2).forEach((key) => {
@@ -299,21 +301,6 @@ export class ResultPieComponent implements OnInit {
             }
           });
         });
-        // Adding gradients
-        series2.slices.template.set("strokeOpacity", 0);
-        series2.slices.template.set("fillGradient", am5.RadialGradient.new(this.root, {
-          stops: [{
-            brighten: -0.8
-          }, {
-            brighten: -0.8
-          }, {
-            brighten: -0.5
-          }, {
-            brighten: 0
-          }, {
-            brighten: -0.5
-          }]
-        }));
         
         series2.slices.template.events.on("click", function(ev) {
           var status = ev.target.dataItem.dataContext.extra.key;

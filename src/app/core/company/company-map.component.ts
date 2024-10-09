@@ -243,7 +243,7 @@ export class CompanyMapComponent implements OnInit {
               let description = `
                 <div class="border-${iconColor}">
                   <strong>
-                    <a href="${environment.baseHref}#/search?workflowId=&codiceIpa=${company.codiceIpa}&ruleName=${this.ruleName}&sort=createdAt,desc">${company.denominazioneEnte}</a>
+                    <a href="${environment.baseHref}#/company-graph?workflowId=${this.workflowId}&codiceIpa=${company.codiceIpa}">${company.denominazioneEnte}</a>
                   </strong>
                 </div>
               `;
