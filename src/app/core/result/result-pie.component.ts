@@ -19,6 +19,7 @@ import * as am5 from '@amcharts/amcharts5';
 import * as am5percent from "@amcharts/amcharts5/percent";
 import am5locales_it_IT from "@amcharts/amcharts5/locales/it_IT";
 import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
+import { paddingTopProperty } from 'tns-core-modules/ui/page';
 
 @Component({
   selector: 'app-result-pie',
@@ -172,7 +173,8 @@ export class ResultPieComponent implements OnInit {
 
       let chart = chartContainer.children.push(
         am5percent.PieChart.new(this.root, {
-          endAngle: 180
+          endAngle: 180,
+          paddingTop: this.small ? 40 : 0
         })
       );
       let series = chart.series.push(
@@ -213,6 +215,7 @@ export class ResultPieComponent implements OnInit {
         chart.children.push(am5.Label.new(this.root, {
           centerX: am5.percent(50),
           x: am5.percent(50),
+          y: am5.percent(this.small? -30 : 0),
           fontWeight: 'bold',
           maxChars: 40,
           text: titleParent,
@@ -222,7 +225,7 @@ export class ResultPieComponent implements OnInit {
 
         series.children.push(am5.Label.new(this.root, {
           centerX: am5.percent(50),
-          y: am5.percent(-45),
+          y: am5.percent(this.small? -65 : -45),
           fontWeight: 'bold',
           text: "{valueSum}",
           populateText: true,
@@ -270,6 +273,7 @@ export class ResultPieComponent implements OnInit {
         chart2.children.push(am5.Label.new(this.root, {
           centerX: am5.percent(50),
           x: am5.percent(50),
+          y: am5.percent(this.small? -10 : 0),
           fontWeight: 'bold',
           maxChars: 40,
           text: title,
@@ -279,7 +283,7 @@ export class ResultPieComponent implements OnInit {
 
         series2.children.push(am5.Label.new(this.root, {
           centerX: am5.percent(50),
-          y: am5.percent(-45),
+          y: am5.percent(this.small? -50 : -45),
           fontWeight: 'bold',
           text: "{valueSum}",
           populateText: true,
