@@ -140,6 +140,9 @@ export class ResultPieComponent implements OnInit {
       }
       let chart = result[wokflowId];
       if (parentKey) {
+        if (this.small) {
+          this.chartDivStyle = `height:75vh !important`;
+        }
         let titleParent = this.rules.filter((rule: SelectRule) => {
           return rule.key === parentKey
         })[0].text;
@@ -148,7 +151,7 @@ export class ResultPieComponent implements OnInit {
           chart[500] = total - Number(Object.values(chart).reduce((a: number, b: number) => a + b, 0)); 
           this.loadChart(result[wokflowId], true, chart, titleParent, title);
         });
-      } else {
+      } else {        
         this.loadChart(chart, false);
       }
     }); 
@@ -174,7 +177,7 @@ export class ResultPieComponent implements OnInit {
       let chart = chartContainer.children.push(
         am5percent.PieChart.new(this.root, {
           endAngle: 180,
-          paddingTop: this.small ? 40 : 0
+          paddingTop: this.small ? 80 : 0
         })
       );
       let series = chart.series.push(
