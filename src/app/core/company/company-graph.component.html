@@ -65,17 +65,19 @@
       <div #chartContainer id="chartContainer" class="bg-secondary"></div>
     </div>
     <div class="col-md-3 px-md-1">
-      @if (company) {
-        <div class="bg-light">
+      <div class="bg-light">
+        @if (company) {
           <div class="d-flex bg-dark text-white h3 mb-2 justify-content-center">
             <span translate>it.rule.satisfy</span>
           </div>
-          <div #chartdiv [style]="chartDivStyle"></div>
+        }
+        <div #chartdiv [style]="chartDivStyle"></div>
+        @if (company) {
           <div class="d-flex text-dark h6 justify-content-center px-2">
             <span class="font-monospace">{{ 'it.rule.all' | translate: {rulesOK: rulesOK, all: data?.length, percent: rulesOK * 100/data?.length | number:'1.2-2' } }}</span>
           </div>
-        </div>
-      }  
+        }
+      </div>  
       <it-tab-container #tab dark="true" (tabSelected)="tabSelected($event)">
         @if (company) {
           <it-tab-item #tabPA label="PA" icon="pa" [active]="tabPAActive">

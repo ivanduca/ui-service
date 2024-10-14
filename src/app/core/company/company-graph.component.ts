@@ -84,9 +84,6 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
   }
 
   ngOnInit(): void {
-    if(this.chartdiv?.nativeElement) {
-      this.root = am5.Root.new(this.chartdiv?.nativeElement);
-    }
     this.translateService.get(`it.rule.status`).subscribe((status) => {
       this.ruleStatus = status;
     });
@@ -216,6 +213,9 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
   }
 
   loadChart() {
+    if(this.chartdiv?.nativeElement && !this.root) {
+      this.root = am5.Root.new(this.chartdiv?.nativeElement);
+    }
     this.root.setThemes([
       am5themes_Animated.new(this.root)
     ]);
