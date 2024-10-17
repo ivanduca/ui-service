@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Observable, debounceTime } from 'rxjs';
 import { HttpParams } from '@angular/common/http';
 import { ApiMessageService, MessageType } from '../api-message.service';
@@ -57,6 +57,7 @@ export class CompanyMapComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
+    private cdr: ChangeDetectorRef,
     private translateService: TranslateService,
     private companyService: CompanyService,
     private ruleService: RuleService,
@@ -200,6 +201,10 @@ export class CompanyMapComponent implements OnInit {
     });
     this.loadGeoJson(queryParams);
 
+  }
+
+  ngAfterContentChecked(): void {
+    this.cdr.detectChanges();
   }
 
   ngOnInit(): void {    
