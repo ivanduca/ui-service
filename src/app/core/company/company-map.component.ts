@@ -245,10 +245,11 @@ export class CompanyMapComponent implements OnInit {
             element.properties.companies.forEach((company: any) => {
               let status = this.workflowId ? company?.validazioni?.[this.ruleName] || 500 : undefined;
               let iconColor = this.workflowId ? ((status == 200 || status == 202) ? `success`: `danger` ) : `primary`;
+              let workflowParams = this.workflowId ? `workflowId=${this.workflowId}&` :``;
               let description = `
                 <div class="border-${iconColor}">
                   <strong>
-                    <a href="${environment.baseHref}#/company-graph?workflowId=${this.workflowId}&codiceIpa=${company.codiceIpa}">${company.denominazioneEnte}</a>
+                    <a href="${environment.baseHref}#/company-graph?${workflowParams}codiceIpa=${company.codiceIpa}">${company.denominazioneEnte}</a>
                   </strong>
                 </div>
               `;
