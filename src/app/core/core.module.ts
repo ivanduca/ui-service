@@ -37,6 +37,9 @@ import { ResultAggregatorService } from './result-aggregator/result-aggregator.s
 import { RuleService } from './rule/rule.service';
 import { RuleSelectComponent } from './rule/rule-select.component';
 
+import { MainConfigurationComponent } from './configuration/main-conf.component';
+import { ConfigurationService } from './configuration/configuration.service';
+
 
 import { FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
@@ -50,7 +53,7 @@ import { DesignAngularKitModule } from 'design-angular-kit';
 import { LeafletModule } from '@bluehalo/ngx-leaflet';
 import { LeafletMarkerClusterModule } from '@bluehalo/ngx-leaflet-markercluster';
 import { NgSelectModule } from '@ng-select/ng-select';
-
+import { Bs5UnixCronModule } from '@sbzen/ng-cron';
 /**
  * Nel core module inserisco tutti i components necessari all'avvio dell'applicazione.
  * Esempio Pagina Iniziale ed Header.
@@ -74,6 +77,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
         WorkflowCardComponent,
         CreditsComponent,
         RuleSelectComponent,
+        MainConfigurationComponent
     ],
     imports: [
         AppRoutingModule,
@@ -95,7 +99,8 @@ import { NgSelectModule } from '@ng-select/ng-select';
         DesignAngularKitModule.forRoot(),
         LeafletModule,
         LeafletMarkerClusterModule,
-        NgSelectModule
+        NgSelectModule,
+        Bs5UnixCronModule
     ],
     exports: [
         AuthModule,
@@ -114,6 +119,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
         CompanyGraphComponent,
         WorkflowCardComponent,
         RuleSelectComponent,
+        MainConfigurationComponent,
         DesignAngularKitModule
     ],
     providers: [
@@ -125,6 +131,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
         ResultService,
         ResultAggregatorService,
         ConductorService,
+        ConfigurationService,
         RuleService
     ]
 })

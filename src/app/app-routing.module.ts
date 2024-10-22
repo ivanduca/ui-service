@@ -12,6 +12,9 @@ import { NoteLegaliComponent } from './core/note-legali/note-legali.component';
 import { ResultPieComponent } from './core/result/result-pie.component';
 import { environment } from '../environments/environment';
 import { AutoLoginAllRoutesGuard } from 'angular-auth-oidc-client';
+import { MainConfigurationComponent } from './core/configuration/main-conf.component';
+import { AuthGuard } from './auth/auth-guard';
+import { RoleEnum } from './auth/role.enum';
 
 const appRoutes: Routes = [
   {path: '', canActivateChild:(environment.oidc.enable && environment.oidc.force)?[AutoLoginAllRoutesGuard]:[], children: [
@@ -22,6 +25,7 @@ const appRoutes: Routes = [
     { path: 'company-graph', component: CompanyGraphComponent },
     { path: 'result-pie', component: ResultPieComponent },
     { path: 'credits', component: CreditsComponent },
+    { path: 'configuration', component: MainConfigurationComponent, canActivate: [AuthGuard], data: {role: RoleEnum.ADMIN}},
   ]},
   { path: 'privacy-policy', component: PrivacyPolicyComponent },
   { path: 'note-legali', component: NoteLegaliComponent },

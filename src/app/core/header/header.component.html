@@ -30,13 +30,21 @@
           <span class="d-none d-md-block" button>{{userData.name}}</span>
           <ng-container list>
             <it-dropdown-item>
-              <a href="#"  
-                translate 
+              <a href="#"
+                class="px-0"
                 (click)="logout()">
-                <it-icon size="md" color="primary" name="logout"></it-icon>
+                <it-icon size="md" color="primary" name="logout" class="user-icon"></it-icon>
                 <span translate>it.navigation.logout</span>      
               </a>
             </it-dropdown-item>
+            @if (isAdmin) {
+              <it-dropdown-item>
+                <a routerLink="/configuration" class="px-0">
+                  <it-icon size="md" color="primary" name="settings" class="user-icon"></it-icon>
+                  <span translate>it.navigation.configuration</span>      
+                </a>
+              </it-dropdown-item>  
+            }
           </ng-container>
         </it-dropdown>  
       </div>
@@ -164,4 +172,4 @@
     </it-navbar-item>
   </ng-container>
 </it-header>
-<it-notifications></it-notifications>
+<it-notifications [duration]="3000"></it-notifications>

@@ -112,7 +112,7 @@ export abstract class CommonService<T extends Base> {
             .pipe(
               map((result) => {
                 try {
-                  let arrays = this.nameOfResults ? result[this.nameOfResults] : result;
+                  let arrays = this.getResultArrays(result);
                   const items: T[] = arrays.map((item) => {
                     const instance: T = this._buildInstance(item);
                     return instance;
@@ -133,6 +133,11 @@ export abstract class CommonService<T extends Base> {
         })
       );
   }
+
+  protected getResultArrays(result: any) {
+    return this.nameOfResults ? result[this.nameOfResults] : result;
+  }
+
 
   /**
    * Get Pageable.
@@ -284,7 +289,7 @@ export abstract class CommonService<T extends Base> {
     return this.getGateway()
       .pipe(
         switchMap((gateway) => {
-          return this.httpClient.put<T>(this.getSaveURL(gateway), this.serializeInstance(entity))
+          return this.httpClient.put<T>(this.getSaveURL(gateway, entity), this.serializeInstance(entity))
             .pipe(
               map((result) => {
                this.apiMessageService.sendMessage(MessageType.SUCCESS, this.saveMessage());
@@ -300,7 +305,7 @@ export abstract class CommonService<T extends Base> {
       );
   }
 
-  protected getSaveURL(gateway: string): string {
+  protected getSaveURL(gateway: string, entity: T): string {
     return gateway + ConfigService.API_BASE + this.getRequestMapping() + '/update';
   }
 

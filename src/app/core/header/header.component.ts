@@ -1,4 +1,4 @@
-import { Component, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, HostListener, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ApiMessage, ApiMessageService, MessageType} from '../api-message.service';
 import { TranslateService, LangChangeEvent} from '@ngx-translate/core';
@@ -8,13 +8,20 @@ import { ItHeaderComponent, ItNotificationService, NotificationPosition } from '
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 import { environment } from '../../../environments/environment';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
+import { AuthGuard } from '../../auth/auth-guard';
+import { RoleEnum } from '../../auth/role.enum';
 
 @Component({
   selector: 'app-header1',
   templateUrl: './header.component.html',
+  encapsulation: ViewEncapsulation.None,
   styles: `
     .border-thin {
       border-color: rgba(255, 255, 255, 0.2) !important;
+    }
+    .user-icon .icon{
+      width: 32px!important;
+      height: 32px!important;
     }
   `
 })
@@ -39,31 +46,22 @@ export class HeaderComponent implements OnInit, OnDestroy {
   companylabel: string = 'header.company.title';
 
   authenticated = false;
+  isAdmin: boolean;
   userData: any;
   
-  public notificationOptions = {
-    timeOut: 5000,
-    pauseOnHover: true,
-    preventDuplicates: true,
-    theClass: 'rounded shadow-lg alert',
-    clickToClose: true,
-    animate: 'fromTop',
-    showProgressBar: true,
-    position: ['top', 'right']
-  }
-
   constructor(private apiMessageService: ApiMessageService,
               private translateService: TranslateService,
               private titleService: Title,
               private router: Router,
+              private authGuard: AuthGuard,
               private responsive: BreakpointObserver,
               private oidcSecurityService: OidcSecurityService,
               private notificationService: ItNotificationService) {
     this.searchHREF = `${environment.baseHref}#/company-search`;
-  }  
+  }
 
-  public ngOnInit() {
-    this.translateService.setDefaultLang('it');
+  public ngOnInit() {        
+    this.translateService.setDefaultLang('it');    
     if (!localStorage.getItem('lang')) {
       localStorage.setItem('lang', this.translateService.getBrowserLang());
     }
@@ -87,6 +85,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
           this.authenticated = isAuthenticated;
           this.oidcSecurityService.userData$.subscribe(({ userData }) => {
             this.userData = userData;
+            this.isAdmin = this.authGuard.hasRolesFromUserData([RoleEnum.ADMIN], userData);
           });    
         }
       );
@@ -132,22 +131,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.onNavbarEvaluated.unsubscribe();
   }
 
-  private notice(alertclass: string, timeOut?: number) : any {
-    var notice = Object.assign({}, this.notificationOptions);
-    notice.theClass = notice.theClass + ' ' + alertclass;
-    if (timeOut !== undefined) {
-      notice.timeOut = timeOut;
-    }
-    return notice;
-  }
-
   private showNotification(messageType: MessageType, message: string, position?: NotificationPosition) {
     if (messageType === MessageType.SUCCESS) {
       this.notificationService.info('Informazione', message, true, 5000, position);
     } else if (messageType === MessageType.ERROR) {
-      this.notificationService.error('Errore!', message, true , 15000, position);
+      this.notificationService.error('Errore!', message, true , 5000, position);
     } else if (messageType === MessageType.WARNING) {
-      this.notificationService.warning('Avvertimento!', message, true, 10000, position);
+      this.notificationService.warning('Avvertimento!', message, true, 5000, position);
     }
   }
 
@@ -166,7 +156,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   logout() {
     this.oidcSecurityService.logoffAndRevokeTokens().subscribe(() => {
-
+      console.log('logout');
     });
   }
+
 }

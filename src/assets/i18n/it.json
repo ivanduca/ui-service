@@ -32,7 +32,14 @@
         },
         "go-to-homepage": "Torna alla homepage"
       }
-    },    
+    },
+    "configuration" : {
+      "cron": {
+        "title": "Espressione per l'esecuzione di un nuovo controllo",
+        "message": "La prossima esecuzione del controllo avverrà il <b>{{nextDate}}</b> confermi il cambiamento dell'espressione?",
+        "error": "Non è possibile selezionare più di un orario all'interno della giornata!"
+      }
+    },
     "navigation" : {
       "full-login": "Accedi all'area riservata",
       "logout": "Esci",
@@ -49,6 +56,8 @@
       "website-search": "Cerca nel sito",
       "navigation-path": "Percorso di navigazione",
       "map-result": "Mappa dei Risultati",
+      "configuration": "Configurazione",
+      "confirm": "Conferma",
       "grafici-mappe": {
         "title": "Grafici e Mappe",
         "grafico-regola": "Grafico per regola",
@@ -358,13 +367,10 @@
     "title": "Accedi all'area personale",
     "sso": "Accedi con SSO SPID/CIE",
     "unauthorized": "Nome utente e/o password errate, utilizzare il nome utente assegnato in fase di registrazione e non l'indirizzo email.",
-    "concorsi": "Per partecipare alle selezioni online del Consiglio Nazionale delle Ricerche occorre accedere all'area utenti inserendo Nome utente e password scelti in fase di registrazione al sito.",
-    "registration": "Si ricorda che, qualora si avesse già partecipato ad una precedente selezione sempre su questo sito, non é necessario ripetere la registrazione.",
     "altri": "Per registrarsi utilizzare il link",
     "new_registration": "Nuova registrazione", 
     "manuale":"Per maggiori informazioni consultare il capitolo \"Accesso / registrazione in procedura\" del Manuale Utente.",
     "helpdesk":"Per ricevere assistenza utilizzare il servizio di",
-    "candidaticnr": "I dipendenti CNR e tutti i candidati già in possesso delle credenziali ufficiali CNR dovranno utilizzarle per l'accesso alla procedura senza necessità di ulteriori registrazioni.<br>Per la gestione delle credenziali ufficiali CNR utilizzare il sito <a href=\"https://utenti.cnr.it\">https://utenti.cnr.it</a>",
     "username": "Nome utente",
     "password": "Password",
     "showpassword": "Visualizza password",
