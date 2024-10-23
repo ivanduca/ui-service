@@ -16,7 +16,7 @@ export class Configuration implements Base {
     @JsonProperty('key')
     public key: string;
     @JsonProperty('value')
-    public value: string;
+    public value: any;
 
     getId(): string {
         return this.id ? String(this.id) : undefined;

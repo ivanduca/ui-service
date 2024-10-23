@@ -1,5 +1,11 @@
 {
   "it": {
+    "errors": {
+      "url-invalid": "URL non valido!",
+      "required-field": "Campo obbligatorio!",
+      "min-invalid": "Il valore deve essere superiore al numero minimo {{min}}",
+      "max-invalid": "Il valore deve essere inferiore al numero massimo {{max}}"
+    },
     "order": {
       "title" :"Ordinamento",
       "createdAt": {
@@ -37,7 +43,23 @@
       "cron": {
         "title": "Espressione per l'esecuzione di un nuovo controllo",
         "message": "La prossima esecuzione del controllo avverrà il <b>{{nextDate}}</b> confermi il cambiamento dell'espressione?",
-        "error": "Non è possibile selezionare più di un orario all'interno della giornata!"
+        "error": "Non è possibile selezionare più di un orario all'interno della giornata!",        
+        "workflow": "Impostazioni controllo",
+        "workflow-url": "URL della piattaforma",
+        "workflow-body": "Parametri di avvio",
+        "body": {
+          "page_size": "Dimensione pagina",
+          "execute_child": "Esegui regole figlie",
+          "crawler_save_object": "Salva pagina sempre",
+          "crawler_save_screenshot": "Salva screenshot sempre",
+          "connection_timeout": "Timeout di connessione iniziale (ms)",
+          "read_timeout": "Timeout di risposta iniziale (ms)",
+          "connection_timeout_max": "Timeout di connessione massimo (ms)",
+          "read_timeout_max": "Timeout di risposta massimo (ms)",
+          "crawler_child_type": "Modalità di esecuzione dei flussi figli",
+          "result_base_url": "URL del servizio Risultati",
+          "crawler_uri": "URL del servizio Crawler"
+        }
       }
     },
     "navigation" : {

@@ -1,28 +1,50 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ConfigurationService } from './configuration.service';
 import { Configuration } from './configuration.model';
 import { Bs5UnixCronComponent, CronLocalization, Tab } from '@sbzen/ng-cron';
-import { ItModalComponent, NotificationPosition } from 'design-angular-kit';
+import { ItModalComponent, NotificationPosition, SelectControlOption } from 'design-angular-kit';
 import { ApiMessageService, MessageType } from '../api-message.service';
+import { TranslateService } from '@ngx-translate/core';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { CodiceCategoria } from '../../common/model/codice-categoria.enum';
+import { Rule, SelectRule } from '../rule/rule.model';
+import { environment } from '../../../environments/environment';
 
 import * as parser from 'cron-parser';
-import { TranslateService } from '@ngx-translate/core';
+import { RuleService } from '../rule/rule.service';
+import { ConductorService } from '../conductor/conductor.service';
 
 @Component({
-  selector: 'app-main-configuration',
-  templateUrl: './main-configuration.component.html',
-  styles: ``
+  selector: 'app-main-conf',
+  templateUrl: './main-conf.component.html',
+  encapsulation: ViewEncapsulation.None,
+  styles: `
+    .callout-highlight {
+      overflow: unset !important;
+    }
+  `
 })
 export class MainConfigurationComponent implements OnInit, AfterViewInit {
   @ViewChild('cron') cronComponent: Bs5UnixCronComponent;
   @ViewChild('headerPopconfirmModal') headerPopconfirmModal: ItModalComponent;
+  
   readonly activeTab = Tab.HOURS;
   readonly tabs = [Tab.HOURS, Tab.DAY, Tab.MONTH];
   readonly WORKFLOW_CRON_EXPRESSION = `workflow.cron.expression`;
+  readonly WORKFLOW_CRON_URL = `workflow.cron.url`;
+  readonly WORKFLOW_CRON_BODY = `workflow.cron.body`;
   protected labels: any;
   protected cronValue: string;
   protected nextDate: Date;
   protected cronConfiguration: Configuration;
+  protected workflowURL: string;
+  protected workflowURLid: number;
+
+  protected workflowBODYForm: FormGroup;
+  protected workflowBODYid: number;
+  protected optionsCategoria: Array<SelectControlOption> = [];
+  protected optionsRule: Array<any>;
+
   readonly localization: CronLocalization = {
     common: {
       month: {
@@ -113,7 +135,7 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
         },
         increment: {
           label1: 'Ogni',
-          label2: 'mese/i a partire da',
+          label2: 'mese/i',
         },
         and: {
           label: 'Mese specifico (scegli uno o più)'
@@ -143,9 +165,11 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
   };
 
   constructor(
+    private formBuilder: FormBuilder,
     private translateService: TranslateService,
     private configurationService: ConfigurationService,
     private apiMessageService: ApiMessageService,
+    private ruleService: RuleService,
     private elementRef: ElementRef                  
   ) {}
 
@@ -153,12 +177,70 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
     this.translateService.get('it.configuration').subscribe((labels: any) => {
       this.labels = labels;
     });
+    Object.keys(CodiceCategoria).forEach((key) => {
+      this.optionsCategoria.push({ value: key, text: CodiceCategoria[key]});
+    });
+    this.ruleService.getRules().subscribe((rule) => {
+      this.optionsRule = [];
+      let rules: SelectRule[] = rule.getKeys(undefined, undefined, Rule.AMMINISTRAZIONE_TRASPARENTE, [], -1);
+      Object.keys(rules).forEach((index) => {
+        this.optionsRule.push({
+          value: rules[index].key,
+          text: rules[index].text,
+          level: rules[index].level,
+          class: `ps-${rules[index].level} fs-${rules[index].level + 3}`
+        });
+      });
+    });
+
+    this.workflowBODYForm = this.formBuilder.group({
+      page_size: new FormControl(1000),
+      codice_categoria: new FormControl(''),
+      codice_ipa: new FormControl(''),
+      id_ipa_from: new FormControl(0),
+      parent_workflow_id: new FormControl(''),
+      execute_child: new FormControl(true),
+      crawler_save_object: new FormControl(false),
+      crawler_save_screenshot: new FormControl(false),
+      rule_name: new FormControl(Rule.AMMINISTRAZIONE_TRASPARENTE),
+      connection_timeout: new FormControl(30000),
+      read_timeout: new FormControl(30000),
+      connection_timeout_max: new FormControl(60000),
+      read_timeout_max: new FormControl(60000),
+      crawler_child_type: new FormControl(`START_WORKFLOW`),
+      result_base_url: new FormControl(`${environment.resultApiUrl}result-service/v1/results`),
+      crawler_uri: new FormControl(environment.crawlerApiUrl)    
+    });
     this.configurationService.getAll().subscribe((configurations: Configuration[]) => {
       configurations.forEach((conf: Configuration) => {
           if (conf.key === this.WORKFLOW_CRON_EXPRESSION) {
             this.cronConfiguration = conf;
             this.cronValue = conf.value;
           }
+          if (conf.key === this.WORKFLOW_CRON_URL) {
+            this.workflowURL = conf.value;
+            this.workflowURLid = conf.id;
+          }
+          if (conf.key === this.WORKFLOW_CRON_BODY) {
+            this.workflowBODYid = conf.id;
+            let jsonvalue = JSON.parse(conf.value);
+            this.workflowBODYForm.controls.page_size.patchValue(jsonvalue.input.page_size);
+            this.workflowBODYForm.controls.codice_categoria.patchValue(jsonvalue.input.codice_categoria);
+            this.workflowBODYForm.controls.codice_ipa.patchValue(jsonvalue.input.codice_ipa);
+            this.workflowBODYForm.controls.id_ipa_from.patchValue(jsonvalue.input.id_ipa_from);
+            this.workflowBODYForm.controls.parent_workflow_id.patchValue(jsonvalue.input.parent_workflow_id);
+            this.workflowBODYForm.controls.execute_child.patchValue(jsonvalue.input.execute_child);
+            this.workflowBODYForm.controls.crawler_save_object.patchValue(jsonvalue.input.crawler_save_object);
+            this.workflowBODYForm.controls.crawler_save_screenshot.patchValue(jsonvalue.input.crawler_save_screenshot);
+            this.workflowBODYForm.controls.rule_name.patchValue(jsonvalue.input.rule_name);
+            this.workflowBODYForm.controls.connection_timeout.patchValue(jsonvalue.input.connection_timeout);
+            this.workflowBODYForm.controls.read_timeout.patchValue(jsonvalue.input.read_timeout);
+            this.workflowBODYForm.controls.connection_timeout_max.patchValue(jsonvalue.input.connection_timeout_max);
+            this.workflowBODYForm.controls.read_timeout_max.patchValue(jsonvalue.input.read_timeout_max);
+            this.workflowBODYForm.controls.crawler_child_type.patchValue(jsonvalue.input.crawler_child_type);
+            this.workflowBODYForm.controls.result_base_url.patchValue(jsonvalue.input.result_base_url);
+            this.workflowBODYForm.controls.crawler_uri.patchValue(jsonvalue.input.crawler_uri);      
+          }  
       });
     });
   }
@@ -183,6 +265,55 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
     conf.value = this.cronValue;
     this.configurationService.save(conf).subscribe((result: any) => {
       this.cronConfiguration = result;
+    });
+  }
+
+  cronConfirmWorkflowURL(): void {
+    let conf: Configuration = new Configuration();
+    conf.id = this.workflowURLid;
+    conf.application = `task-scheduler-service`;
+    conf.profile = `default`;
+    conf.label= this.labels.cron['workflow-url'];
+    conf.key = this.WORKFLOW_CRON_URL;
+    conf.value = this.workflowURL;
+    this.configurationService.save(conf).subscribe((result: any) => {
+      this.workflowURLid = result.id;
+      this.workflowURL = result.value;
+    });
+  }
+
+  cronConfirmWorkflowBODY(): void {
+    let conf: Configuration = new Configuration();
+    conf.id = this.workflowBODYid;
+    conf.application = `task-scheduler-service`;
+    conf.profile = `default`;
+    conf.label= this.labels.cron['workflow-body'];
+    conf.key = this.WORKFLOW_CRON_BODY;
+    conf.value = JSON.stringify({
+      name: ConductorService.AMMINISTRAZIONE_TRASPARENTE_FLOW,
+      correlationId: ConductorService.AMMINISTRAZIONE_TRASPARENTE_FLOW,
+      version: 1,
+      input: {
+        page_size: this.workflowBODYForm.controls.page_size.value,
+        codice_categoria: this.workflowBODYForm.controls.codice_categoria.value,
+        codice_ipa: "",
+        id_ipa_from: 0,
+        parent_workflow_id: "",
+        execute_child: this.workflowBODYForm.controls.execute_child.value,
+        crawler_save_object: this.workflowBODYForm.controls.crawler_save_object.value,
+        crawler_save_screenshot: this.workflowBODYForm.controls.crawler_save_screenshot.value,
+        rule_name: this.workflowBODYForm.controls.rule_name.value,
+        connection_timeout: this.workflowBODYForm.controls.connection_timeout.value,
+        read_timeout: this.workflowBODYForm.controls.read_timeout.value,
+        connection_timeout_max: this.workflowBODYForm.controls.connection_timeout_max.value,
+        read_timeout_max: this.workflowBODYForm.controls.read_timeout_max.value,
+        crawler_child_type: this.workflowBODYForm.controls.crawler_child_type.value,
+        result_base_url: this.workflowBODYForm.controls.result_base_url.value,
+        crawler_uri: this.workflowBODYForm.controls.crawler_uri.value    
+      }   
+    });
+    this.configurationService.save(conf).subscribe((result: any) => {
+      this.workflowBODYid = result.id;
     });
   }
 

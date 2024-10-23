@@ -19,8 +19,12 @@
     margin-bottom: 0.5rem !important;
 }  
   
-.ng-select-searchable {
+.ng-select-container {
     margin-top: -0.70em;
+}
+
+.ng-select-container.ng-has-value {
+    margin-top: -0.8em;
 }
 
 .ng-select .ng-has-value .ng-placeholder, .ng-select.ng-select-opened .ng-placeholder {
@@ -30,3 +34,7 @@
 ng-select.break-spaces .ng-option {
     white-space: break-spaces !important;
 } 
+
+.form-group {
+    margin-bottom: 1rem;
+}
