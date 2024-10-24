@@ -92,10 +92,12 @@
               </it-input>
             </div>
           </div>
-          <div class="row col-md-12">
-            <button (click)="cronConfirmWorkflowBODY()" [disabled]="!workflowBODYForm.valid" role='button' class="btn">
-              <it-icon name="pencil" color="primary"></it-icon>{{'it.navigation.confirm' | translate}}
-            </button>  
+          <div class="row justify-content-md-end">
+            <div class="form-group col-md-auto">
+              <button (click)="cronConfirmWorkflowBODY()" [disabled]="!workflowBODYForm.valid" role='button' class="btn">
+                <it-icon name="pencil" color="primary"></it-icon>{{'it.navigation.confirm' | translate}}
+              </button>  
+            </div>
           </div>
         </form>        
       </it-callout>
