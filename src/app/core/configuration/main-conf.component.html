@@ -23,30 +23,30 @@
       </form>
       <it-callout appearance="highlight" color="note" label="{{'it.configuration.cron.workflow-body' | translate}}">
         <form [formGroup]="workflowBODYForm">
-          <div class="row col-md-12 mb-3">
-            <div class="form-group col-md-2">
+          <div class="row mb-3">
+            <div class="form-group col-12 col-lg-2">
               <it-input type="number" required [min]="100" 
                 [max]="2000" [step]="100" formControlName="page_size" 
                 [label]="'it.configuration.cron.body.page_size'| translate"></it-input>
             </div>
-            <div class="form-group col-md-3">
+            <div class="form-group col-12 col-lg-3">
               <ng-select formControlName="codice_categoria"  [placeholder]="'it.company.codiceCategoria'| translate">
                   @for (categoria of optionsCategoria; track categoria.value) {
                       <ng-option [value]="categoria.value">{{categoria.text}}</ng-option>
                   }
               </ng-select>
             </div>
-            <div class="form-group col-md-2">
+            <div class="form-check col-12 col-lg-2">
               <it-checkbox formControlName="execute_child" [label]="'it.configuration.cron.body.execute_child'| translate" toggle="true"></it-checkbox>
             </div>
-            <div class="form-group col-md-2">
+            <div class="form-check col-12 col-lg-2">
               <it-checkbox formControlName="crawler_save_object" [label]="'it.configuration.cron.body.crawler_save_object'| translate" toggle="true"></it-checkbox>
             </div>
-            <div class="form-group col-md-3">
+            <div class="form-check col-12 col-lg-3">
               <it-checkbox formControlName="crawler_save_screenshot" [label]="'it.configuration.cron.body.crawler_save_screenshot'| translate" toggle="true"></it-checkbox>
             </div>
           </div>
-          <div class="row col-md-12">
+          <div class="row">
             <div class="form-group col-md-4">
               <app-rule-select [optionsRule]="optionsRule" [form]="workflowBODYForm" controlName="rule_name"></app-rule-select>
             </div>
@@ -71,7 +71,7 @@
                 [label]="'it.configuration.cron.body.read_timeout_max'| translate"></it-input>
             </div>
           </div>
-          <div class="row col-md-12">
+          <div class="row">
             <div class="form-group col-md-4">
               <it-select
                 formControlName="crawler_child_type"
