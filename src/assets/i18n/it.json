@@ -46,7 +46,10 @@
         "error": "Non è possibile selezionare più di un orario all'interno della giornata!",        
         "workflow": "Impostazioni controllo",
         "workflow-url": "URL della piattaforma",
-        "workflow-body": "Parametri di avvio",
+        "workflow-body": "Parametri",
+        "workflow-preserve-label": "Numero di controlli da conservare",
+        "workflow-preserve": "Numero di controlli da conservare: {{number_workflows_preserve}}",
+        "workflow-id": "Controllo da conservare",
         "body": {
           "page_size": "Dimensione pagina",
           "execute_child": "Esegui regole figlie",

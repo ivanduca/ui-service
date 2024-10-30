@@ -249,7 +249,7 @@ export abstract class CommonService<T extends Base> {
    * @param entity
    * @returns {Observable<T>}
    */
-  public create(entity: T): Observable<T> {
+  public create(entity: T, nomessage?: boolean): Observable<T> {
 
     // return observableThrowError(null);
     return this.getGateway()
@@ -258,7 +258,9 @@ export abstract class CommonService<T extends Base> {
           return this.httpClient.post<T>(this.getCreateURL(gateway), this.serializeInstance(entity))
             .pipe(
               map(result => {
-                this.apiMessageService.sendMessage(MessageType.SUCCESS, this.saveMessage());
+                if (nomessage === undefined) {
+                  this.apiMessageService.sendMessage(MessageType.SUCCESS, this.saveMessage());
+                }
                 return this._buildInstance(result);
               }),
               catchError((httpErrorResponse: HttpErrorResponse) => {
@@ -280,10 +282,10 @@ export abstract class CommonService<T extends Base> {
    * @param entity
    * @returns {Observable<T>}
    */
-  public save(entity: T): Observable<T> {
+  public save(entity: T, nomessage?: boolean): Observable<T> {
 
     if (!entity.getId()) {
-      return this.create(entity);
+      return this.create(entity, nomessage);
     }    
 
     return this.getGateway()
@@ -292,7 +294,9 @@ export abstract class CommonService<T extends Base> {
           return this.httpClient.put<T>(this.getSaveURL(gateway, entity), this.serializeInstance(entity))
             .pipe(
               map((result) => {
-               this.apiMessageService.sendMessage(MessageType.SUCCESS, this.saveMessage());
+               if (nomessage === undefined) {
+                this.apiMessageService.sendMessage(MessageType.SUCCESS, this.saveMessage());
+               } 
                return this._buildInstance(result);
               }),
               catchError((httpErrorResponse: HttpErrorResponse) => {

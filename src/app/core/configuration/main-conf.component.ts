@@ -13,6 +13,8 @@ import { environment } from '../../../environments/environment';
 import * as parser from 'cron-parser';
 import { RuleService } from '../rule/rule.service';
 import { ConductorService } from '../conductor/conductor.service';
+import { Workflow } from '../conductor/workflow.model';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-main-conf',
@@ -22,7 +24,8 @@ import { ConductorService } from '../conductor/conductor.service';
     .callout-highlight {
       overflow: unset !important;
     }
-  `
+  `,
+  providers: [DatePipe]  
 })
 export class MainConfigurationComponent implements OnInit, AfterViewInit {
   @ViewChild('cron') cronComponent: Bs5UnixCronComponent;
@@ -33,6 +36,9 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
   readonly WORKFLOW_CRON_EXPRESSION = `workflow.cron.expression`;
   readonly WORKFLOW_CRON_URL = `workflow.cron.url`;
   readonly WORKFLOW_CRON_BODY = `workflow.cron.body`;
+  readonly WORKFLOW_NUMBER_PRESERVE = `workflow.number.preserve`;
+  readonly WORKFLOW_ID_PRESERVE = `workflow.id.preserve`;
+
   protected labels: any;
   protected cronValue: string;
   protected nextDate: Date;
@@ -44,6 +50,11 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
   protected workflowBODYid: number;
   protected optionsCategoria: Array<SelectControlOption> = [];
   protected optionsRule: Array<any>;
+
+  protected optionsWorkflow: Array<SelectControlOption> = [];
+
+  protected number_workflows_preserve_id: number;
+  protected workflow_id_preserve_id: number;
 
   readonly localization: CronLocalization = {
     common: {
@@ -170,6 +181,8 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
     private configurationService: ConfigurationService,
     private apiMessageService: ApiMessageService,
     private ruleService: RuleService,
+    private conductorService: ConductorService,
+    private datepipe: DatePipe,
     private elementRef: ElementRef                  
   ) {}
 
@@ -192,7 +205,20 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
         });
       });
     });
-
+    this.conductorService.getAll({
+      includeClosed: true,
+      includeTasks: false
+    }).subscribe((workflows: Workflow[]) => {
+      workflows.forEach((workflow: Workflow) => {
+        this.optionsWorkflow.push({
+          value: workflow.workflowId,
+          text: this.translateService.instant('it.workflow.text', {
+            startTime: this.datepipe.transform(workflow.startTime, 'dd/MM/yyyy HH:mm:ss'),
+            status: this.translateService.instant(`it.workflow.status.${workflow.status}`)
+          })
+        });
+      });
+    });
     this.workflowBODYForm = this.formBuilder.group({
       page_size: new FormControl(1000),
       codice_categoria: new FormControl(''),
@@ -209,7 +235,9 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
       read_timeout_max: new FormControl(60000),
       crawler_child_type: new FormControl(`START_WORKFLOW`),
       result_base_url: new FormControl(`${environment.resultApiUrl}result-service/v1/results`),
-      crawler_uri: new FormControl(environment.crawlerApiUrl)    
+      crawler_uri: new FormControl(environment.crawlerApiUrl),
+      number_workflows_preserve: new FormControl(3),
+      workflow_id_preserve: new FormControl('')
     });
     this.configurationService.getAll().subscribe((configurations: Configuration[]) => {
       configurations.forEach((conf: Configuration) => {
@@ -220,6 +248,15 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
           if (conf.key === this.WORKFLOW_CRON_URL) {
             this.workflowURL = conf.value;
             this.workflowURLid = conf.id;
+          }
+          if (conf.key === this.WORKFLOW_NUMBER_PRESERVE) {
+            console.log(conf.value);
+            this.workflowBODYForm.controls.number_workflows_preserve.patchValue(Number(conf.value));
+            this.number_workflows_preserve_id = conf.id;
+          }
+          if (conf.key === this.WORKFLOW_ID_PRESERVE) {
+            this.workflowBODYForm.controls.workflow_id_preserve.patchValue(conf.value);
+            this.workflow_id_preserve_id = conf.id;
           }
           if (conf.key === this.WORKFLOW_CRON_BODY) {
             this.workflowBODYid = conf.id;
@@ -265,7 +302,7 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
     conf.value = this.cronValue;
     this.configurationService.save(conf).subscribe((result: any) => {
       this.cronConfiguration = result;
-    });
+    });    
   }
 
   cronConfirmWorkflowURL(): void {
@@ -312,8 +349,24 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
         crawler_uri: this.workflowBODYForm.controls.crawler_uri.value    
       }   
     });
-    this.configurationService.save(conf).subscribe((result: any) => {
+    this.configurationService.save(conf, true).subscribe((result: any) => {
       this.workflowBODYid = result.id;
+      // Comunico il numero di flussi da conservare
+      conf.id = this.number_workflows_preserve_id;
+      conf.label= this.labels.cron['workflow-preserve-label'];
+      conf.key = this.WORKFLOW_NUMBER_PRESERVE;
+      conf.value = this.workflowBODYForm.controls.number_workflows_preserve.value;
+      this.configurationService.save(conf, true).subscribe((result: any) => {
+        console.log(result);
+        // Comunico l'id dell'eventuale flusso da conservare
+        conf.id = this.workflow_id_preserve_id;
+        conf.label= this.labels.cron['workflow-id'];
+        conf.key = this.WORKFLOW_ID_PRESERVE;
+        conf.value = this.workflowBODYForm.controls.workflow_id_preserve.value;
+        this.configurationService.save(conf).subscribe((result: any) => {
+          console.log(result);
+        });
+      });
     });
   }
 
