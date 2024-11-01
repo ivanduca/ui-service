@@ -140,7 +140,7 @@ export class CompanyMapComponent implements OnInit {
       let params = new HttpParams()
         .set(`workflowId`, this.workflowId)
         .set(`ruleName`, this.ruleName);
-      return this.resultAggregatorService.getAny(`/v1/aggregator/geojson${this.filterFormSearch.value.cache ? `/gzip`: `/nocache`}`, params);
+      return this.resultAggregatorService.getAny(`/v1/aggregator/geojson${this.filterFormSearch?.value?.cache ? `/gzip`: `/nocache`}`, params);
     } else {
       return this.companyService.getAny(`/v1/geo/geojson`);
     } 
@@ -249,7 +249,7 @@ export class CompanyMapComponent implements OnInit {
               let description = `
                 <div class="border-${iconColor}">
                   <strong>
-                    <a href="${environment.baseHref}#/company-graph?${workflowParams}codiceIpa=${company.codiceIpa}">${company.denominazioneEnte}</a>
+                    <a href="${environment.baseHref}#/company-graph?${workflowParams}codiceIpa=${company.codiceIpa}&fromMap=true">${company.denominazioneEnte}</a>
                   </strong>
                 </div>
               `;

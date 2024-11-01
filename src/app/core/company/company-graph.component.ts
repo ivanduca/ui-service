@@ -1,5 +1,5 @@
-import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, ViewChild, ElementRef, OnChanges } from '@angular/core';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, ViewChild, ElementRef, OnChanges, HostListener } from '@angular/core';
+import { ActivatedRoute, NavigationStart, Params, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { OrgChart } from "d3-org-chart";
 import { RuleService } from '../rule/rule.service';
@@ -57,6 +57,8 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
 
   protected codiceIpa: string;
   protected company: Company;
+  protected fromMap: boolean;
+
   tabPAActive: boolean;
   tabRuleActive: boolean;
   protected ruleStatus = {};
@@ -80,8 +82,7 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
               private companyService: CompanyService,
               private translateService: TranslateService,
               private datepipe: DatePipe,
-              protected router: Router) {
-  }
+              protected router: Router) {}
 
   ngOnInit(): void {
     this.translateService.get(`it.rule.status`).subscribe((status) => {
@@ -92,6 +93,7 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
     });
     this.route.queryParams.subscribe((queryParams: Params) => {
       this.codiceIpa = queryParams.codiceIpa;
+      this.fromMap = queryParams.fromMap;
       if (this.codiceIpa) {
         this.companyService.getAll({
           codiceIpa: this.codiceIpa,
@@ -537,6 +539,15 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
       }
     });
   }
+
+  @HostListener('window:popstate', ['$event'])
+  onPopState(event) {
+    if (this.fromMap) {
+      this.router.navigateByUrl(`/company-map?workflowId=${this.filterFormSearch.value.workflowId}&codiceIpa=${this.codiceIpa}`);
+    }
+    return false;
+  }
+    
   // -------------------------------
   // On Destroy.
   // -------------------------------
