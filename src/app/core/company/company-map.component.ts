@@ -120,8 +120,9 @@ export class CompanyMapComponent implements OnInit {
     if (this.currentMarker) {
       const parent = this.currentMarker['__parent'];
       if (parent && parent._zoom == CompanyMapComponent.ZOOM){
-        parent.spiderfy();
+        parent.spiderfy();      
       }
+      this.currentMarker.fire('click');
       this.currentMarker.openPopup();
     }
     if (this.workflowId) {
@@ -227,7 +228,7 @@ export class CompanyMapComponent implements OnInit {
       }
     });
   }
-
+ 
   loadGeoJson(params: any) {
     this.options = undefined;
     this.isGEOLoaded = false;
@@ -245,14 +246,6 @@ export class CompanyMapComponent implements OnInit {
             element.properties.companies.forEach((company: any) => {
               let status = this.workflowId ? company?.validazioni?.[this.ruleName] || 500 : undefined;
               let iconColor = this.workflowId ? ((status == 200 || status == 202) ? `success`: `danger` ) : `primary`;
-              let workflowParams = this.workflowId ? `workflowId=${this.workflowId}&` :``;
-              let description = `
-                <div class="border-${iconColor}">
-                  <strong>
-                    <a href="${environment.baseHref}#/company-graph?${workflowParams}codiceIpa=${company.codiceIpa}&fromMap=true">${company.denominazioneEnte}</a>
-                  </strong>
-                </div>
-              `;
               let icon = Leaflet.divIcon({
                 html: `
                   <svg class="icon icon-white icon-sm bg-${iconColor}">
@@ -265,13 +258,29 @@ export class CompanyMapComponent implements OnInit {
               let marker = Leaflet.marker(new Leaflet.LatLng(lat, lng), {
                 icon: icon,
                 codiceIpa: company.codiceIpa,
-                status: status
-              } as Leaflet.MarkerOptions);
-              marker.bindPopup(description);
+                denominazioneEnte: company.denominazioneEnte,
+                status: status,
+                that: this
+              } as Leaflet.MarkerOptions).on('click', function(e) {
+                var popup = e.target.getPopup();
+                let options = e.sourceTarget.options;
+                let zoom = options.that.map.getZoom();
+                let workflowParams = options.that.workflowId ? `workflowId=${options.that.workflowId}&` :``;
+                let description = `
+                <div class="border-${iconColor}">
+                  <strong>
+                    <a href="${environment.baseHref}#/company-graph?${workflowParams}codiceIpa=${options.codiceIpa}&fromMap=true&zoom=${zoom}">${options.denominazioneEnte}</a>
+                  </strong>
+                </div>
+              `;
+                popup.setContent(description);
+                popup.update();
+              });
+              marker.bindPopup("");
               this.markerClusterData.push(marker);
               if (codiceIpa && codiceIpa == company.codiceIpa) {
                 this.center = new Leaflet.LatLng(lat, lng);
-                this.zoom = CompanyMapComponent.ZOOM;
+                this.zoom = params.zoom || CompanyMapComponent.ZOOM;
                 this.currentMarker = marker;
               }
             });

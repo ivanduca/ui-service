@@ -58,6 +58,8 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
   protected codiceIpa: string;
   protected company: Company;
   protected fromMap: boolean;
+  protected zoom: number;
+  protected paramsWorkflowId: string;
 
   tabPAActive: boolean;
   tabRuleActive: boolean;
@@ -94,14 +96,16 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
     this.route.queryParams.subscribe((queryParams: Params) => {
       this.codiceIpa = queryParams.codiceIpa;
       this.fromMap = queryParams.fromMap;
+      this.zoom = queryParams.zoom;
+      this.paramsWorkflowId = queryParams.workflowId;
       if (this.codiceIpa) {
         this.companyService.getAll({
           codiceIpa: this.codiceIpa,
           size: 1
         }).subscribe((company: Company[]) => {
           this.company = company[0];
-          this.tabRuleActive = true;
-          this.tabPAActive = false;
+          this.tabRuleActive = false;
+          this.tabPAActive = true;
           if (!this.company) {
             this.apiMessageService.sendMessage(MessageType.ERROR,  `PA non presente!`);
           }
@@ -542,8 +546,13 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
 
   @HostListener('window:popstate', ['$event'])
   onPopState(event) {
+    let dest = `/company-map?zoom=${this.zoom}&codiceIpa=${this.codiceIpa}`;
     if (this.fromMap) {
-      this.router.navigateByUrl(`/company-map?workflowId=${this.filterFormSearch.value.workflowId}&codiceIpa=${this.codiceIpa}`);
+      if (this.paramsWorkflowId) {
+        dest += `&workflowId=${this.paramsWorkflowId}`;
+      }
+      event.stopPropagation();
+      this.router.navigateByUrl(dest, { onSameUrlNavigation: 'reload', replaceUrl: true });
     }
     return false;
   }
