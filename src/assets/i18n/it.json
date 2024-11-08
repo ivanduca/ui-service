@@ -43,6 +43,8 @@
       "cron": {
         "title": "Espressione per l'esecuzione di un nuovo controllo",
         "message": "La prossima esecuzione del controllo avverrà il <b>{{nextDate}}</b> confermi il cambiamento dell'espressione?",
+        "next-date": ", la prossima esecuzione avverrà il {{nextDate}}",
+        "next-next-date": ", la successiva il {{nextDate}}",
         "error": "Non è possibile selezionare più di un orario all'interno della giornata!",        
         "workflow": "Impostazioni controllo",
         "workflow-url": "URL della piattaforma",

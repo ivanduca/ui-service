@@ -41,7 +41,6 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
 
   protected labels: any;
   protected cronValue: string;
-  protected nextDate: Date;
   protected cronConfiguration: Configuration;
   protected workflowURL: string;
   protected workflowURLid: number;
@@ -250,7 +249,6 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
             this.workflowURLid = conf.id;
           }
           if (conf.key === this.WORKFLOW_NUMBER_PRESERVE) {
-            console.log(conf.value);
             this.workflowBODYForm.controls.number_workflows_preserve.patchValue(Number(conf.value));
             this.number_workflows_preserve_id = conf.id;
           }
@@ -287,9 +285,25 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
     if (cronExpression.fields.hour.length > 1) {
       this.apiMessageService.sendMessage(MessageType.ERROR, this.labels.cron.error, NotificationPosition.Top);
     } else {
-      this.nextDate = cronExpression.next().toDate();
       this.headerPopconfirmModal.toggle();  
     }
+  }
+
+  get nextDate(): Date {
+    if (this.cronValue) {
+      let cronExpression = parser.parseExpression(this.cronValue);
+      return cronExpression.next().toDate();  
+    }
+    return undefined;
+  }
+
+  get nextNextDate(): Date {
+    if (this.cronValue) {
+      let cronExpression = parser.parseExpression(this.cronValue);
+      cronExpression.next();
+      return cronExpression.next().toDate();  
+    }
+    return undefined;
   }
 
   cronSave(): void {
@@ -297,7 +311,6 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
     conf.id = this.cronConfiguration ? this.cronConfiguration.id: undefined;
     conf.application = `task-scheduler-service`;
     conf.profile = `default`;
-    conf.label= this.labels.cron.title;
     conf.key = this.WORKFLOW_CRON_EXPRESSION;
     conf.value = this.cronValue;
     this.configurationService.save(conf).subscribe((result: any) => {
@@ -310,7 +323,6 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
     conf.id = this.workflowURLid;
     conf.application = `task-scheduler-service`;
     conf.profile = `default`;
-    conf.label= this.labels.cron['workflow-url'];
     conf.key = this.WORKFLOW_CRON_URL;
     conf.value = this.workflowURL;
     this.configurationService.save(conf).subscribe((result: any) => {
@@ -324,7 +336,6 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
     conf.id = this.workflowBODYid;
     conf.application = `task-scheduler-service`;
     conf.profile = `default`;
-    conf.label= this.labels.cron['workflow-body'];
     conf.key = this.WORKFLOW_CRON_BODY;
     conf.value = JSON.stringify({
       name: ConductorService.AMMINISTRAZIONE_TRASPARENTE_FLOW,
@@ -353,14 +364,12 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
       this.workflowBODYid = result.id;
       // Comunico il numero di flussi da conservare
       conf.id = this.number_workflows_preserve_id;
-      conf.label= this.labels.cron['workflow-preserve-label'];
       conf.key = this.WORKFLOW_NUMBER_PRESERVE;
       conf.value = this.workflowBODYForm.controls.number_workflows_preserve.value;
       this.configurationService.save(conf, true).subscribe((result: any) => {
         console.log(result);
         // Comunico l'id dell'eventuale flusso da conservare
         conf.id = this.workflow_id_preserve_id;
-        conf.label= this.labels.cron['workflow-id'];
         conf.key = this.WORKFLOW_ID_PRESERVE;
         conf.value = this.workflowBODYForm.controls.workflow_id_preserve.value;
         this.configurationService.save(conf).subscribe((result: any) => {

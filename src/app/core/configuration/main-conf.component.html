@@ -1,8 +1,9 @@
 <div class="container pt-4">
   <div class="border border-top-0 border-bottom-0">
-    <it-accordion title="{{'it.configuration.cron.title'| translate}}" opened="true">
+    <it-accordion title="{{'it.configuration.cron.title'| translate}}{{'it.configuration.cron.next-date'| translate:{nextDate: nextDate| date:'dd/MM/yyyy \'alle ore\' HH'} }}{{'it.configuration.cron.next-next-date'| translate:{nextDate: nextNextDate| date:'dd/MM/yyyy \'alle ore\' HH'} }}" opened="true">
       <button (click)="cronConfirm()" role='button' class="btn pull-right py-sm-1 py-md-2 px-sm-1 px-md-4">
-        <it-icon name="pencil" color="primary"></it-icon>{{'it.navigation.confirm' | translate}}
+        <it-icon name="pencil" color="primary"></it-icon>
+        <span translate>it.navigation.confirm</span>
       </button>
       <bs5-unix-cron #cron [(ngModel)]="cronValue" (tabChanged)="onTabChanged($event)" [activeTab]="activeTab" [tabs]="tabs" [localization]="localization"></bs5-unix-cron>
     </it-accordion> 
