@@ -656,6 +656,8 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
 
   openCreateModal() {
     this.editNode = {
+      nodeId: undefined,
+      term: undefined,
       create: true,
       alternativeTerm: []
     };
@@ -668,6 +670,14 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
 
   edit(ngForm: NgForm) {
     if (this.editNode.create) {
+      let parentRule = this.findCurrentRule();
+      if (parentRule.childs) {
+        if (Object.keys(parentRule.childs)
+              .filter((childkey) => childkey === this.editNode.nodeId).length !== 0) {
+          this.apiMessageService.sendMessage(MessageType.ERROR, 'La regola che si sta tentando di inserire già esiste!', NotificationPosition.Top);
+          return;
+        }
+      }      
       this.chart.addNode({
         id: this.editNode.nodeId,
         nodeId: this.editNode.nodeId,
@@ -684,7 +694,6 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
       this.editNode.alternativeTerm.forEach((alternativeTerm: string) => {
         rule.term.push(new Term(alternativeTerm, 202));
       });
-      let parentRule = this.findCurrentRule();
       if (!parentRule.childs) {
         parentRule.childs = {};
       }
