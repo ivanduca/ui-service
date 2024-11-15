@@ -199,11 +199,11 @@
           </div>
           <it-callout appearance="highlight" color="success" [label]="'it.rule.alternativeTerm'| translate">
             @for (term of editNode.alternativeTerm; track $index; let idx = $index) {
-              <div class="d-flex">
-                <div class="w-100 me-auto">
+              <div class="row">
+                <div class="col-md-8">
                   <it-input [(ngModel)]="editNode.alternativeTerm[idx]" name="alternativeTerm_{{idx}}" required></it-input>
                 </div>
-                <div>
+                <div class="col-md-4">
                   <a itButton class="pull-right" (click)="editNode.alternativeTerm.splice(idx, 1)">
                     <it-icon name="minus-circle" color="danger"></it-icon><span class="text-danger" translate>remove</span>
                   </a>  
