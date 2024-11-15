@@ -45,15 +45,20 @@ export class RuleService extends CommonService<Rule> {
     return observableOf(environment.ruleApiUrl);
   }
 
-  public getRules(): Observable<Rule> {
+  public getRules(): Observable<Map<String, Rule>> {
     return this.getApiBase()
       .pipe(
         switchMap((apiBase) => {
-          return this.httpClient.get<Rule>( apiBase + this.getRequestMapping())
+          return this.httpClient.get<Map<String, Rule>>( apiBase + this.getRequestMapping())
             .pipe(
               map((result) => {
                 try {
-                  return this._buildInstance(result[Rule.AMMINISTRAZIONE_TRASPARENTE]);
+                  let rules = new Map();
+
+                  Object.keys(result).forEach((key: string) => {
+                    rules.set(key, this._buildInstance(result[key]));
+                  });
+                  return rules;
                 } catch (ex) {
                   console.log(ex);
                   this.apiMessageService.sendMessage(MessageType.ERROR, ex.message);

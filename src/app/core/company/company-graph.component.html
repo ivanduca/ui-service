@@ -1,58 +1,68 @@
-<div class="container px-0 border shadow-lg">
-  <div class="btn-toolbar bg-light pt-2 d-flex justify-content-around" role="toolbar" aria-label="Toolbar with button groups">
-    <a class="btn" href="#" (click)="zoomOut()">
-      <it-icon color="primary" name="zoom-out"></it-icon>
-      <span class="d-none d-lg-block" translate>it.rule.graph.zoomout</span>
-    </a>
-    <a class="btn" href="#" (click)="zoomIn()">
-      <it-icon color="primary" name="zoom-in"></it-icon>
-      <span class="d-none d-lg-block" translate>it.rule.graph.zoomin</span>
-    </a>
-    <a class="btn" href="#" (click)="swap()">
-      <it-icon color="primary" name="exchange-circle"></it-icon>
-      <span class="d-none d-lg-block" translate>it.rule.graph.rotate</span>
-    </a>
-    <a class="btn" href="#" (click)="fit()">
-      <it-icon color="primary" name="minimize"></it-icon>
-      <span class="d-none d-lg-block" translate>it.rule.graph.fit</span>
-    </a>
-    <a class="btn" href="#" (click)="expandAll()">
-      <it-icon color="primary" name="arrow-down-circle"></it-icon>
-      <span class="d-none d-lg-block" translate>it.rule.graph.expand</span>
-    </a>
-    <a class="btn" href="#" (click)="collapseAll()">
-      <it-icon color="primary" name="arrow-up-circle"></it-icon>
-      <span class="d-none d-lg-block" translate>it.rule.graph.collapse</span>
-    </a>
-    <a class="btn" href="#" (click)="compactGraph()">
-      <it-icon color="primary" name="piattaforme"></it-icon>
-      <span class="d-none d-lg-block" translate>it.rule.graph.compact</span>
-    </a>
-    <a class="btn" href="#" (click)="center()">
-      <it-icon color="primary" name="maximize-alt"></it-icon>
-      <span class="d-none d-lg-block" translate>it.rule.graph.center</span>
-    </a>
-    <div class="mt-4">
+<div class="container px-0 border shadow d-block">
+  <div class="btn-toolbar bg-light pt-2 pb-1 d-flex justify-content-around border-bottom" role="toolbar" aria-label="Toolbar with button groups">
+    @if (isSuperuser) {
+      <button itButton class="btn btn-outline-success shadow d-block" (click)="newModal.toggle()">
+        <it-icon color="success" size="lg" name="plus-circle"></it-icon>
+        <span class="d-none d-xl-block text-success" translate>it.configuration.rule.new.button</span>
+      </button>  
+    }
+    <button itButton class="btn shadow d-block" [disabled]="rules === undefined" (click)="zoomOut()" >
+      <it-icon color="primary" size="lg" name="zoom-out"></it-icon>
+      <span class="d-none d-xl-block" translate>it.rule.graph.zoomout</span>
+    </button>
+    <button itButton class="btn shadow d-block" [disabled]="rules === undefined" (click)="zoomIn()">
+      <it-icon color="primary" size="lg" name="zoom-in"></it-icon>
+      <span class="d-none d-xl-block" translate>it.rule.graph.zoomin</span>
+    </button>
+    <button itButton class="btn shadow d-block" [disabled]="rules === undefined" (click)="swap()">
+      <it-icon color="primary" size="lg" name="exchange-circle"></it-icon>
+      <span class="d-none d-xl-block" translate>it.rule.graph.rotate</span>
+    </button>
+    <button itButton class="btn shadow d-block" [disabled]="rules === undefined" (click)="fit()">
+      <it-icon color="primary" size="lg" name="minimize"></it-icon>
+      <span class="d-none d-xl-block" translate>it.rule.graph.fit</span>
+    </button>
+    <button itButton class="btn shadow d-block" [disabled]="rules === undefined" (click)="expandAll()">
+      <it-icon color="primary" size="lg" name="arrow-down-circle"></it-icon>
+      <span class="d-none d-xl-block" translate>it.rule.graph.expand</span>
+    </button>
+    <button itButton class="btn shadow d-block" [disabled]="rules === undefined" (click)="collapseAll()">
+      <it-icon color="primary" size="lg" name="arrow-up-circle"></it-icon>
+      <span class="d-none d-xl-block" translate>it.rule.graph.collapse</span>
+    </button>
+    <button itButton class="btn shadow d-block" [disabled]="rules === undefined" (click)="compactGraph()">
+      <it-icon color="primary" size="lg" name="piattaforme"></it-icon>
+      <span class="d-none d-xl-block" translate>it.rule.graph.compact</span>
+    </button>
+    <button itButton class="btn shadow d-block" [disabled]="rules === undefined" (click)="center()">
+      <it-icon color="primary" size="lg" name="maximize-alt"></it-icon>
+      <span class="d-none d-xl-block" translate>it.rule.graph.center</span>
+    </button>
+    <div class="pt-4 shadow d-block">
       <it-dropdown mode="button">
-        <span button>
-          <it-icon color="primary" name="file-slides"></it-icon>
+        <span button class="d-block px-4">
+          <it-icon color="primary" class="d-block" size="lg" name="file-slides"></it-icon>
           <span translate>it.rule.graph.export.title</span>
         </span>
         <ng-container list>
-          <it-dropdown-item (click)="exportImg(false)"><span translate>it.rule.graph.export.visible</span></it-dropdown-item>
-          <it-dropdown-item (click)="exportImg(true)"><span translate>it.rule.graph.export.all</span></it-dropdown-item>
-          <it-dropdown-item (click)="exportPdf()"><span translate>it.rule.graph.export.pdf</span></it-dropdown-item>
+          <it-dropdown-item [disabled]="rules === undefined" (click)="exportImg(false)"><span translate>it.rule.graph.export.visible</span></it-dropdown-item>
+          <it-dropdown-item [disabled]="rules === undefined" (click)="exportImg(true)"><span translate>it.rule.graph.export.all</span></it-dropdown-item>
+          <it-dropdown-item [disabled]="rules === undefined" (click)="exportPdf()"><span translate>it.rule.graph.export.pdf</span></it-dropdown-item>
         </ng-container>
       </it-dropdown>
     </div>
   </div>
-  @if (company) {
-    <form *ngIf="filterFormSearch" [formGroup]="filterFormSearch">
+  <form *ngIf="filterFormSearch" [formGroup]="filterFormSearch">
+    @if (company) {
       <div class="form-group mb-0">
-          <it-select [options]="optionsWorkflow" formControlName="workflowId"></it-select>        
+          <it-select [options]="optionsWorkflow" formControlName="workflowId"></it-select>
       </div>
-    </form>  
-  }
+    } @else {
+      <div class="form-group mb-0">
+        <it-select [options]="optionsRule" formControlName="rootRule"></it-select>
+      </div>
+    }
+  </form>
   <div class="row mx-0 bg-light">  
     <div class="col-md-9 ps-md-1 pe-md-0">
       @if (!data) {
@@ -118,6 +128,21 @@
             }
             <app-show-list-text [label]="'it.result.updatedAt'" [value]="currentNode?.data?.updatedAt| date: 'dd/MM/yyyy HH:mm:ss'"></app-show-list-text>
             <app-show-list-text [label]="'it.result.destinationUrl'" [value]="currentNode?.data?.destinationUrl" url="true"></app-show-list-text>
+            @if (currentNode && !company && isSuperuser) {
+              <it-list-item>
+                <div class="w-100 d-flex justify-content-around">
+                  <a itButton="outline-primary" size="xs" class="mt-1" (click)="openEditModal()">
+                    <it-icon name="pencil" color="primary"></it-icon><span class="ms-1" translate>edit</span>
+                  </a>
+                  <a itButton="outline-success" size="xs" class="mt-1" (click)="openCreateModal()">
+                    <it-icon name="plus-circle" color="success"></it-icon><span class="ms-1" translate>new</span>
+                  </a>
+                  <a itButton="outline-danger" size="xs" class="mt-1" (click)="deletePopconfirmModal.toggle()">
+                      <it-icon name="delete" color="danger"></it-icon><span class="ms-1" translate>delete</span>
+                    </a>
+                </div>
+              </it-list-item>
+            }
             @if (company) {
               @if (currentNode?.data?.storageData?.screenshotId || currentNode?.data?.storageData?.objectId) {
                 <it-list-item>
@@ -154,3 +179,71 @@
     </div>
   </div>
 </div>
+
+<it-modal #editModal="itModal" size="md" footerShadow="true" closeButton="false">
+  <ng-container modalTitle>{{(editNode?.create ? 'it.configuration.rule.new.title' : 'it.configuration.rule.edit.title')| translate: {id: currentNode?.data?.nodeId} }}</ng-container>
+  <form #editForm="ngForm">
+    @if (editNode) {
+      <div class="row">
+        <div class="form-group col-md-12">
+          <it-input [(ngModel)]="editNode.nodeId" name="nodeId" [label]="'it.rule.name'| translate" required></it-input>
+        </div>
+        <div class="form-group col-md-12">
+          <it-input [(ngModel)]="editNode.term" name="term" [label]="'it.rule.term'| translate" required></it-input>
+        </div>
+        <div class="form-group col-md-12">
+          <div class="d-flex justify-content-end mb-n3">
+            <a itButton (click)="editNode.alternativeTerm.push('')">
+              <it-icon name="plus-circle" color="success"></it-icon><span class="text-success" translate>add</span>
+            </a>  
+          </div>
+          <it-callout appearance="highlight" color="success" [label]="'it.rule.alternativeTerm'| translate">
+            @for (term of editNode.alternativeTerm; track $index; let idx = $index) {
+              <div class="d-flex">
+                <div class="w-100 me-auto">
+                  <it-input [(ngModel)]="editNode.alternativeTerm[idx]" name="alternativeTerm_{{idx}}" required></it-input>
+                </div>
+                <div>
+                  <a itButton class="pull-right" (click)="editNode.alternativeTerm.splice(idx, 1)">
+                    <it-icon name="minus-circle" color="danger"></it-icon><span class="text-danger" translate>remove</span>
+                  </a>  
+                </div>
+              </div>
+            }  
+          </it-callout>
+        </div>
+      </div>
+    }
+  </form>
+  <ng-container footer>
+    <button itButton="primary" size="sm" type="button" [disabled]="!editForm.valid" (click)="edit(editForm)" data-bs-dismiss="modal" translate>button.ok</button>
+    <button itButton="outline-secondary" size="sm" type="button" data-bs-dismiss="modal" translate>button.cancel</button>
+  </ng-container>
+</it-modal>
+
+<it-modal #newModal="itModal" size="md" footerShadow="true" closeButton="true">
+  <ng-container modalTitle>{{'it.configuration.rule.new.button'| translate }}</ng-container>
+  <hr class="mt-n3 pb-2">
+  <form [formGroup]="newRuleForm">
+    <div class="form-group col-md-12">
+      <it-select formControlName="codiceCategoria" [label]="'it.configuration.rule.new.root-name'| translate" [options]="optionsCategoria" required></it-select>
+    </div>    
+    <div class="form-group col-md-12 pt-4">
+      <it-select [options]="optionsRule" [label]="'it.configuration.rule.new.copy-from'| translate" formControlName="copyFrom" required></it-select>
+    </div>
+  </form>
+  <ng-container footer>
+    <button itButton="primary" size="sm" type="button" [disabled]="!newRuleForm.valid" (click)="new()" data-bs-dismiss="modal" translate>button.ok</button>
+    <button itButton="outline-secondary" size="sm" type="button" data-bs-dismiss="modal" translate>button.cancel</button>
+  </ng-container>
+</it-modal>
+
+
+<it-modal #deletePopconfirmModal="itModal" size="md" alignment="centered" footerShadow="true" closeButton="false">
+  <ng-container modalTitle>{{'it.configuration.rule.delete.title'| translate}}</ng-container>
+  <p innerHtml="{{'it.configuration.rule.delete.text' | translate: {term: currentNode?.data?.term} }}"></p>
+  <ng-container footer>
+    <button itButton="primary" size="sm" type="button" (click)="delete()" data-bs-dismiss="modal" translate>button.ok</button>
+    <button itButton="outline-secondary" size="sm" type="button" data-bs-dismiss="modal" translate>button.cancel</button>
+  </ng-container>
+</it-modal>

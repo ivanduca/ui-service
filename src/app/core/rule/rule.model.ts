@@ -20,7 +20,7 @@ export class RuleChart {
     public nodeId: string;
     public parentNodeId: string;
     public term: string;
-    public alternativeTerm: string;
+    public alternativeTerm: string[];
     public childStatus : Number[];
 
     public status: number;
@@ -33,7 +33,7 @@ export class RuleChart {
     public workflowChildId: string;
     public content: string;
 
-    constructor(nodeId: string, parentNodeId: string, term: string, alternativeTerm?: string, childStatus?: Number[]) {
+    constructor(nodeId: string, parentNodeId: string, term: string, alternativeTerm?: string[], childStatus?: Number[]) {
         this.nodeId = nodeId;
         this.parentNodeId = parentNodeId;
         this.term = term;
@@ -50,6 +50,11 @@ export class Term {
     public key: string;
     @JsonProperty('code')
     public code: number;
+
+    constructor(key: string, code: number) {
+        this.key = key;
+        this.code = code;
+    }
 }
 
 @JsonObject("Rule")
@@ -60,7 +65,7 @@ export class Rule implements Base {
     @JsonProperty('term', [Term])
     public term: Term[] = [];
     @JsonProperty('childs')
-    public childs: Map<String, Rule>;    
+    public childs: any;    
 
     public getKeys(parentKey: string, rule: Rule, key: string, array: SelectRule[], leveli: number): SelectRule[] {
         let level = leveli + 1;
@@ -87,12 +92,12 @@ export class Rule implements Base {
         let childs : Map<String, Rule> = rule ? rule.childs : this.childs;
         if (childs) {
             Object.keys(childs).forEach((child) => {
-                result.push(new RuleChart(child, key, this.term200(childs[child].term), this.splitTerm(childs[child].term)));
+                result.push(new RuleChart(child, key, this.term200(childs[child].term), this.term202(childs[child].term)));
                 this.getCharts(childs[child], child, result);
             });
         } 
         if (key && !rule) {
-            result.push(new RuleChart(key, null, this.term200(this.term), this.splitTerm(this.term)));
+            result.push(new RuleChart(key, null, this.term200(this.term), this.term202(this.term)));
         }
         return result;
     }
@@ -101,11 +106,8 @@ export class Rule implements Base {
         return terms.filter(key => key.code === 200)[0].key;
     }
 
-    public splitTerm(terms: Term[]): string {
-        if (terms.length == 1) {
-            return undefined;
-        }
-        return terms.filter(key => key.code !== 200).map(a => a.key).join(',');
+    public term202(terms: Term[]): string[] {
+        return terms.filter(key => key.code === 202).map((term: Term) => {return term.key;});
     }
 
     getId(): string {

@@ -192,8 +192,9 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
     Object.keys(CodiceCategoria).forEach((key) => {
       this.optionsCategoria.push({ value: key, text: CodiceCategoria[key]});
     });
-    this.ruleService.getRules().subscribe((rule) => {
+    this.ruleService.getRules().subscribe((resultRules: Map<String, Rule>) => {
       this.optionsRule = [];
+      let rule = resultRules.get(Rule.AMMINISTRAZIONE_TRASPARENTE);
       let rules: SelectRule[] = rule.getKeys(undefined, undefined, Rule.AMMINISTRAZIONE_TRASPARENTE, [], -1);
       Object.keys(rules).forEach((index) => {
         this.optionsRule.push({
@@ -343,7 +344,7 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
       version: 1,
       input: {
         page_size: this.workflowBODYForm.controls.page_size.value,
-        codice_categoria: this.workflowBODYForm.controls.codice_categoria.value,
+        codice_categoria: this.workflowBODYForm.controls.codice_categoria.value||'',
         codice_ipa: "",
         id_ipa_from: 0,
         parent_workflow_id: "",

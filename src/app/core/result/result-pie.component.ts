@@ -78,8 +78,9 @@ export class ResultPieComponent implements OnInit {
     this.pieChartLabels();
     this.route.queryParams.subscribe((queryParams) => {
       this.ruleName = queryParams.ruleName || Rule.AMMINISTRAZIONE_TRASPARENTE;
-      this.ruleService.getRules().subscribe((rule) => {
+      this.ruleService.getRules().subscribe((resultRules: Map<String, Rule>) => {
         this.optionsRule = [];
+        let rule = resultRules.get(Rule.AMMINISTRAZIONE_TRASPARENTE);
         this.rules = rule.getKeys(undefined, undefined, Rule.AMMINISTRAZIONE_TRASPARENTE, [], -1);
         Object.keys(this.rules).forEach((index) => {
           this.optionsRule.push({

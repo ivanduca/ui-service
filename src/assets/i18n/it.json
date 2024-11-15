@@ -65,6 +65,21 @@
           "result_base_url": "URL del servizio Risultati",
           "crawler_uri": "URL del servizio Crawler"
         }
+      },
+      "rule": {
+        "delete": {
+          "title": "Conferma cancellazione",
+          "text": "Sei sicuro di voler eliminare la regola <b>\"{{term}}\"</b>, e tutte le sue eventuali regole figlie?"
+        },
+        "edit": {
+          "title": "Modifica regola {{id}}"
+        },
+        "new": {
+          "button": "Nuovo albero delle regole",
+          "title": "Nuova regola figlia di {{id}}",
+          "copy-from": "Copia da",
+          "root-name": "Chiave - Categoria PA"
+        }        
       }
     },
     "navigation" : {
@@ -142,6 +157,7 @@
       },
       "children": "Figli",
       "graph": {
+        "save": "Salva",
         "zoomout": "Zoom Out",
         "zoomin": "Zoom In",
         "rotate": "Ruota",

@@ -3,7 +3,7 @@ import { ActivatedRoute, NavigationStart, Params, Router } from '@angular/router
 import { TranslateService } from '@ngx-translate/core';
 import { OrgChart } from "d3-org-chart";
 import { RuleService } from '../rule/rule.service';
-import { Rule, RuleChart } from '../rule/rule.model';
+import { Rule, RuleChart, Term } from '../rule/rule.model';
 import { Helpers } from '../../common/helpers/helpers';
 import { jsPDF } from "jspdf";
 import { ConductorService } from '../conductor/conductor.service';
@@ -12,11 +12,16 @@ import { ResultService } from '../result/result.service';
 import { Result } from '../result/result.model';
 import { Company } from './company.model';
 import { CompanyService } from './company.service';
-import { ItTabContainerComponent, ItTabItemComponent, NotificationPosition, SelectControlOption } from 'design-angular-kit';
+import { ItModalComponent, ItTabContainerComponent, ItTabItemComponent, NotificationPosition, SelectControlOption } from 'design-angular-kit';
 import { ApiMessageService, MessageType } from '../api-message.service';
 import { of as observableOf, Observable, map } from 'rxjs';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, NgForm } from '@angular/forms';
 import { DatePipe } from '@angular/common';
+import { RoleEnum } from '../../auth/role.enum';
+import { AuthGuard } from '../../auth/auth-guard';
+import { Configuration } from '../configuration/configuration.model';
+import { ConfigurationService } from '../configuration/configuration.service';
+import { CodiceCategoria } from '../../common/model/codice-categoria.enum';
 
 import * as am5 from '@amcharts/amcharts5';
 import * as am5xy from "@amcharts/amcharts5/xy";
@@ -52,6 +57,7 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
   data: any[];
   rulesOK: number;
   currentNode: any;
+  editNode: any;
   @ViewChild("chartContainer") chartContainer: ElementRef;
   chart;
 
@@ -60,6 +66,11 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
   protected fromMap: boolean;
   protected zoom: number;
   protected paramsWorkflowId: string;
+  protected rules: Map<String, Rule>;
+  protected ruleConfigurationId: number;
+  protected isSuperuser: boolean;
+
+  readonly JSONRULES_KEY = `jsonrules`;
 
   tabPAActive: boolean;
   tabRuleActive: boolean;
@@ -69,29 +80,47 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
   @ViewChild("tabRule") tabRule: ItTabItemComponent;
   protected filterFormSearch: FormGroup;
   optionsWorkflow: Array<SelectControlOption>;
+  optionsRule: Array<SelectControlOption> = [];
 
   chartDivStyle: string = 'height:30vh !important';
   @ViewChild('chartdiv', {static: true}) chartdiv: ElementRef;
   root;
   chartGauge;
 
+  @ViewChild("editModal") editModal: ItModalComponent;
+  optionsCategoria: Array<SelectControlOption> = [];
+  protected newRuleForm: FormGroup;
+
   constructor(private formBuilder: FormBuilder,
               private route: ActivatedRoute,
               protected apiMessageService: ApiMessageService,
               private ruleService: RuleService,
               private resultService: ResultService,
+              private configurationService: ConfigurationService,
               private conductorService: ConductorService,
+              private authGuard: AuthGuard,
               private companyService: CompanyService,
               private translateService: TranslateService,
               private datepipe: DatePipe,
               protected router: Router) {}
 
   ngOnInit(): void {
+    Object.keys(CodiceCategoria).forEach((key) => {
+      this.optionsCategoria.push({ value: key, text: CodiceCategoria[key]});
+    });    
+    this.authGuard.hasRole([RoleEnum.ADMIN, RoleEnum.SUPERUSER]).subscribe((hasRole: boolean) => {
+      this.isSuperuser = hasRole;
+    });
     this.translateService.get(`it.rule.status`).subscribe((status) => {
       this.ruleStatus = status;
     });
     this.filterFormSearch = this.formBuilder.group({
-      workflowId: new FormControl()
+      workflowId: new FormControl(),
+      rootRule: new FormControl(),
+    });
+    this.newRuleForm = this.formBuilder.group({
+      codiceCategoria: new FormControl(),
+      copyFrom: new FormControl(),
     });
     this.route.queryParams.subscribe((queryParams: Params) => {
       this.codiceIpa = queryParams.codiceIpa;
@@ -111,8 +140,8 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
           }
         });
         this.getWorkflow(queryParams).subscribe((workflowId: string) => {
-          this.filterFormSearch.controls['workflowId'].patchValue(workflowId);
-          this.filterFormSearch.valueChanges.subscribe((value: any) => {
+          this.filterFormSearch.controls.workflowId.patchValue(workflowId);
+          this.filterFormSearch.valueChanges.subscribe((value: any) => {            
             this.manageChart(value.workflowId);
           });  
           this.conductorService.getAll({
@@ -140,20 +169,51 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
         });
       } else {
         this.chartDivStyle = 'height:0px !important';
-        this.ruleService.getRules().subscribe((rule: Rule) => {
-          this.data = rule.getCharts(undefined, Rule.AMMINISTRAZIONE_TRASPARENTE, []);
-          this.data.forEach((ruleChart: RuleChart) => {
-            if (ruleChart.nodeId === Rule.AMMINISTRAZIONE_TRASPARENTE) {
-              this.currentNode = {
-                data: ruleChart
-              };
-              this.tabRuleActive = true;
-            }
+        this.configurationService.getAll().subscribe((configurations: Configuration[]) => {
+          configurations.forEach((conf: Configuration) => {
+            if (conf.key === this.JSONRULES_KEY) {
+              this.ruleConfigurationId = conf.id;
+              this.rules = new Map();
+              let value = JSON.parse(conf.value);
+              Object.keys(value).forEach((key: string) => {
+                this.rules.set(key, this.ruleService.buildInstance(value[key]));
+              });
+            }            
           });
-          this.updateChart();
-        });  
+          if (this.rules) {
+            this.rules.forEach((value: Rule, key: String) => {
+              let text = value.term.filter(key => key.code == 200)[0].key;
+              this.optionsRule.push({
+                value: key,
+                text: `${key} - ${text}`
+              });
+            });  
+            this.filterFormSearch.controls.rootRule.patchValue(Rule.AMMINISTRAZIONE_TRASPARENTE);
+            this.filterFormSearch.valueChanges.subscribe((value: any) => {
+              if (value.rootRule) {
+                this.loadRuleData(value.rootRule, this.rules.get(value.rootRule));
+              }
+            });
+            this.loadRuleData(Rule.AMMINISTRAZIONE_TRASPARENTE, this.rules.get(Rule.AMMINISTRAZIONE_TRASPARENTE));
+          } else {
+            this.data = [];
+          }
+        });    
       }
     });
+  }
+
+  loadRuleData(key: string, rule: Rule) {
+    this.data = rule.getCharts(undefined, key, []);
+    this.data.forEach((ruleChart: RuleChart) => {
+      if (ruleChart.nodeId === key) {
+        this.currentNode = {
+          data: ruleChart
+        };
+        this.tabRuleActive = true;
+      }
+    });
+    this.updateChart();
   }
 
   manageChart(workflowId: string) {
@@ -167,7 +227,8 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
         this.apiMessageService.sendMessage(MessageType.WARNING, `Risultati non presenti per la PA: ${this.company.denominazioneEnte}!`);
       }
       this.rulesOK = results.filter(result => result.status == 200 || result.status == 202).length;
-      this.ruleService.getRules().subscribe((rule: Rule) => {
+      this.ruleService.getRules().subscribe((rules: Map<String, Rule>) => {
+        let rule = rules.get(Rule.AMMINISTRAZIONE_TRASPARENTE);
         this.data = rule.getCharts(undefined, Rule.AMMINISTRAZIONE_TRASPARENTE, []);
         this.rating = Math.trunc((this.rulesOK * 100 / this.data.length) / 20);
         this.loadChart();
@@ -198,7 +259,7 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
             ruleChart.buttonColor = 'danger';  
             if (childStatus && childStatus.length > 0) {
               let successCount = childStatus.filter(result => result == 200 || result == 202).length;
-              console.log(`${result.ruleName} width total:${childStatus.length} and succes: ${successCount}`);
+              console.log(`${result.ruleName} width total:${childStatus.length} and success: ${successCount}`);
               if (successCount == 0) {
                 ruleChart.buttonColor = 'danger';  
               } else if (successCount < childStatus.length) {
@@ -556,7 +617,141 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
     }
     return false;
   }
-    
+
+  replacer(key, value) {
+    if(value instanceof Map) {
+      return Object.fromEntries(value);
+    } else {
+      return value;
+    }
+  }
+
+  saveRules(): boolean {
+    let conf: Configuration = new Configuration();
+    conf.id = this.ruleConfigurationId ? this.ruleConfigurationId: undefined;
+    conf.application = `rule-service`;
+    conf.profile = `default`;
+    conf.key = this.JSONRULES_KEY;
+    conf.value = JSON.stringify(this.rules, this.replacer);
+    this.configurationService.save(conf).subscribe((result: any) => {
+      this.ruleConfigurationId = result.id;
+      this.rules = new Map();
+      let value = JSON.parse(result.value);
+      Object.keys(value).forEach((key: string) => {
+        this.rules.set(key, this.ruleService.buildInstance(value[key]));
+      });
+    });
+    return false;
+  }
+
+  openEditModal() {
+    this.editNode = {
+      nodeId: this.currentNode?.data?.nodeId,
+      term: this.currentNode?.data?.term,
+      alternativeTerm: Object.assign([], this.currentNode?.data?.alternativeTerm),
+      create: false
+    };
+    this.editModal.toggle();
+  }
+
+  openCreateModal() {
+    this.editNode = {
+      create: true,
+      alternativeTerm: []
+    };
+    this.editModal.toggle();
+  }
+
+  new() {   
+    return false;
+  }
+
+  edit(ngForm: NgForm) {
+    if (this.editNode.create) {
+      this.chart.addNode({
+        id: this.editNode.nodeId,
+        nodeId: this.editNode.nodeId,
+        color: 'primary',
+        buttonColor: 'primary',
+        parentId: this.currentNode.data.nodeId,
+        term: this.editNode.term,
+        alternativeTerm: this.editNode.alternativeTerm
+      });
+      this.chart.setCentered(this.editNode.nodeId).render();
+      let rule: Rule = new Rule();
+      rule.term = [];
+      rule.term.push(new Term(this.editNode.term, 200));
+      this.editNode.alternativeTerm.forEach((alternativeTerm: string) => {
+        rule.term.push(new Term(alternativeTerm, 202));
+      });
+      let parentRule = this.findCurrentRule();
+      if (!parentRule.childs) {
+        parentRule.childs = {};
+      }
+      parentRule.childs[this.editNode.nodeId] = rule;
+    } else {
+      this.currentNode.data.nodeId = this.editNode.nodeId;
+      this.currentNode.data.term = this.editNode.term;
+      this.currentNode.data.alternativeTerm = this.editNode.alternativeTerm;      
+      this.chart.render();
+      let rule = this.findCurrentRule();
+      rule.term = [];
+      rule.term.push(new Term(this.editNode.term, 200));
+      this.editNode.alternativeTerm.forEach((alternativeTerm: string) => {
+        rule.term.push(new Term(alternativeTerm, 202));
+      });
+    }
+    this.saveRules();
+  }
+
+  delete() {
+    if (this.currentNode) {      
+      let rule: Rule = this.rules.get(this.filterFormSearch.controls.rootRule.value);
+      if (this.currentNode.parent) {
+        let parentRule: Rule;
+        if (this.currentNode.parent.id === this.filterFormSearch.controls.rootRule.value) {
+          parentRule = rule;
+        } else {
+          parentRule = this.findRule(rule.childs, this.currentNode.parent.id);
+        }
+        if (parentRule) {
+          delete parentRule.childs[this.currentNode.id];
+        }
+      } else {
+        this.rules.delete(this.currentNode.id);
+        this.filterFormSearch.controls.rootRule.patchValue(undefined);
+      }
+      this.chart.removeNode(this.currentNode.id);
+      this.currentNode = undefined;
+      this.saveRules();
+    }
+  }
+
+  findCurrentRule(): Rule {
+    let rule: Rule = this.rules.get(this.filterFormSearch.controls.rootRule.value);
+    if (this.currentNode.data.nodeId === this.filterFormSearch.controls.rootRule.value) {
+      return rule;
+    }
+    return this.findRule(rule.childs, this.currentNode.data.nodeId);
+  }
+
+  findRule(childs: Map<String, Rule>, id: string) {
+    let result;
+    if (childs) {
+      let filter = Object.keys(childs).filter((childkey) => childkey === id);
+      if (filter.length === 1) {
+        result = childs[id];
+      } else {
+        Object.keys(childs).forEach((childkey) => {          
+          let childResult = this.findRule(childs[childkey].childs, id);
+          if(childResult) {
+            result = childResult;
+          }
+        });
+      }
+    }
+    return result;
+  }
   // -------------------------------
   // On Destroy.
   // -------------------------------

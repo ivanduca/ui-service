@@ -113,9 +113,10 @@ export class SearchComponent implements OnInit {
           });
         });
       });      
-      this.ruleService.getRules().subscribe((rule) => {
+      this.ruleService.getRules().subscribe((resultRules: Map<String, Rule>) => {
         this.optionsRule = [];
         this.optionsRule.push({value: '', text: '*', selected: false});
+        let rule = resultRules.get(Rule.AMMINISTRAZIONE_TRASPARENTE);
         let rules: SelectRule[] = rule.getKeys(undefined, undefined, Rule.AMMINISTRAZIONE_TRASPARENTE, [], -1);
         Object.keys(rules).forEach((index) => {
           this.optionsRule.push({

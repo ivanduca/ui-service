@@ -171,8 +171,9 @@ export class CompanyMapComponent implements OnInit {
       }
     });
     this.workflowId = workflowId;
-    this.ruleService.getRules().subscribe((rule) => {
+    this.ruleService.getRules().subscribe((resultRules: Map<String, Rule>) => {
       this.optionsRule = [];
+      let rule = resultRules.get(Rule.AMMINISTRAZIONE_TRASPARENTE);
       let rules: SelectRule[] = rule.getKeys(undefined, undefined, Rule.AMMINISTRAZIONE_TRASPARENTE, [], -1);
       Object.keys(rules).forEach((index) => {
         this.optionsRule.push({
