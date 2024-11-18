@@ -78,7 +78,10 @@
           "button": "Nuovo albero delle regole",
           "title": "Nuova regola figlia di {{id}}",
           "copy-from": "Copia da",
-          "root-name": "Chiave - Categoria PA"
+          "codice-categoria": "Categoria PA",
+          "key": "Chiave",
+          "keytype": "Chiave come categoria della PA",
+          "error": "La regola che si sta tentando di inserire già esiste!"
         }        
       }
     },

@@ -23,6 +23,7 @@ import { Configuration } from '../configuration/configuration.model';
 import { ConfigurationService } from '../configuration/configuration.service';
 import { CodiceCategoria } from '../../common/model/codice-categoria.enum';
 
+import * as _ from "lodash";
 import * as am5 from '@amcharts/amcharts5';
 import * as am5xy from "@amcharts/amcharts5/xy";
 import * as am5radar from "@amcharts/amcharts5/radar";
@@ -88,6 +89,7 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
   chartGauge;
 
   @ViewChild("editModal") editModal: ItModalComponent;
+  @ViewChild("newModal") newModal: ItModalComponent;
   optionsCategoria: Array<SelectControlOption> = [];
   protected newRuleForm: FormGroup;
 
@@ -119,8 +121,9 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
       rootRule: new FormControl(),
     });
     this.newRuleForm = this.formBuilder.group({
-      codiceCategoria: new FormControl(),
+      key: new FormControl(),
       copyFrom: new FormControl(),
+      keytype: new FormControl(true)
     });
     this.route.queryParams.subscribe((queryParams: Params) => {
       this.codiceIpa = queryParams.codiceIpa;
@@ -181,13 +184,7 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
             }            
           });
           if (this.rules) {
-            this.rules.forEach((value: Rule, key: String) => {
-              let text = value.term.filter(key => key.code == 200)[0].key;
-              this.optionsRule.push({
-                value: key,
-                text: `${key} - ${text}`
-              });
-            });  
+            this.loadSelectRules();
             this.filterFormSearch.controls.rootRule.patchValue(Rule.AMMINISTRAZIONE_TRASPARENTE);
             this.filterFormSearch.valueChanges.subscribe((value: any) => {
               if (value.rootRule) {
@@ -200,6 +197,17 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
           }
         });    
       }
+    });
+  }
+
+  loadSelectRules() {
+    this.optionsRule = [];
+    this.rules.forEach((value: Rule, key: String) => {
+      let text = value.term.filter(key => key.code == 200)[0].key;
+      this.optionsRule.push({
+        value: key,
+        text: `${key} - ${text}`
+      });
     });
   }
 
@@ -664,7 +672,22 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
     this.editModal.toggle();
   }
 
-  new() {   
+  new() {
+    let keyValue = this.newRuleForm.controls.key.value;
+    if (this.rules.get(keyValue)) {
+      this.apiMessageService.sendMessage(
+        MessageType.ERROR, 
+        this.translateService.instant('it.configuration.rule.new.error'), 
+        NotificationPosition.Top
+      );
+      return;
+    }
+    let newRule: Rule = _.cloneDeep(this.rules.get(this.newRuleForm.controls.copyFrom.value));
+    this.rules.set(keyValue, newRule);
+    this.loadSelectRules();
+    this.filterFormSearch.controls.rootRule.patchValue(keyValue);
+    this.newModal.toggle();
+    this.saveRules();    
     return false;
   }
 
@@ -674,7 +697,11 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
       if (parentRule.childs) {
         if (Object.keys(parentRule.childs)
               .filter((childkey) => childkey === this.editNode.nodeId).length !== 0) {
-          this.apiMessageService.sendMessage(MessageType.ERROR, 'La regola che si sta tentando di inserire già esiste!', NotificationPosition.Top);
+          this.apiMessageService.sendMessage(
+            MessageType.ERROR, 
+            this.translateService.instant('it.configuration.rule.new.error'), 
+            NotificationPosition.Top
+          );
           return;
         }
       }      
@@ -698,6 +725,7 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
         parentRule.childs = {};
       }
       parentRule.childs[this.editNode.nodeId] = rule;
+      this.newModal.toggle();
     } else {
       this.currentNode.data.nodeId = this.editNode.nodeId;
       this.currentNode.data.term = this.editNode.term;
@@ -709,6 +737,7 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
       this.editNode.alternativeTerm.forEach((alternativeTerm: string) => {
         rule.term.push(new Term(alternativeTerm, 202));
       });
+      this.editModal.toggle();
     }
     this.saveRules();
   }
@@ -727,10 +756,11 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
           delete parentRule.childs[this.currentNode.id];
         }
       } else {
-        this.rules.delete(this.currentNode.id);
+        this.rules.delete(this.currentNode.data.nodeId);
+        this.loadSelectRules();
         this.filterFormSearch.controls.rootRule.patchValue(undefined);
       }
-      this.chart.removeNode(this.currentNode.id);
+      this.chart.removeNode(this.currentNode.data.nodeId);
       this.currentNode = undefined;
       this.saveRules();
     }

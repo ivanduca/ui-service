@@ -216,7 +216,7 @@
     }
   </form>
   <ng-container footer>
-    <button itButton="primary" size="sm" type="button" [disabled]="!editForm.valid" (click)="edit(editForm)" data-bs-dismiss="modal" translate>button.ok</button>
+    <button itButton="primary" size="sm" type="button" [disabled]="!editForm.valid" (click)="edit(editForm)" translate>button.ok</button>
     <button itButton="outline-secondary" size="sm" type="button" data-bs-dismiss="modal" translate>button.cancel</button>
   </ng-container>
 </it-modal>
@@ -225,15 +225,22 @@
   <ng-container modalTitle>{{'it.configuration.rule.new.button'| translate }}</ng-container>
   <hr class="mt-n3 pb-2">
   <form [formGroup]="newRuleForm">
+    <div class="form-group col-md-12 pb-2">
+      <it-checkbox formControlName="keytype" [label]="'it.configuration.rule.new.keytype'| translate" toggle="true"></it-checkbox>
+    </div>
     <div class="form-group col-md-12">
-      <it-select formControlName="codiceCategoria" [label]="'it.configuration.rule.new.root-name'| translate" [options]="optionsCategoria" required></it-select>
-    </div>    
+      @if (newRuleForm.controls.keytype.value) {
+        <it-select formControlName="key" [label]="'it.configuration.rule.new.codice-categoria'| translate" [options]="optionsCategoria" required></it-select>
+      } @else {
+        <it-input formControlName="key" [label]="'it.configuration.rule.new.key'| translate" required></it-input>
+      }
+    </div>  
     <div class="form-group col-md-12 pt-4">
       <it-select [options]="optionsRule" [label]="'it.configuration.rule.new.copy-from'| translate" formControlName="copyFrom" required></it-select>
     </div>
   </form>
   <ng-container footer>
-    <button itButton="primary" size="sm" type="button" [disabled]="!newRuleForm.valid" (click)="new()" data-bs-dismiss="modal" translate>button.ok</button>
+    <button itButton="primary" size="sm" type="button" [disabled]="!newRuleForm.valid" (click)="new()" translate>button.ok</button>
     <button itButton="outline-secondary" size="sm" type="button" data-bs-dismiss="modal" translate>button.cancel</button>
   </ng-container>
 </it-modal>

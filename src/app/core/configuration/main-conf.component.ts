@@ -48,7 +48,7 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
   protected workflowBODYForm: FormGroup;
   protected workflowBODYid: number;
   protected optionsCategoria: Array<SelectControlOption> = [];
-  protected optionsRule: Array<any>;
+  protected optionsRule: Array<SelectControlOption> = [];
 
   protected optionsWorkflow: Array<SelectControlOption> = [];
 
@@ -194,14 +194,11 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
     });
     this.ruleService.getRules().subscribe((resultRules: Map<String, Rule>) => {
       this.optionsRule = [];
-      let rule = resultRules.get(Rule.AMMINISTRAZIONE_TRASPARENTE);
-      let rules: SelectRule[] = rule.getKeys(undefined, undefined, Rule.AMMINISTRAZIONE_TRASPARENTE, [], -1);
-      Object.keys(rules).forEach((index) => {
+      resultRules.forEach((value: Rule, key: String) => {
+        let text = value.term.filter(key => key.code == 200)[0].key;
         this.optionsRule.push({
-          value: rules[index].key,
-          text: rules[index].text,
-          level: rules[index].level,
-          class: `ps-${rules[index].level} fs-${rules[index].level + 3}`
+          value: key,
+          text: `${key} - ${text}`
         });
       });
     });
