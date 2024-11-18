@@ -1,40 +1,40 @@
 <div class="container px-0 border shadow d-block">
   <div class="btn-toolbar bg-light pt-2 pb-1 d-flex justify-content-around border-bottom" role="toolbar" aria-label="Toolbar with button groups">
-    @if (isSuperuser) {
+    @if (isSuperuser && !codiceIpa) {
       <button itButton class="btn btn-outline-success shadow d-block" (click)="newModal.toggle()">
         <it-icon color="success" size="lg" name="plus-circle"></it-icon>
         <span class="d-none d-xl-block text-success" translate>it.configuration.rule.new.button</span>
       </button>  
     }
-    <button itButton class="btn shadow d-block" [disabled]="rules === undefined" (click)="zoomOut()" >
+    <button itButton class="btn shadow d-block" [disabled]="!(data && data.length > 0)" (click)="zoomOut()" >
       <it-icon color="primary" size="lg" name="zoom-out"></it-icon>
       <span class="d-none d-xl-block" translate>it.rule.graph.zoomout</span>
     </button>
-    <button itButton class="btn shadow d-block" [disabled]="rules === undefined" (click)="zoomIn()">
+    <button itButton class="btn shadow d-block" [disabled]="!(data && data.length > 0)" (click)="zoomIn()">
       <it-icon color="primary" size="lg" name="zoom-in"></it-icon>
       <span class="d-none d-xl-block" translate>it.rule.graph.zoomin</span>
     </button>
-    <button itButton class="btn shadow d-block" [disabled]="rules === undefined" (click)="swap()">
+    <button itButton class="btn shadow d-block" [disabled]="!(data && data.length > 0)" (click)="swap()">
       <it-icon color="primary" size="lg" name="exchange-circle"></it-icon>
       <span class="d-none d-xl-block" translate>it.rule.graph.rotate</span>
     </button>
-    <button itButton class="btn shadow d-block" [disabled]="rules === undefined" (click)="fit()">
+    <button itButton class="btn shadow d-block" [disabled]="!(data && data.length > 0)" (click)="fit()">
       <it-icon color="primary" size="lg" name="minimize"></it-icon>
       <span class="d-none d-xl-block" translate>it.rule.graph.fit</span>
     </button>
-    <button itButton class="btn shadow d-block" [disabled]="rules === undefined" (click)="expandAll()">
+    <button itButton class="btn shadow d-block" [disabled]="!(data && data.length > 0)" (click)="expandAll()">
       <it-icon color="primary" size="lg" name="arrow-down-circle"></it-icon>
       <span class="d-none d-xl-block" translate>it.rule.graph.expand</span>
     </button>
-    <button itButton class="btn shadow d-block" [disabled]="rules === undefined" (click)="collapseAll()">
+    <button itButton class="btn shadow d-block" [disabled]="!(data && data.length > 0)" (click)="collapseAll()">
       <it-icon color="primary" size="lg" name="arrow-up-circle"></it-icon>
       <span class="d-none d-xl-block" translate>it.rule.graph.collapse</span>
     </button>
-    <button itButton class="btn shadow d-block" [disabled]="rules === undefined" (click)="compactGraph()">
+    <button itButton class="btn shadow d-block" [disabled]="!(data && data.length > 0)" (click)="compactGraph()">
       <it-icon color="primary" size="lg" name="piattaforme"></it-icon>
       <span class="d-none d-xl-block" translate>it.rule.graph.compact</span>
     </button>
-    <button itButton class="btn shadow d-block" [disabled]="rules === undefined" (click)="center()">
+    <button itButton class="btn shadow d-block" [disabled]="!(data && data.length > 0)" (click)="center()">
       <it-icon color="primary" size="lg" name="maximize-alt"></it-icon>
       <span class="d-none d-xl-block" translate>it.rule.graph.center</span>
     </button>
@@ -45,9 +45,9 @@
           <span translate>it.rule.graph.export.title</span>
         </span>
         <ng-container list>
-          <it-dropdown-item [disabled]="rules === undefined" (click)="exportImg(false)"><span translate>it.rule.graph.export.visible</span></it-dropdown-item>
-          <it-dropdown-item [disabled]="rules === undefined" (click)="exportImg(true)"><span translate>it.rule.graph.export.all</span></it-dropdown-item>
-          <it-dropdown-item [disabled]="rules === undefined" (click)="exportPdf()"><span translate>it.rule.graph.export.pdf</span></it-dropdown-item>
+          <it-dropdown-item [disabled]="!(data && data.length > 0)" (click)="exportImg(false)"><span translate>it.rule.graph.export.visible</span></it-dropdown-item>
+          <it-dropdown-item [disabled]="!(data && data.length > 0)" (click)="exportImg(true)"><span translate>it.rule.graph.export.all</span></it-dropdown-item>
+          <it-dropdown-item [disabled]="!(data && data.length > 0)" (click)="exportPdf()"><span translate>it.rule.graph.export.pdf</span></it-dropdown-item>
         </ng-container>
       </it-dropdown>
     </div>
