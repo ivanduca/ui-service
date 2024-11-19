@@ -33,11 +33,6 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
   
   readonly activeTab = Tab.HOURS;
   readonly tabs = [Tab.HOURS, Tab.DAY, Tab.MONTH];
-  readonly WORKFLOW_CRON_EXPRESSION = `workflow.cron.expression`;
-  readonly WORKFLOW_CRON_URL = `workflow.cron.url`;
-  readonly WORKFLOW_CRON_BODY = `workflow.cron.body`;
-  readonly WORKFLOW_NUMBER_PRESERVE = `workflow.number.preserve`;
-  readonly WORKFLOW_ID_PRESERVE = `workflow.id.preserve`;
 
   protected labels: any;
   protected cronValue: string;
@@ -192,16 +187,6 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
     Object.keys(CodiceCategoria).forEach((key) => {
       this.optionsCategoria.push({ value: key, text: CodiceCategoria[key]});
     });
-    this.ruleService.getRules().subscribe((resultRules: Map<String, Rule>) => {
-      this.optionsRule = [];
-      resultRules.forEach((value: Rule, key: String) => {
-        let text = value.term.filter(key => key.code == 200)[0].key;
-        this.optionsRule.push({
-          value: key,
-          text: `${key} - ${text}`
-        });
-      });
-    });
     this.conductorService.getAll({
       includeClosed: true,
       includeTasks: false
@@ -238,23 +223,23 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
     });
     this.configurationService.getAll().subscribe((configurations: Configuration[]) => {
       configurations.forEach((conf: Configuration) => {
-          if (conf.key === this.WORKFLOW_CRON_EXPRESSION) {
+          if (conf.key === ConfigurationService.WORKFLOW_CRON_EXPRESSION) {
             this.cronConfiguration = conf;
             this.cronValue = conf.value;
           }
-          if (conf.key === this.WORKFLOW_CRON_URL) {
+          if (conf.key === ConfigurationService.WORKFLOW_CRON_URL) {
             this.workflowURL = conf.value;
             this.workflowURLid = conf.id;
           }
-          if (conf.key === this.WORKFLOW_NUMBER_PRESERVE) {
+          if (conf.key === ConfigurationService.WORKFLOW_NUMBER_PRESERVE) {
             this.workflowBODYForm.controls.number_workflows_preserve.patchValue(Number(conf.value));
             this.number_workflows_preserve_id = conf.id;
           }
-          if (conf.key === this.WORKFLOW_ID_PRESERVE) {
+          if (conf.key === ConfigurationService.WORKFLOW_ID_PRESERVE) {
             this.workflowBODYForm.controls.workflow_id_preserve.patchValue(conf.value);
             this.workflow_id_preserve_id = conf.id;
           }
-          if (conf.key === this.WORKFLOW_CRON_BODY) {
+          if (conf.key === ConfigurationService.WORKFLOW_CRON_BODY) {
             this.workflowBODYid = conf.id;
             let jsonvalue = JSON.parse(conf.value);
             this.workflowBODYForm.controls.page_size.patchValue(jsonvalue.input.page_size);
@@ -273,6 +258,21 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
             this.workflowBODYForm.controls.crawler_child_type.patchValue(jsonvalue.input.crawler_child_type);
             this.workflowBODYForm.controls.result_base_url.patchValue(jsonvalue.input.result_base_url);
             this.workflowBODYForm.controls.crawler_uri.patchValue(jsonvalue.input.crawler_uri);      
+          }
+          if (conf.key === ConfigurationService.JSONRULES_KEY) {
+            let resultRules = new Map();
+            let value = JSON.parse(conf.value);
+            Object.keys(value).forEach((key: string) => {
+              resultRules.set(key, this.ruleService.buildInstance(value[key]));
+            });
+            this.optionsRule = [];
+            resultRules.forEach((value: Rule, key: String) => {
+              let text = value.term.filter(key => key.code == 200)[0].key;
+              this.optionsRule.push({
+                value: key,
+                text: `${key} - ${text}`
+              });
+            });
           }  
       });
     });
@@ -309,7 +309,7 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
     conf.id = this.cronConfiguration ? this.cronConfiguration.id: undefined;
     conf.application = `task-scheduler-service`;
     conf.profile = `default`;
-    conf.key = this.WORKFLOW_CRON_EXPRESSION;
+    conf.key = ConfigurationService.WORKFLOW_CRON_EXPRESSION;
     conf.value = this.cronValue;
     this.configurationService.save(conf).subscribe((result: any) => {
       this.cronConfiguration = result;
@@ -321,7 +321,7 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
     conf.id = this.workflowURLid;
     conf.application = `task-scheduler-service`;
     conf.profile = `default`;
-    conf.key = this.WORKFLOW_CRON_URL;
+    conf.key = ConfigurationService.WORKFLOW_CRON_URL;
     conf.value = this.workflowURL;
     this.configurationService.save(conf).subscribe((result: any) => {
       this.workflowURLid = result.id;
@@ -334,7 +334,7 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
     conf.id = this.workflowBODYid;
     conf.application = `task-scheduler-service`;
     conf.profile = `default`;
-    conf.key = this.WORKFLOW_CRON_BODY;
+    conf.key = ConfigurationService.WORKFLOW_CRON_BODY;
     conf.value = JSON.stringify({
       name: ConductorService.AMMINISTRAZIONE_TRASPARENTE_FLOW,
       correlationId: ConductorService.AMMINISTRAZIONE_TRASPARENTE_FLOW,
@@ -362,13 +362,13 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
       this.workflowBODYid = result.id;
       // Comunico il numero di flussi da conservare
       conf.id = this.number_workflows_preserve_id;
-      conf.key = this.WORKFLOW_NUMBER_PRESERVE;
+      conf.key = ConfigurationService.WORKFLOW_NUMBER_PRESERVE;
       conf.value = this.workflowBODYForm.controls.number_workflows_preserve.value;
       this.configurationService.save(conf, true).subscribe((result: any) => {
         console.log(result);
         // Comunico l'id dell'eventuale flusso da conservare
         conf.id = this.workflow_id_preserve_id;
-        conf.key = this.WORKFLOW_ID_PRESERVE;
+        conf.key = ConfigurationService.WORKFLOW_ID_PRESERVE;
         conf.value = this.workflowBODYForm.controls.workflow_id_preserve.value;
         this.configurationService.save(conf).subscribe((result: any) => {
           console.log(result);

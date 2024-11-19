@@ -71,8 +71,6 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
   protected ruleConfigurationId: number;
   protected isSuperuser: boolean;
 
-  readonly JSONRULES_KEY = `jsonrules`;
-
   tabPAActive: boolean;
   tabRuleActive: boolean;
   protected ruleStatus = {};
@@ -174,7 +172,7 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
         this.chartDivStyle = 'height:0px !important';
         this.configurationService.getAll().subscribe((configurations: Configuration[]) => {
           configurations.forEach((conf: Configuration) => {
-            if (conf.key === this.JSONRULES_KEY) {
+            if (conf.key === ConfigurationService.JSONRULES_KEY) {
               this.ruleConfigurationId = conf.id;
               this.rules = new Map();
               let value = JSON.parse(conf.value);
@@ -639,7 +637,7 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
     conf.id = this.ruleConfigurationId ? this.ruleConfigurationId: undefined;
     conf.application = `rule-service`;
     conf.profile = `default`;
-    conf.key = this.JSONRULES_KEY;
+    conf.key = ConfigurationService.JSONRULES_KEY;
     conf.value = JSON.stringify(this.rules, this.replacer);
     this.configurationService.save(conf).subscribe((result: any) => {
       this.ruleConfigurationId = result.id;

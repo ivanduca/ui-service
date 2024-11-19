@@ -15,6 +15,13 @@ export class ConfigurationService extends CommonService<Configuration> {
   public static ROUTE = 'config-service';
   static PAGE_OFFSET = 12;
 
+  public static readonly WORKFLOW_CRON_EXPRESSION = `workflow.cron.expression`;
+  public static readonly WORKFLOW_CRON_URL = `workflow.cron.url`;
+  public static readonly WORKFLOW_CRON_BODY = `workflow.cron.body`;
+  public static readonly WORKFLOW_NUMBER_PRESERVE = `workflow.number.preserve`;
+  public static readonly WORKFLOW_ID_PRESERVE = `workflow.id.preserve`;
+  public static readonly JSONRULES_KEY = `jsonrules`;
+
   public constructor(protected httpClient: HttpClient,
                      protected apiMessageService: ApiMessageService,
                      protected router: Router,
