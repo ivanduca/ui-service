@@ -26,7 +26,7 @@ export class RuleService extends CommonService<Rule> {
   }
 
   public getApiService(): string {
-    return 'rule-service';
+    return ``;
   }
   
   public getRoute(): string {

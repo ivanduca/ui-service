@@ -2,12 +2,12 @@
     window["env"] = window["env"] || {};
   
     // Environment variables
-    window["env"]["apiUrl"] = "https://dica33.ba.cnr.it/";
-    window["env"]["companyApiUrl"] = window["env"]["apiUrl"];
-    window["env"]["conductorApiUrl"] = "https://monitorai.ba.cnr.it/";
-    window["env"]["resultApiUrl"] = window["env"]["apiUrl"];
-    window["env"]["resultAggregatorapiUrl"] = window["env"]["apiUrl"];
-    window["env"]["ruleApiUrl"] = "https://monitorai.ba.cnr.it/";
+    window["env"]["apiUrl"] = "https://dica33.ba.cnr.it";
+    window["env"]["companyApiUrl"] = window["env"]["apiUrl"] + "/public-sites-service";
+    window["env"]["conductorApiUrl"] = "https://monitorai.ba.cnr.it" + "/conductor-server";
+    window["env"]["resultApiUrl"] = window["env"]["apiUrl"] + "/result-service";
+    window["env"]["resultAggregatorapiUrl"] = window["env"]["apiUrl"] + "/result-aggregator-service";
+    window["env"]["ruleApiUrl"] = "https://monitorai.ba.cnr.it" + "/rule-service";
     window["env"]["crawlerApiUrl"] = "http://150.145.95.77:8080/crawl";
 
     window["env"]["baseHref"] = "/";

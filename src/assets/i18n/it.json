@@ -63,7 +63,10 @@
           "read_timeout_max": "Timeout di risposta massimo (ms)",
           "crawler_child_type": "Modalità di esecuzione dei flussi figli",
           "result_base_url": "URL del servizio Risultati",
-          "crawler_uri": "URL del servizio Crawler"
+          "crawler_uri": "URL del servizio Crawler",
+          "rule_base_url": "URL del servizio delle Regole",
+          "public_company_base_url": "URL del registro delle PA",
+          "result_aggregator_base_url": "URL del servizio dei dati Aggregati"
         }
       },
       "rule": {

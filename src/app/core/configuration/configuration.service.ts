@@ -35,7 +35,7 @@ export class ConfigurationService extends CommonService<Configuration> {
   }
 
   public getApiService(): string {
-    return `config-service`;
+    return `/${ConfigurationService.ROUTE}`;
   }
 
   public getApiPath(): string {

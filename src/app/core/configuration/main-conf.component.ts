@@ -216,8 +216,11 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
       connection_timeout_max: new FormControl(60000),
       read_timeout_max: new FormControl(60000),
       crawler_child_type: new FormControl(`START_WORKFLOW`),
-      result_base_url: new FormControl(`${environment.resultApiUrl}result-service/v1/results`),
+      result_base_url: new FormControl(environment.resultApiUrl),
       crawler_uri: new FormControl(environment.crawlerApiUrl),
+      rule_base_url: new FormControl(environment.ruleApiUrl),
+      public_company_base_url: new FormControl(environment.companyApiUrl),
+      result_aggregator_base_url: new FormControl(environment.resultAggregatorapiUrl),
       number_workflows_preserve: new FormControl(3),
       workflow_id_preserve: new FormControl('')
     });
@@ -257,7 +260,10 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
             this.workflowBODYForm.controls.read_timeout_max.patchValue(jsonvalue.input.read_timeout_max);
             this.workflowBODYForm.controls.crawler_child_type.patchValue(jsonvalue.input.crawler_child_type);
             this.workflowBODYForm.controls.result_base_url.patchValue(jsonvalue.input.result_base_url);
-            this.workflowBODYForm.controls.crawler_uri.patchValue(jsonvalue.input.crawler_uri);      
+            this.workflowBODYForm.controls.crawler_uri.patchValue(jsonvalue.input.crawler_uri);
+            this.workflowBODYForm.controls.rule_base_url.patchValue(jsonvalue.input.rule_base_url);
+            this.workflowBODYForm.controls.public_company_base_url.patchValue(jsonvalue.input.public_company_base_url);
+            this.workflowBODYForm.controls.result_aggregator_base_url.patchValue(jsonvalue.input.result_aggregator_base_url);
           }
           if (conf.key === ConfigurationService.JSONRULES_KEY) {
             let resultRules = new Map();
@@ -348,14 +354,18 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
         execute_child: this.workflowBODYForm.controls.execute_child.value,
         crawler_save_object: this.workflowBODYForm.controls.crawler_save_object.value,
         crawler_save_screenshot: this.workflowBODYForm.controls.crawler_save_screenshot.value,
-        rule_name: this.workflowBODYForm.controls.rule_name.value,
+        rule_name: Rule.AMMINISTRAZIONE_TRASPARENTE,
+        root_rule: this.workflowBODYForm.controls.rule_name.value,
         connection_timeout: this.workflowBODYForm.controls.connection_timeout.value,
         read_timeout: this.workflowBODYForm.controls.read_timeout.value,
         connection_timeout_max: this.workflowBODYForm.controls.connection_timeout_max.value,
         read_timeout_max: this.workflowBODYForm.controls.read_timeout_max.value,
         crawler_child_type: this.workflowBODYForm.controls.crawler_child_type.value,
         result_base_url: this.workflowBODYForm.controls.result_base_url.value,
-        crawler_uri: this.workflowBODYForm.controls.crawler_uri.value    
+        crawler_uri: this.workflowBODYForm.controls.crawler_uri.value,
+        rule_base_url: this.workflowBODYForm.controls.rule_base_url.value,
+        public_company_base_url: this.workflowBODYForm.controls.public_company_base_url.value,
+        result_aggregator_base_url: this.workflowBODYForm.controls.result_aggregator_base_url.value
       }   
     });
     this.configurationService.save(conf, true).subscribe((result: any) => {

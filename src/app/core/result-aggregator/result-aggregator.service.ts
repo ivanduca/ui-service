@@ -12,7 +12,6 @@ import { environment } from '../../../environments/environment';
 @Injectable()
 export class ResultAggregatorService extends CommonService<Result> {
 
-  public static ROUTE = 'result-aggregator-service';
   static PAGE_OFFSET = 12;
 
   public constructor(protected httpClient: HttpClient,
@@ -28,11 +27,11 @@ export class ResultAggregatorService extends CommonService<Result> {
   }
 
   public getApiService(): string {
-    return `result-aggregator-service`;
+    return ``;
   }
 
   public getRoute(): string {
-    return ResultAggregatorService.ROUTE;
+    return this.getApiService();
   }
 
   public getPageOffset(): number {

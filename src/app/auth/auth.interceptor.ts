@@ -18,7 +18,7 @@ export class AuthInterceptor implements HttpInterceptor {
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     if (environment.oidc.enable) {
       if (req.url.indexOf(CompanyService.API_SERVICE) != -1 || 
-          req.url.indexOf(ConductorService.API_SERVICE) != -1) {
+          req.url.indexOf(ConductorService.API_SERVICE) != -1) {            
         return this.oidcSecurityService.checkAuth().pipe(          
           switchMap((isAuthenticated) => {
             if(!isAuthenticated) {

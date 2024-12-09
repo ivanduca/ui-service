@@ -29,7 +29,7 @@ export class CompanyService extends CommonService<Company> {
   }
 
   public getApiService(): string {
-    return CompanyService.API_SERVICE;
+    return ``;
   }
 
   public getRoute(): string {

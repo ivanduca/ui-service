@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, ViewChild, ElementRef, OnChanges, HostListener } from '@angular/core';
-import { ActivatedRoute, NavigationStart, Params, Router } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { OrgChart } from "d3-org-chart";
 import { RuleService } from '../rule/rule.service';
@@ -78,7 +78,7 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
   @ViewChild("tabPA") tabPA: ItTabItemComponent;
   @ViewChild("tabRule") tabRule: ItTabItemComponent;
   protected filterFormSearch: FormGroup;
-  optionsWorkflow: Array<SelectControlOption>;
+  optionsWorkflow: Array<any>;
   optionsRule: Array<SelectControlOption> = [];
 
   chartDivStyle: string = 'height:30vh !important';
@@ -161,12 +161,13 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
                     startTime: this.datepipe.transform(workflow.startTime, 'dd/MM/yyyy HH:mm:ss'),
                     status: this.translateService.instant(`it.workflow.status.${workflow.status}`)
                   }),
-                  selected: workflow.workflowId === queryParams['workflowId']
+                  selected: workflow.workflowId === queryParams['workflowId'],
+                  ruleName: workflow.input.root_rule || Rule.AMMINISTRAZIONE_TRASPARENTE
                 });
               });  
+              this.manageChart(workflowId);
             });      
           });
-          this.manageChart(workflowId);
         });
       } else {
         this.chartDivStyle = 'height:0px !important';
@@ -198,6 +199,20 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
     });
   }
 
+  workflowRuleName(workflowId: string): string {
+    if (this.optionsWorkflow) {
+      let workflows: any[] = this.optionsWorkflow.filter((value: any) => {
+        if (value.value == workflowId) {
+          return value;
+        }
+      });
+      if (workflows.length == 1) {
+        return workflows[0].ruleName;  
+      }
+    }
+    return Rule.AMMINISTRAZIONE_TRASPARENTE;
+  }
+
   loadSelectRules() {
     this.optionsRule = [];
     this.rules.forEach((value: Rule, key: String) => {
@@ -223,6 +238,7 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
   }
 
   manageChart(workflowId: string) {
+    let ruleName = this.workflowRuleName(workflowId); 
     this.resultService.getAll({
       workflowId: workflowId,
       codiceIpa: this.codiceIpa,
@@ -234,11 +250,12 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
       }
       this.rulesOK = results.filter(result => result.status == 200 || result.status == 202).length;
       this.ruleService.getRules().subscribe((rules: Map<String, Rule>) => {
-        let rule = rules.get(Rule.AMMINISTRAZIONE_TRASPARENTE);
-        this.data = rule.getCharts(undefined, Rule.AMMINISTRAZIONE_TRASPARENTE, []);
+        let rule = rules.get(ruleName);
+        this.data = rule.getCharts(undefined, ruleName, []);
         this.rating = Math.trunc((this.rulesOK * 100 / this.data.length) / 20);
         this.loadChart();
         this.data.forEach((ruleChart: RuleChart) => {
+          let nodeId = (ruleName == ruleChart.nodeId) ? Rule.AMMINISTRAZIONE_TRASPARENTE : ruleChart.nodeId;
           let childStatus : Number[] = [];
           this.data.filter(result => result.parentNodeId == ruleChart.nodeId).forEach((childRule: RuleChart) => {
             let child = results.filter(result => result.ruleName == childRule.nodeId);
@@ -246,8 +263,8 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
               childStatus.push(child[0].status);
             }
           });
-          let result = results.filter(result => result.ruleName == ruleChart.nodeId)[0];
-          if (ruleChart.nodeId === Rule.AMMINISTRAZIONE_TRASPARENTE) {
+          let result = results.filter(result => result.ruleName == nodeId)[0];
+          if (ruleChart.nodeId === ruleName) {
             this.currentNode = {
               data: ruleChart
             };
@@ -371,26 +388,26 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
     let bandsData = [{
       color: "#ee1f25",
       lowScore: 0,
-      highScore: 20
+      highScore: this.data?.length / 6.3
     }, {
       color: "#f04922",
-      lowScore: 20,
-      highScore: 40
+      lowScore: this.data?.length / 6.3,
+      highScore: this.data?.length / (6.3 / 2)
     }, {
       color: "#fdae19",
-      lowScore: 40,
-      highScore: 60
+      lowScore: this.data?.length / (6.3 / 2),
+      highScore: this.data?.length / (6.3 / 3)
     }, {
       color: "#b0d136",
-      lowScore: 60,
-      highScore: 80
+      lowScore: this.data?.length / (6.3 / 3),
+      highScore: this.data?.length / (6.3 / 4)
     }, {
       color: "#54b947",
-      lowScore: 80,
-      highScore: 100
+      lowScore: this.data?.length / (6.3 / 4),
+      highScore: this.data?.length / (6.3 / 5)
     }, {
       color: "#0f9747",
-      lowScore: 100,
+      lowScore: this.data?.length / (6.3 / 5),
       highScore: this.data?.length
     }];
 

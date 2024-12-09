@@ -32,11 +32,11 @@ export class ConductorService extends CommonService<Workflow> {
   }
 
   public getApiService(): string {
-    return ConductorService.API_SERVICE;
+    return ``;
   }
   
   public getRoute(): string {
-    return '';
+    return ``;
   }
 
   public getApiPath(): string {
@@ -124,14 +124,18 @@ export class ConductorService extends CommonService<Workflow> {
         execute_child: true,
         crawler_save_object: true,
         crawler_save_screenshot: true,
+        root_rule: Rule.AMMINISTRAZIONE_TRASPARENTE,
         rule_name: Rule.AMMINISTRAZIONE_TRASPARENTE,
         connection_timeout: 60000,
         read_timeout: 60000,
         connection_timeout_max: 120000,
         read_timeout_max: 120000,
-        result_base_url: `${environment.resultApiUrl}result-service/v1/results`,
         crawler_child_type: `SUB_WORKFLOW`,
-        crawler_uri: environment.crawlerApiUrl  
+        crawler_uri: environment.crawlerApiUrl,
+        result_base_url: environment.resultApiUrl,
+        rule_base_url: environment.ruleApiUrl,
+        public_company_base_url: environment.companyApiUrl,
+        result_aggregator_base_url: environment.resultAggregatorapiUrl
       }
     }
   }

@@ -30,7 +30,7 @@ export class ResultService extends CommonService<Result> {
   }
 
   public getApiService(): string {
-    return `result-service`;
+    return ``;
   }
 
   public getRoute(): string {

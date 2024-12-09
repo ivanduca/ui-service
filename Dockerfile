@@ -31,13 +31,13 @@ RUN rm -rf /usr/share/nginx/html/*
 ## From 'builder' stage copy over the artifacts in dist folder to default nginx public folder
 COPY --from=builder /ng-app/dist/browser /usr/share/nginx/html
 
-ENV API_URL=https://dica33.ba.cnr.it/
-ENV COMPANY_API_URL=$API_URL
-ENV CONDUCTOR_API_URL=$API_URL
-ENV RESULT_API_URL=$API_URL
-ENV RESULT_AGGREGATOR_API_URL=$API_URL
-ENV RULE_API_URL=$API_URL
-ENV CRAWLER_API_URL=http://150.145.95.77:8080/crawl
+ENV API_URL=https://dica33.ba.cnr.it
+ENV COMPANY_API_URL=$API_URL/public-sites-service
+ENV CONDUCTOR_API_URL=$API_URL/conductor-server
+ENV RESULT_API_URL=$API_URL/result-service
+ENV RESULT_AGGREGATOR_API_URL=$API_URL/result-aggregator-service
+ENV RULE_API_URL=$API_URL/rule-service
+ENV CRAWLER_API_URL=$API_URL/crawl
 
 ENV BASE_HREF=/
 ENV OIDC_ENABLE=false

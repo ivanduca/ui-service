@@ -44,6 +44,8 @@ export class Workflow implements Base {
     public status: Status;
     @JsonProperty('tasks')
     public tasks: Task[];
+    @JsonProperty('input')
+    public input: any;    
 
 
     public get executionTime(): number {
