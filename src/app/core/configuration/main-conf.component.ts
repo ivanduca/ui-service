@@ -253,7 +253,7 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
             this.workflowBODYForm.controls.execute_child.patchValue(jsonvalue.input.execute_child);
             this.workflowBODYForm.controls.crawler_save_object.patchValue(jsonvalue.input.crawler_save_object);
             this.workflowBODYForm.controls.crawler_save_screenshot.patchValue(jsonvalue.input.crawler_save_screenshot);
-            this.workflowBODYForm.controls.rule_name.patchValue(jsonvalue.input.rule_name);
+            this.workflowBODYForm.controls.rule_name.patchValue(jsonvalue.input.root_rule);
             this.workflowBODYForm.controls.connection_timeout.patchValue(jsonvalue.input.connection_timeout);
             this.workflowBODYForm.controls.read_timeout.patchValue(jsonvalue.input.read_timeout);
             this.workflowBODYForm.controls.connection_timeout_max.patchValue(jsonvalue.input.connection_timeout_max);
