@@ -52,7 +52,7 @@ export class CompanyMapComponent implements OnInit {
   protected map: Leaflet.Map;
   
   protected filterFormSearch: FormGroup;
-  protected optionsWorkflow: Array<SelectControlOption> = [];
+  protected optionsWorkflow: Array<any> = [];
   protected optionsRule: Array<any>;
 
   constructor(
@@ -166,24 +166,12 @@ export class CompanyMapComponent implements OnInit {
         if (!valueChanges.preserveZoom) {
           this.center = new Leaflet.LatLng(42.00, 11.50);
           this.zoom = queryParams.zoom || 6;
-        }
-        this.loadGeoJson(queryParams);  
+        }        
+        this.loadRules(this.workflowId);
+        this.loadGeoJson(queryParams);
       }
     });
-    this.workflowId = workflowId;
-    this.ruleService.getRules().subscribe((resultRules: Map<String, Rule>) => {
-      this.optionsRule = [];
-      let rule = resultRules.get(Rule.AMMINISTRAZIONE_TRASPARENTE);
-      let rules: SelectRule[] = rule.getKeys(undefined, undefined, Rule.AMMINISTRAZIONE_TRASPARENTE, [], -1);
-      Object.keys(rules).forEach((index) => {
-        this.optionsRule.push({
-          value: rules[index].key,
-          text: rules[index].text,
-          level: rules[index].level,
-          class: `ps-${rules[index].level} fs-${rules[index].level + 3}`
-        });
-      });
-    });
+    this.workflowId = workflowId;    
     this.conductorService.getAll({
       includeClosed: true,
       includeTasks: false
@@ -196,13 +184,30 @@ export class CompanyMapComponent implements OnInit {
               startTime: this.datepipe.transform(workflow.startTime, 'dd/MM/yyyy'),
               duration: this.durationFormatPipe.transform(workflow.executionTime)
             }),
-            selected: workflow.workflowId === workflow.workflowId
+            selected: workflow.workflowId === workflow.workflowId,
+            ruleName: workflow.input.root_rule || Rule.AMMINISTRAZIONE_TRASPARENTE
           });
         }
       });
+      this.loadRules(this.workflowId);
     });
     this.loadGeoJson(queryParams);
+  }
 
+  loadRules(workflowId: string) {
+    this.ruleService.getRules().subscribe((resultRules: Map<String, Rule>) => {
+      this.optionsRule = [];
+      let rule = resultRules.get(this.workflowRuleName(workflowId));
+      let rules: SelectRule[] = rule.getKeys(undefined, undefined, Rule.AMMINISTRAZIONE_TRASPARENTE, [], -1);
+      Object.keys(rules).forEach((index) => {
+        this.optionsRule.push({
+          value: rules[index].key,
+          text: rules[index].text,
+          level: rules[index].level,
+          class: `ps-${rules[index].level} fs-${rules[index].level + 3}`
+        });
+      });
+    });
   }
 
   ngAfterContentChecked(): void {
@@ -215,7 +220,7 @@ export class CompanyMapComponent implements OnInit {
       this.filter = queryParams.filter;
       this.zoom = queryParams.zoom || 6;
       this.workflowId = queryParams.workflowId;
-      this.ruleName = queryParams.ruleName || Rule.AMMINISTRAZIONE_TRASPARENTE;
+      this.ruleName = queryParams.ruleName || this.workflowRuleName(this.workflowId);
       if (!this.filter) {
         this.loadGeoJson(queryParams);
       } else {
@@ -229,7 +234,21 @@ export class CompanyMapComponent implements OnInit {
       }
     });
   }
- 
+
+  workflowRuleName(workflowId: string): string {
+    if (this.optionsWorkflow) {
+      let workflows: any[] = this.optionsWorkflow.filter((value: any) => {
+        if (value.value == workflowId) {
+          return value;
+        }
+      });
+      if (workflows.length == 1) {
+        return workflows[0].ruleName;  
+      }
+    }
+    return Rule.AMMINISTRAZIONE_TRASPARENTE;
+  }
+
   loadGeoJson(params: any) {
     this.options = undefined;
     this.isGEOLoaded = false;
@@ -295,9 +314,17 @@ export class CompanyMapComponent implements OnInit {
           }
         },
         error: (err)=>{
-          this.apiMessageService.sendMessage(MessageType.ERROR,  `Dati non presenti, per il controllo con id ${this.workflowId}!`);
-          this.isGEOLoaded = true;
-          this.router.navigate(['error/not-found-no-back']);
+          if (this.optionsRule.filter((value: any) => {
+            if (value.value == this.ruleName) {
+              return value;
+            }
+          }).length == 0) {
+            this.filterFormSearch.controls.ruleName.patchValue(this.optionsRule[0].value);
+          } else {
+            this.apiMessageService.sendMessage(MessageType.ERROR,  `Dati non presenti, per il controllo con id ${this.workflowId}!`);
+            this.isGEOLoaded = true;
+            this.router.navigate(['error/not-found-no-back']);  
+          }
         }
       });
   }
