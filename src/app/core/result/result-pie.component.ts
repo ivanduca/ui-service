@@ -19,7 +19,6 @@ import * as am5 from '@amcharts/amcharts5';
 import * as am5percent from "@amcharts/amcharts5/percent";
 import am5locales_it_IT from "@amcharts/amcharts5/locales/it_IT";
 import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
-import { paddingTopProperty } from 'tns-core-modules/ui/page';
 
 @Component({
   selector: 'app-result-pie',
@@ -43,11 +42,12 @@ export class ResultPieComponent implements OnInit {
 
   protected filterFormSearch: FormGroup;
 
-  protected optionsWorkflow: Array<SelectControlOption> = [];
+  protected optionsWorkflow: Array<any> = [];
   protected optionsRule: Array<any>;
   protected rules: SelectRule[];
 
   protected small: boolean = false;
+  protected workflowId: string;
 
   @ViewChild('chartdiv', {static: true}) chartdiv: ElementRef;
   @ViewChild('columnchartdiv', {static: true}) columnchartdiv: ElementRef;
@@ -78,19 +78,7 @@ export class ResultPieComponent implements OnInit {
     this.pieChartLabels();
     this.route.queryParams.subscribe((queryParams) => {
       this.ruleName = queryParams.ruleName || Rule.AMMINISTRAZIONE_TRASPARENTE;
-      this.ruleService.getRules().subscribe((resultRules: Map<String, Rule>) => {
-        this.optionsRule = [];
-        let rule = resultRules.get(Rule.AMMINISTRAZIONE_TRASPARENTE);
-        this.rules = rule.getKeys(undefined, undefined, Rule.AMMINISTRAZIONE_TRASPARENTE, [], -1);
-        Object.keys(this.rules).forEach((index) => {
-          this.optionsRule.push({
-            value: this.rules[index].key,
-            text: this.rules[index].text,
-            level: this.rules[index].level,
-            class: `ps-${this.rules[index].level} fs-${this.rules[index].level + 3}`
-          });
-        });
-      });
+      this.workflowId = queryParams.workflowId;
       this.conductorService.getAll({
         includeClosed: true,
         includeTasks: false
@@ -107,7 +95,8 @@ export class ResultPieComponent implements OnInit {
               text: this.translateService.instant('it.workflow.textfull', {
                 startTime: this.datepipe.transform(workflow.startTime, 'dd/MM/yyyy'),
                 duration: this.durationFormatPipe.transform(workflow.executionTime)
-              })
+              }),
+              ruleName: workflow.input.root_rule || Rule.AMMINISTRAZIONE_TRASPARENTE
             });
           }
         });
@@ -116,8 +105,9 @@ export class ResultPieComponent implements OnInit {
         });
         this.filterFormSearch.valueChanges.pipe(
           debounceTime(500)
-        ).subscribe(() => {
-          this.loadResult();
+        ).subscribe((valueChanges: any) => {
+          this.workflowId = valueChanges.workflowId;
+          this.loadRules(this.workflowId || lastWorkflowId);
         });
         this.root = am5.Root.new(this.chartdiv.nativeElement);
         this.root.locale = am5locales_it_IT;
@@ -125,6 +115,38 @@ export class ResultPieComponent implements OnInit {
     });
   }
 
+  loadRules(workflowId: string) {
+    this.ruleService.getRules().subscribe((resultRules: Map<String, Rule>) => {
+      this.optionsRule = [];
+      let rule = resultRules.get(this.workflowRuleName(workflowId));
+      let rules: SelectRule[] = rule.getKeys(undefined, undefined, Rule.AMMINISTRAZIONE_TRASPARENTE, [], -1);
+      Object.keys(rules).forEach((index) => {
+        this.optionsRule.push({
+          value: rules[index].key,
+          text: rules[index].text,
+          level: rules[index].level,
+          class: `ps-${rules[index].level} fs-${rules[index].level + 3}`
+        });
+      });
+      this.rules = rules;
+      this.loadResult();
+    });
+  }
+
+  workflowRuleName(workflowId: string): string {
+    if (this.optionsWorkflow) {
+      let workflows: any[] = this.optionsWorkflow.filter((value: any) => {
+        if (value.value == workflowId) {
+          return value;
+        }
+      });
+      if (workflows.length == 1) {
+        return workflows[0].ruleName;  
+      }
+    }
+    return Rule.AMMINISTRAZIONE_TRASPARENTE;
+  }  
+  
   loadResult() : void {
     this.isPieLoaded = false;
     let wokflowId = this.filterFormSearch.value.workflowId;
