@@ -2,9 +2,13 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, V
 import { Observable, interval } from 'rxjs';
 import { map, takeWhile } from 'rxjs/operators';
 import { ConductorService } from '../../../core/conductor/conductor.service';
+import { ConfigurationService } from '../../../core/configuration/configuration.service';
+import { Configuration } from '../../../core/configuration/configuration.model';
+import { Rule } from '../../../core/rule/rule.model';
+import { RuleService } from '../../../core/rule/rule.service';
 import { ApiMessageService, MessageType } from '../../../core/api-message.service';
 import { TranslateService } from '@ngx-translate/core';
-import { ItModalComponent } from 'design-angular-kit';
+import { ItModalComponent, SelectControlOption } from 'design-angular-kit';
 import { Status, Workflow } from '../../../core/conductor/workflow.model';
 import { HttpParams } from '@angular/common/http';
 import { ResultService } from '../../../core/result/result.service';
@@ -83,9 +87,24 @@ import saveAs from 'file-saver';
       </it-list>
       @if (isAbleToStartWorkflow) {
         <ng-container footer>
-          <button itButton="primary" size="sm" type="button" (click)="startMainWorkflow()">
-            <it-icon name="plus-circle" color="white"></it-icon><span translate class="ps-2">it.workflow.new</span>
-          </button>
+          <it-dropdown
+            [color]="'primary'"
+            [dark]="false">
+            <span button translate>it.workflow.new</span>
+            <span listHeading translate>it.rule.name</span>
+
+            <ng-container list>
+              <it-dropdown-item divider="true"></it-dropdown-item>
+
+              <it-dropdown-item
+                *ngFor="let item of optionsRule"
+                (click)="startMainWorkflow(item.value)"
+                externalLink="true"
+                [large]="true">
+                {{ item.text }}
+              </it-dropdown-item>
+            </ng-container>
+          </it-dropdown>
         </ng-container>
       }
     </it-modal>
@@ -98,6 +117,8 @@ export class ShowWorkflowHistoryComponent implements OnInit{
     protected apiMessageService: ApiMessageService, 
     protected translateService: TranslateService,                    
     private conductorService: ConductorService,
+    private configurationService: ConfigurationService,
+    private ruleService: RuleService,
     private resultService: ResultService,
     private changeDetectorRef: ChangeDetectorRef,
     private authGuard: AuthGuard
@@ -110,12 +131,33 @@ export class ShowWorkflowHistoryComponent implements OnInit{
   isRefreshing: boolean = false;
   isAbleToStartWorkflow: boolean = false;
   isCSVVisible: boolean = false;
+  protected optionsRule: Array<SelectControlOption> = [];
 
   ngOnInit(): void {
     this.authGuard.hasRole([RoleEnum.ADMIN, RoleEnum.SUPERUSER]).subscribe((hasRole: boolean) => {
       this.isAbleToStartWorkflow = hasRole;
       this.isCSVVisible = hasRole;
     });
+    this.configurationService.getAll().subscribe((configurations: Configuration[]) => {
+      configurations.forEach((conf: Configuration) => {
+          if (conf.key === ConfigurationService.JSONRULES_KEY) {
+            let resultRules = new Map();
+            let value = JSON.parse(conf.value);
+            Object.keys(value).forEach((key: string) => {
+              resultRules.set(key, this.ruleService.buildInstance(value[key]));
+            });
+            this.optionsRule = [];
+            resultRules.forEach((value: Rule, key: String) => {
+              let text = value.term.filter(key => key.code == 200)[0].key;
+              this.optionsRule.push({
+                value: key,
+                text: `${key} - ${text}`
+              });
+            });
+          }      
+      });
+    });
+
   }
 
   openWorkflowList() {
@@ -133,8 +175,8 @@ export class ShowWorkflowHistoryComponent implements OnInit{
     });
   }
 
-  startMainWorkflow() {
-    this.conductorService.startMainWorkflow(this.codiceIpa).subscribe((workflowId: string) => {
+  startMainWorkflow(ruleName?: string) {
+    this.conductorService.startMainWorkflow(this.codiceIpa, ruleName).subscribe((workflowId: string) => {
       this.apiMessageService.sendMessage(MessageType.SUCCESS, `it.workflow.message.new`);
       this.conductorService.getById(workflowId).subscribe((result: Workflow) => {
         this.workflows.unshift(result);

@@ -239,7 +239,7 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
             this.number_workflows_preserve_id = conf.id;
           }
           if (conf.key === ConfigurationService.WORKFLOW_ID_PRESERVE) {
-            this.workflowBODYForm.controls.workflow_id_preserve.patchValue(conf.value);
+            this.workflowBODYForm.controls.workflow_id_preserve.patchValue(conf.value.split(","));
             this.workflow_id_preserve_id = conf.id;
           }
           if (conf.key === ConfigurationService.WORKFLOW_CRON_BODY) {
@@ -379,7 +379,7 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
         // Comunico l'id dell'eventuale flusso da conservare
         conf.id = this.workflow_id_preserve_id;
         conf.key = ConfigurationService.WORKFLOW_ID_PRESERVE;
-        conf.value = this.workflowBODYForm.controls.workflow_id_preserve.value;
+        conf.value = this.workflowBODYForm.controls.workflow_id_preserve.value.join(",");
         this.configurationService.save(conf).subscribe((result: any) => {
           console.log(result);
         });

@@ -5,8 +5,7 @@ import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/c
 import { ConfigService} from '../core/config.service';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { environment } from '../../environments/environment';
-import { ConductorService } from '../core/conductor/conductor.service';
-import { CompanyService } from '../core/company/company.service';
+import { ConfigurationService } from '../core/configuration/configuration.service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -17,8 +16,12 @@ export class AuthInterceptor implements HttpInterceptor {
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     if (environment.oidc.enable) {
-      if (req.url.indexOf(CompanyService.API_SERVICE) != -1 || 
-          req.url.indexOf(ConductorService.API_SERVICE) != -1) {            
+      if (req.url.indexOf(environment.companyApiUrl) != -1 || 
+          req.url.indexOf(environment.conductorApiUrl) != -1 ||
+          req.url.indexOf(environment.resultAggregatorapiUrl) != -1 ||
+          req.url.indexOf(environment.resultApiUrl) != -1 ||
+          req.url.indexOf(environment.ruleApiUrl) != -1 ||
+          req.url.indexOf(ConfigurationService.ROUTE) != -1) {            
         return this.oidcSecurityService.checkAuth().pipe(          
           switchMap((isAuthenticated) => {
             if(!isAuthenticated) {

@@ -78,7 +78,7 @@ export class ShowStorageResultComponent {
 
   downloadhtml() {
     if (this.storageData?.objectBucket && this.storageData?.objectId) {
-      this.httpClient.get(`${environment.apiUrl}${this.storageData?.objectBucket}/${this.storageData?.objectId}`, {
+      this.httpClient.get(`${environment.apiUrl}/${this.storageData?.objectBucket}/${this.storageData?.objectId}`, {
         responseType: 'text'
       }).subscribe((base64: string) => {
         let result = base64.replace("\'","").replace("b", "").replace("\'","");

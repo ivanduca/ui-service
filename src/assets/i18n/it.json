@@ -51,7 +51,7 @@
         "workflow-body": "Parametri",
         "workflow-preserve-label": "Numero di controlli da conservare",
         "workflow-preserve": "Numero di controlli da conservare: {{number_workflows_preserve}}",
-        "workflow-id": "Controllo da conservare",
+        "workflow-id": "Controlli da conservare",
         "body": {
           "page_size": "Dimensione pagina",
           "execute_child": "Esegui regole figlie",
@@ -147,7 +147,9 @@
       "cache": "Dati memorizzati"
     },
     "rule": {
+      "main": "Regola",
       "title": "Regole",
+      "failed": "Fallite",
       "satisfy": "Report Regole",
       "all": "Check regole {{rulesOK}} / {{all}} ({{percent}}%)",
       "parent": {

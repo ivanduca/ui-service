@@ -111,13 +111,13 @@
             </div>
           </div>
           <div class="row">
-            <div class="form-group col-md-6">
+            <div class="form-group col-md-4">
               <it-range [min]="3" [max]="24" [step]="1" formControlName="number_workflows_preserve">
                 {{'it.configuration.cron.workflow-preserve'| translate: {number_workflows_preserve: workflowBODYForm.get('number_workflows_preserve').value} }}
               </it-range>
             </div>
-            <div class="form-group col-md-6">
-              <ng-select formControlName="workflow_id_preserve"  [placeholder]="'it.configuration.cron.workflow-id'| translate">
+            <div class="form-group col-md-8">
+              <ng-select formControlName="workflow_id_preserve" [multiple]="true" [placeholder]="'it.configuration.cron.workflow-id'| translate">
                   @for (workflow of optionsWorkflow; track workflow.value) {
                       <ng-option [value]="workflow.value">{{workflow.text}}</ng-option>
                   }

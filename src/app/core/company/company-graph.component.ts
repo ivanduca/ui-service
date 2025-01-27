@@ -73,13 +73,16 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
 
   tabPAActive: boolean;
   tabRuleActive: boolean;
+  tabFailedActive: boolean;
   protected ruleStatus = {};
   @ViewChild("tab") tab: ItTabContainerComponent;
   @ViewChild("tabPA") tabPA: ItTabItemComponent;
   @ViewChild("tabRule") tabRule: ItTabItemComponent;
+  @ViewChild("tabFailed") tabFailed: ItTabItemComponent;
   protected filterFormSearch: FormGroup;
   optionsWorkflow: Array<any>;
   optionsRule: Array<SelectControlOption> = [];
+  rulesFailed: Array<RuleChart> = [];
 
   chartDivStyle: string = 'height:30vh !important';
   @ViewChild('chartdiv', {static: true}) chartdiv: ElementRef;
@@ -136,6 +139,7 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
           this.company = company[0];
           this.tabRuleActive = true;
           this.tabPAActive = false;
+          this.tabFailedActive = false;
           if (!this.company) {
             this.apiMessageService.sendMessage(MessageType.ERROR,  `PA non presente!`);
           }
@@ -232,6 +236,7 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
           data: ruleChart
         };
         this.tabRuleActive = true;
+        this.tabFailedActive = false;
       }
     });
     this.updateChart();
@@ -249,6 +254,7 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
         this.apiMessageService.sendMessage(MessageType.WARNING, `Risultati non presenti per la PA: ${this.company.denominazioneEnte}!`);
       }
       this.rulesOK = results.filter(result => result.status == 200 || result.status == 202).length;
+      this.rulesFailed = [];
       this.ruleService.getRules().subscribe((rules: Map<String, Rule>) => {
         let rule = rules.get(ruleName);
         this.data = rule.getCharts(undefined, ruleName, []);
@@ -282,7 +288,7 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
             ruleChart.buttonColor = 'danger';  
             if (childStatus && childStatus.length > 0) {
               let successCount = childStatus.filter(result => result == 200 || result == 202).length;
-              console.log(`${result.ruleName} width total:${childStatus.length} and success: ${successCount}`);
+              //console.log(`${result.ruleName} width total:${childStatus.length} and success: ${successCount}`);
               if (successCount == 0) {
                 ruleChart.buttonColor = 'danger';  
               } else if (successCount < childStatus.length) {
@@ -291,10 +297,14 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
                 ruleChart.buttonColor = 'success';  
               }
             }
+            if (result.status !== 200 && result.status !== 202 ) {
+              this.rulesFailed.push(ruleChart);
+            }
           } else {
             ruleChart.status = 404;
             ruleChart.color = 'danger';
             ruleChart.buttonColor = 'danger';
+            this.rulesFailed.push(ruleChart);
           }
         });
         this.updateChart();
@@ -449,7 +459,18 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
     if (tab.id === this.tabPA.id) {
       this.tabRuleActive = false;
       this.tabPAActive = true;
+      this.tabFailedActive = false;
     }
+    if (tab.id === this.tabRule.id) {
+      this.tabRuleActive = true;
+      this.tabPAActive = false;
+      this.tabFailedActive = false;
+    }
+    if (tab.id === this.tabFailed.id) {
+      this.tabRuleActive = false;
+      this.tabPAActive = false;
+      this.tabFailedActive = true;
+    }    
   }
 
   ngAfterViewInit() {
@@ -486,6 +507,7 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
         this.currentNode = d;
         this.tabRuleActive = true;
         this.tabPAActive = false;
+        this.tabFailedActive = false;
       })
       .buttonContent(({ node, state }) => {
         return `<div class="w-100 h-100 border rounded bg-${node.data.buttonColor}">

@@ -116,7 +116,7 @@
             </it-list>
           </it-tab-item>
         }
-        <it-tab-item #tabRule label="Regola" icon="file" [active]="tabRuleActive">
+        <it-tab-item #tabRule [label]="'it.rule.main'| translate" icon="file" [active]="tabRuleActive">
           <it-list>
             <app-show-list-text [label]="'it.rule.name'" [value]="currentNode?.data?.nodeId"></app-show-list-text>
             <app-show-list-text [label]="'it.rule.parent.name'" [value]="currentNode?.data?.parentNodeId"></app-show-list-text>
@@ -147,9 +147,7 @@
               @if (currentNode?.data?.storageData?.screenshotId || currentNode?.data?.storageData?.objectId) {
                 <it-list-item>
                   <div class="w-100 d-flex justify-content-around">
-                    @if (currentNode?.data?.storageData?.screenshotId) {
-                      <app-show-storage-result class="w-100" [screenshot]="true" [storageData]="currentNode?.data?.storageData" [denominazione]="company.denominazioneEnte"></app-show-storage-result>
-                    }
+                    <app-show-storage-result class="w-100" [screenshot]="true" [storageData]="currentNode?.data?.storageData" [denominazione]="company.denominazioneEnte"></app-show-storage-result>
                     <app-show-storage-result class="w-100" [html]="true" [storageData]="currentNode?.data?.storageData" [denominazione]="company.denominazioneEnte"></app-show-storage-result>
                   </div>
                 </it-list-item>  
@@ -175,6 +173,13 @@
             }
           </it-list>          
         </it-tab-item>
+        <it-tab-item #tabFailed [label]="'it.rule.failed'| translate" icon="error" [active]="tabFailedActive">
+          <it-list>
+            @for (ruleFailed of rulesFailed; track ruleFailed.nodeId) {
+              <it-list-item><label>{{ruleFailed.term}}</label></it-list-item>
+            }
+          </it-list>
+        </it-tab-item>  
       </it-tab-container>
     </div>
   </div>

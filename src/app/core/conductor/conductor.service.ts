@@ -91,11 +91,11 @@ export class ConductorService extends CommonService<Workflow> {
     }));
   }
 
-  public startMainWorkflow(codiceIpa?: string): Observable<string> {
+  public startMainWorkflow(codiceIpa?: string, ruleName?: string): Observable<string> {
     return this.getGateway()
       .pipe(
         switchMap((gateway) => {
-          return this.httpClient.post(`${gateway}${this.getApiService()}/api/workflow`, this.inputParamter(codiceIpa), {responseType: 'text'})
+          return this.httpClient.post(`${gateway}${this.getApiService()}/api/workflow`, this.inputParamter(codiceIpa, ruleName), {responseType: 'text'})
             .pipe(
               map((result: string) => {
                 return result;
@@ -110,7 +110,7 @@ export class ConductorService extends CommonService<Workflow> {
     );
   }
 
-  public inputParamter(codiceIpa?: string): any {
+  public inputParamter(codiceIpa?: string, ruleName?: string): any {
     return {
       name: ConductorService.AMMINISTRAZIONE_TRASPARENTE_FLOW,
       version: 1,
@@ -124,7 +124,7 @@ export class ConductorService extends CommonService<Workflow> {
         execute_child: true,
         crawler_save_object: true,
         crawler_save_screenshot: true,
-        root_rule: Rule.AMMINISTRAZIONE_TRASPARENTE,
+        root_rule: ruleName || Rule.AMMINISTRAZIONE_TRASPARENTE,
         rule_name: Rule.AMMINISTRAZIONE_TRASPARENTE,
         connection_timeout: 60000,
         read_timeout: 60000,
