@@ -173,13 +173,15 @@
             }
           </it-list>          
         </it-tab-item>
-        <it-tab-item #tabFailed [label]="'it.rule.failed'| translate" icon="error" [active]="tabFailedActive">
-          <it-list>
-            @for (ruleFailed of rulesFailed; track ruleFailed.nodeId) {
-              <it-list-item><label>{{ruleFailed.term}}</label></it-list-item>
-            }
-          </it-list>
-        </it-tab-item>  
+        @if (company) {
+          <it-tab-item #tabFailed [label]="'it.rule.failed'| translate" icon="error" [active]="tabFailedActive">
+            <it-list>
+              @for (ruleFailed of rulesFailed; track ruleFailed.nodeId) {
+                <it-list-item><label>{{ruleFailed.term}}</label></it-list-item>
+              }
+            </it-list>
+          </it-tab-item>
+        } 
       </it-tab-container>
     </div>
   </div>
