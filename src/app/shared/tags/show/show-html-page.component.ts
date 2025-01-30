@@ -56,7 +56,7 @@ export class ShowHtmlPageComponent {
   
   downloadhtml() {
     if (this.workflowChildId) {
-      this.conductorService.getById(this.workflowChildId, {'includeTasks': true}).subscribe((workflow: Workflow) => {
+      this.conductorService.getById(this.workflowChildId, {'includeTasks': true}, false).subscribe((workflow: Workflow) => {
         workflow.tasks.filter(task => task.referenceTaskName == 'crawler_html_source_ref' || task.referenceTaskName == 'crawler_http_stream_ref').forEach((task: Task) => {
           let base64 = task.outputData?.response?.body?.htmlPage;
           if (base64) {

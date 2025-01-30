@@ -11,7 +11,11 @@ export class SpringError {
 
   public restError: SpringRestError;
 
-  public constructor(public httpErrorResponse: HttpErrorResponse, public translateService: TranslateService) {
+  public constructor(
+    public httpErrorResponse: HttpErrorResponse, 
+    public translateService: TranslateService,
+    public redirectOnError: boolean = true
+  ) {
 
     let message = this.httpErrorResponse.error.error;
     if (httpErrorResponse.error.message) {

@@ -1,5 +1,6 @@
 import { ErrorHandler, Injectable} from '@angular/core';
 import { Router } from '@angular/router';
+import { SpringError } from '../common/model/spring-error.model';
 
 @Injectable()
 export class GlobalErrorHandler implements ErrorHandler {
@@ -8,7 +9,9 @@ export class GlobalErrorHandler implements ErrorHandler {
 
   handleError(error: any) {
     console.error(error);
-    this.router.navigate(['error/server-error']);
+    if ((error instanceof SpringError && error?.redirectOnError) || !(error instanceof SpringError)) {
+      this.router.navigate(['error/server-error']);
+    }
     // IMPORTANT: Rethrow the error otherwise it gets swallowed
     throw error;
   }
