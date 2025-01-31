@@ -634,6 +634,15 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
     return false;
   }
 
+  centerNode(node) {
+    this.chart.setCentered(node.nodeId).render();    
+    const attrs = this.chart.getChartState();
+    const root = attrs.generateRoot(attrs.data)
+    const descendants = root.descendants();
+    this.currentNode = descendants.filter(({ data }) => attrs.nodeId(data) == node.nodeId)[0];
+    return false;
+  }
+
   showErrorMessage(ruleName: string) {
     this.resultService.getAll({
       workflowId: this.filterFormSearch.value.workflowId,

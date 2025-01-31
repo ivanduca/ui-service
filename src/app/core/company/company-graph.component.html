@@ -173,14 +173,21 @@
             }
           </it-list>          
         </it-tab-item>
-        @if (company) {
+        @if (company && rulesFailed.length > 0) {
           <it-tab-item #tabFailed [label]="'it.rule.failed'| translate" icon="error" [active]="tabFailedActive">
-            <it-list>
-              @for (ruleFailed of rulesFailed; track ruleFailed.nodeId) {
-                <it-list-item><label>{{ruleFailed.term}}</label></it-list-item>
-              }
+              <it-list>
+                <div style="overflow-y: auto; max-height: 50vh;">
+                  @for (ruleFailed of rulesFailed; track ruleFailed.nodeId) {
+                  <it-list-item href="#" externalLink="true" (click)="centerNode(ruleFailed);">
+                    <div>
+                      <h5 class="text m-0">{{ruleFailed.nodeId}}</h5>
+                      <p class="small m-0">{{ruleFailed.term}}</p>  
+                    </div>
+                  </it-list-item>
+                  }
+                </div>  
             </it-list>
-          </it-tab-item>
+        </it-tab-item>
         } 
       </it-tab-container>
     </div>
