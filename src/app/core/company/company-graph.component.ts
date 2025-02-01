@@ -466,7 +466,7 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
       this.tabPAActive = false;
       this.tabFailedActive = false;
     }
-    if (tab.id === this.tabFailed.id) {
+    if (tab.id === this.tabFailed?.id) {
       this.tabRuleActive = false;
       this.tabPAActive = false;
       this.tabFailedActive = true;
