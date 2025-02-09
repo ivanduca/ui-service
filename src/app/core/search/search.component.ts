@@ -1,7 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, ViewEncapsulation, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SelectControlOption } from 'design-angular-kit';
 import { TranslateService } from '@ngx-translate/core';
 import { ConductorService } from '../conductor/conductor.service';
 import { Workflow } from '../conductor/workflow.model';
@@ -28,11 +27,11 @@ export class SearchComponent implements OnInit {
   protected collapse: boolean = false;
   protected isLoadingCsv: boolean = false;
   protected ruleName: string;
-  options: Array<SelectControlOption> = [];
-  optionsWorkflow: Array<SelectControlOption> = [];
-  optionsStatus: Array<SelectControlOption> = [];
+  options: Array<any> = [];
+  optionsWorkflow: Array<any> = [];
+  optionsStatus: Array<any> = [];
   optionsRule: Array<any>;
-  optionsCategoria: Array<SelectControlOption> = [];
+  optionsCategoria: Array<any> = [];
   isCSVVisible: boolean = false;
 
   constructor(private formBuilder: FormBuilder,
@@ -96,11 +95,6 @@ export class SearchComponent implements OnInit {
           codiceCategoria: new FormControl(),
           sort: new FormControl(queryParams.sort),
         });
-        this.filterFormSearch.valueChanges.subscribe((value: any) => {
-          if (this.filterFormSearch.controls.ruleName.touched) {
-            this.manageOptionStatus(value.ruleName);
-          }
-        });          
       }
 
       Object.values(Status).filter(key => !isNaN(Number(key))).forEach((key: number) => {
@@ -113,20 +107,6 @@ export class SearchComponent implements OnInit {
           });
         });
       });      
-      this.ruleService.getRules().subscribe((resultRules: Map<String, Rule>) => {
-        this.optionsRule = [];
-        this.optionsRule.push({value: '', text: '*', selected: false});
-        let rule = resultRules.get(Rule.AMMINISTRAZIONE_TRASPARENTE);
-        let rules: SelectRule[] = rule.getKeys(undefined, undefined, Rule.AMMINISTRAZIONE_TRASPARENTE, [], -1);
-        Object.keys(rules).forEach((index) => {
-          this.optionsRule.push({
-            value: rules[index].key,
-            text: rules[index].text,
-            level: rules[index].level,
-            class: `ps-${rules[index].level} fs-${rules[index].level + 3}`
-          });
-        });
-      });
       this.conductorService.getAll({
         includeClosed: true,
         includeTasks: false
@@ -138,6 +118,7 @@ export class SearchComponent implements OnInit {
               startTime: this.datepipe.transform(workflow.startTime, 'dd/MM/yyyy HH:mm:ss'),
               status: this.translateService.instant(`it.workflow.status.${workflow.status}`)
             }),
+            ruleName: workflow.input.root_rule || Rule.AMMINISTRAZIONE_TRASPARENTE,
             selected: workflow.workflowId === queryParams['workflowId']
           });
         });
@@ -146,9 +127,57 @@ export class SearchComponent implements OnInit {
           this.optionsWorkflow[0].selected = true;
           this.filterFormSearch.controls['workflowId'].patchValue(workflowId);
         }
+        this.loadRules(workflowId);
+        this.filterFormSearch.valueChanges.subscribe((value: any) => {
+          if (this.filterFormSearch.controls.ruleName.touched) {
+            this.manageOptionStatus(value.ruleName);
+          }
+          this.loadRules(value.workflowId);
+        });
       });
     });
   }
+
+  loadRules(workflowId: string) {
+    this.ruleService.getRules().subscribe((resultRules: Map<String, Rule>) => {
+      this.optionsRule = [];
+      if (workflowId) {
+        let name = this.workflowRuleName(workflowId);
+        this.loadFromRule(name, resultRules.get(name));
+      } else {
+        resultRules.forEach((index, name: string) => {
+          this.loadFromRule(name, resultRules.get(name));
+        });
+      }
+    });
+  }
+
+  loadFromRule(name: string, rule: any) {
+    let rules: SelectRule[] = rule.getKeys(undefined, undefined, Rule.AMMINISTRAZIONE_TRASPARENTE, [], -1);
+    Object.keys(rules).forEach((index) => {
+      this.optionsRule.push({
+        value: rules[index].key,
+        text: rules[index].text,
+        level: rules[index].level,
+        name: name,
+        class: `ps-${rules[index].level} fs-${rules[index].level + 3}`
+      });
+    });
+  }
+
+  workflowRuleName(workflowId: string): string {
+    if (this.optionsWorkflow) {
+      let workflows: any[] = this.optionsWorkflow.filter((value: any) => {
+        if (value.value == workflowId) {
+          return value;
+        }
+      });
+      if (workflows.length == 1) {
+        return workflows[0].ruleName;  
+      }
+    }
+    return Rule.AMMINISTRAZIONE_TRASPARENTE;
+  } 
 
   downloadCsv() {
     this.isLoadingCsv = true;

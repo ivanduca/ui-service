@@ -11,7 +11,6 @@ import { DurationFormatPipe } from '../../shared/pipes/durationFormat.pipe';
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SelectControlOption } from 'design-angular-kit';
 import { RuleService } from '../rule/rule.service';
 import { StatusColor } from '../../common/model/status-color.enum';
 
