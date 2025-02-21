@@ -138,6 +138,9 @@ export class ShowWorkflowHistoryComponent implements OnInit{
       this.isAbleToStartWorkflow = hasRole;
       this.isCSVVisible = hasRole;
     });
+  }
+
+  openWorkflowList() {
     this.configurationService.getAll().subscribe((configurations: Configuration[]) => {
       configurations.forEach((conf: Configuration) => {
           if (conf.key === ConfigurationService.JSONRULES_KEY) {
@@ -157,10 +160,6 @@ export class ShowWorkflowHistoryComponent implements OnInit{
           }      
       });
     });
-
-  }
-
-  openWorkflowList() {
     this.conductorService.getAll({
       includeClosed: true,
       includeTasks: false
