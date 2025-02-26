@@ -112,61 +112,36 @@
       </it-dropdown>
     </it-navbar-item>    
     <it-navbar-item>
-      <it-dropdown mode="nav" [megamenu]="true">
+      <it-dropdown mode="nav">
         <span button translate>it.navigation.sezioni</span>
         <ng-container list>
-          <it-megamenu [mode]="'normal'">
-            <ng-container megamenuLinkList>
-              <div class="col-12 col-lg-4">
-                <it-list linkList="true">
-                  <it-list-item href="#" (click)="toggleCollapse()" routerLink="/search" [queryParams]="{ruleName: 'bilanci'}">
-                    <it-icon name="arrow-right-triangle"></it-icon>
-                    <span>Bilanci</span>
-                  </it-list-item>
-                  <it-list-item href="#" (click)="toggleCollapse()" routerLink="/search" [queryParams]="{ruleName: 'bandi-gara-contratti'}">
-                    <it-icon name="arrow-right-triangle"></it-icon>
-                    <span>Bandi di gara e contratti</span>
-                  </it-list-item>
-                  <it-list-item href="#" (click)="toggleCollapse()" routerLink="/search" [queryParams]="{ruleName: 'bandi-concorso'}">
-                    <it-icon name="arrow-right-triangle"></it-icon>
-                    <span>Bandi di Concorso</span>
-                  </it-list-item>
-                </it-list>
-              </div>
-              <div class="col-12 col-lg-4">
-                <it-list linkList="true">
-                  <it-list-item href="#" (click)="toggleCollapse()" routerLink="/search" [queryParams]="{ruleName: 'servizi-erogati'}">
-                    <it-icon name="arrow-right-triangle"></it-icon>
-                    <span>Servizi erogati</span>
-                  </it-list-item>
-                  <it-list-item href="#" (click)="toggleCollapse()" routerLink="/search" [queryParams]="{ruleName: 'opere-pubbliche'}">
-                    <it-icon name="arrow-right-triangle"></it-icon>
-                    <span>Opere Pubbliche</span>
-                  </it-list-item>
-                  <it-list-item href="#" (click)="toggleCollapse()" routerLink="/search" [queryParams]="{ruleName: 'enti-controllati'}">
-                    <it-icon name="arrow-right-triangle"></it-icon>
-                    <span>Enti controllati</span>
-                  </it-list-item>
-                </it-list>
-              </div>
-              <div class="col-12 col-lg-4">
-                <it-list linkList="true">
-                  <it-list-item href="#" (click)="toggleCollapse()" routerLink="/search" [queryParams]="{ruleName: 'organizzazione'}">
-                    <it-icon name="arrow-right-triangle"></it-icon>
-                    <span>Organizzazione</span>
-                  </it-list-item>
-                  <it-list-item href="#" (click)="toggleCollapse()" routerLink="/search" [queryParams]="{ruleName: 'disposizioni-generali'}">
-                    <it-icon name="arrow-right-triangle"></it-icon>
-                    <span>Disposizioni Generali</span>
-                  </it-list-item>
-                  <it-list-item href="#" (click)="toggleCollapse()" routerLink="/search" [queryParams]="{ruleName: 'personale'}">
-                    <it-icon name="arrow-right-triangle"></it-icon>
-                    <span>Personale</span>
-                  </it-list-item>
-                </it-list>
-              </div>
-            </ng-container>
-          </it-megamenu>
+          <it-dropdown-item href="#" (click)="toggleCollapse()" routerLink="/search" [queryParams]="{ruleName: 'bilanci'}">
+            <span>Bilanci</span>
+          </it-dropdown-item>
+          <it-dropdown-item href="#" (click)="toggleCollapse()" routerLink="/search" [queryParams]="{ruleName: 'bandi-gara-contratti'}">
+            <span>Bandi di gara e contratti</span>
+          </it-dropdown-item>
+          <it-dropdown-item href="#" (click)="toggleCollapse()" routerLink="/search" [queryParams]="{ruleName: 'bandi-concorso'}">
+            <span>Bandi di Concorso</span>
+          </it-dropdown-item>
+          <it-dropdown-item href="#" (click)="toggleCollapse()" routerLink="/search" [queryParams]="{ruleName: 'servizi-erogati'}">
+            <span>Servizi erogati</span>
+          </it-dropdown-item>
+          <it-dropdown-item href="#" (click)="toggleCollapse()" routerLink="/search" [queryParams]="{ruleName: 'opere-pubbliche'}">
+            <span>Opere Pubbliche</span>
+          </it-dropdown-item>
+          <it-dropdown-item href="#" (click)="toggleCollapse()" routerLink="/search" [queryParams]="{ruleName: 'enti-controllati'}">
+            <span>Enti controllati</span>
+          </it-dropdown-item>
+          <it-dropdown-item href="#" (click)="toggleCollapse()" routerLink="/search" [queryParams]="{ruleName: 'organizzazione'}">
+            <span>Organizzazione</span>
+          </it-dropdown-item>
+          <it-dropdown-item href="#" (click)="toggleCollapse()" routerLink="/search" [queryParams]="{ruleName: 'disposizioni-generali'}">
+            <span>Disposizioni Generali</span>
+          </it-dropdown-item>
+          <it-dropdown-item href="#" (click)="toggleCollapse()" routerLink="/search" [queryParams]="{ruleName: 'personale'}">
+            <span>Personale</span>
+          </it-dropdown-item>
         </ng-container>
       </it-dropdown>
     </it-navbar-item>

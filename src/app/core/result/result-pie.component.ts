@@ -170,7 +170,7 @@ export class ResultPieComponent implements OnInit {
         })[0].text;
         this.resultService.getWorkflowMap(parentKey, [wokflowId]).subscribe((result: any) => {
           let total = Number(result[wokflowId][200]||0) + Number(result[wokflowId][202]||0); 
-          chart[500] = total - Number(Object.values(chart).reduce((a: number, b: number) => a + b, 0)); 
+          chart[501] = total - Number(Object.values(chart).reduce((a: number, b: number) => a + b, 0)); 
           this.loadChart(result[wokflowId], true, chart, titleParent, title);
         });
       } else {        

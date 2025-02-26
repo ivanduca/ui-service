@@ -176,4 +176,8 @@ export class HomeComponent implements OnInit {
       this.pieChartLabels();      
     }
   }
+
+  public getBGColor(key) {
+    return StatusColor[`STATUS_${key}`] + `!important`; 
+  }
 }

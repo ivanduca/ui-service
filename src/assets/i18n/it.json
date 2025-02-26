@@ -211,6 +211,9 @@
           "title": "Sito PA non dichiarato",
           "ruletitle": "Non Presente",
           "subtitle": "L'Amministrazione non ha fornito l'indirizzo del sito istituzionale"
+        },
+        "501" : {
+          "ruletitle": "URL errata"
         }
       }
     },

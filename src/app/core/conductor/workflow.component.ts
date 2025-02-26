@@ -6,6 +6,7 @@ import { Rule } from '../rule/rule.model';
 import { ResultService } from '../result/result.service';
 import { AuthGuard } from '../../auth/auth-guard';
 import { RoleEnum } from '../../auth/role.enum';
+import { StatusColor } from '../../common/model/status-color.enum';
 import saveAs from 'file-saver';
 
 @Component({
@@ -65,31 +66,31 @@ import saveAs from 'file-saver';
             <it-list-item [routerLink]="['/search']" [queryParams]="{workflowId: workflow.workflowId, ruleName: 'amministrazione-trasparente', status: 200}" href="." iconLeft="true">
                 <span class="fst-italic card-text">{{'it.rule.status.200.title' | translate}}</span>
                 <ng-container multiple>
-                <span @scale [itBadge]="'success'" [rounded]="true" class="text-sm-left">{{ workflow.getResultFromStatus('200') | number: undefined : 'it-IT' }}</span>
+                <span @scale [itBadge] [style.background]="getBGColor(200)" [rounded]="true" class="text-sm-left">{{ workflow.getResultFromStatus('200') | number: undefined : 'it-IT' }}</span>
                 </ng-container>
             </it-list-item>
             <it-list-item [routerLink]="['/search']" [queryParams]="{workflowId: workflow.workflowId, ruleName: 'amministrazione-trasparente', status: 202}" href="." iconLeft="true">
                 <span class="fst-italic card-text">{{'it.rule.status.202.title' | translate}}</span>
                 <ng-container multiple>                    
-                <span @scale [itBadge]="'warning'" [rounded]="true" class="text-sm-left">{{ workflow.getResultFromStatus('202') | number: undefined : 'it-IT' }}</span>
+                <span @scale [itBadge] [style.background]="getBGColor(202)" [rounded]="true" class="text-sm-left">{{ workflow.getResultFromStatus('202') | number: undefined : 'it-IT' }}</span>
                 </ng-container>
             </it-list-item>
             <it-list-item [routerLink]="['/search']" [queryParams]="{workflowId: workflow.workflowId, ruleName: 'amministrazione-trasparente', status: 400}" href="." iconLeft="true">
                 <span class="fst-italic card-text">{{'it.rule.status.400.title' | translate}}</span>
                 <ng-container multiple>
-                <span @scale [itBadge]="'danger'" [rounded]="true" class="text-sm-left">{{ workflow.getResultFromStatus('400') | number: undefined : 'it-IT' }}</span>
+                <span @scale [itBadge] [style.background]="getBGColor(400)" [rounded]="true" class="text-sm-left">{{ workflow.getResultFromStatus('400') | number: undefined : 'it-IT' }}</span>
                 </ng-container>
             </it-list-item>
             <it-list-item [routerLink]="['/search']" [queryParams]="{workflowId: workflow.workflowId, ruleName: 'amministrazione-trasparente', status: 407}" href="." iconLeft="true">
                 <span class="fst-italic card-text">{{'it.rule.status.407.title' | translate}}</span>
                 <ng-container multiple>
-                <span @scale class="badge rounded-pill complementary-1-bg-b1 text-sm-left">{{ workflow.getResultFromStatus('407') | number: undefined : 'it-IT' }}</span>
+                <span @scale [itBadge] [style.background]="getBGColor(407)" [rounded]="true">{{ workflow.getResultFromStatus('407') | number: undefined : 'it-IT' }}</span>
                 </ng-container>
             </it-list-item>
             <it-list-item [routerLink]="['/search']" [queryParams]="{workflowId: workflow.workflowId, ruleName: 'amministrazione-trasparente', status: 500}" href="." iconLeft="true">
                 <span class="fst-italic card-text">{{'it.rule.status.500.title' | translate}}</span>
                 <ng-container multiple>
-                <span @scale class="badge rounded-pill complementary-1-bg-a12 text-sm-left">{{ workflow.getResultFromStatus('500') | number: undefined : 'it-IT' }}</span>
+                <span @scale [itBadge] [style.background]="getBGColor(500)" [rounded]="true">{{ workflow.getResultFromStatus('500') | number: undefined : 'it-IT' }}</span>
                 </ng-container>
             </it-list-item>
             </it-list>  
@@ -148,6 +149,10 @@ export class WorkflowCardComponent implements OnInit{
     this.resultService.getWorkflowMap(Rule.AMMINISTRAZIONE_TRASPARENTE, [workflow.workflowId], true).subscribe((result: any) => {
         workflow.resultCount = result[workflow.workflowId];
     });
+  }
+
+  public getBGColor(key) {
+    return StatusColor[`STATUS_${key}`] + `!important`; 
   }
 
 }
