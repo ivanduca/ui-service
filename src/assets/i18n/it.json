@@ -190,8 +190,8 @@
           "subtitle": "Il sito contiene la sezione 'Amministrazione Trasparente' come previsto dal D.Lgs. 33/2013"
         },
         "202" : {
-          "title": "Homepage parzialmente conforme",
-          "ruletitle": "Parzialmente conforme",
+          "title": "Homepage conforme con testo alternativo",
+          "ruletitle": "Conforme con testo alternativo",
           "subtitle": "La sezione ‘Amministrazione Trasparente’ è raggiungibile attraverso un link in homepage non rispondente al dettato del D.Lgs. 33/2013"
         },
         "400" : {
@@ -214,7 +214,7 @@
           "subtitle": "L'Amministrazione non ha fornito l'indirizzo del sito istituzionale"
         },
         "501" : {
-          "ruletitle": "URL errata"
+          "ruletitle": "Pagina non trovata"
         }
       }
     },

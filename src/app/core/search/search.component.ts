@@ -61,7 +61,7 @@ export class SearchComponent implements OnInit {
     if (ruleName === Rule.AMMINISTRAZIONE_TRASPARENTE) {
       return status == 404;
     } 
-    return (status != 200 && status != 404);
+    return (status != 200 && status != 202 && status != 404);
   }
 
   manageOptionStatus(ruleName: string) {
