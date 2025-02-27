@@ -42,7 +42,7 @@ import { ConfigurationService } from './configuration/configuration.service';
 
 
 import { FormsModule, ReactiveFormsModule} from '@angular/forms';
-import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
 
 // import ngx-translate and the http loader
 import { TranslateCompiler, TranslateLoader, TranslateModule} from '@ngx-translate/core';
@@ -54,6 +54,7 @@ import { LeafletModule } from '@bluehalo/ngx-leaflet';
 import { LeafletMarkerClusterModule } from '@bluehalo/ngx-leaflet-markercluster';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { Bs5UnixCronModule } from '@sbzen/ng-cron';
+import { NgxColorsModule } from 'ngx-colors';
 /**
  * Nel core module inserisco tutti i components necessari all'avvio dell'applicazione.
  * Esempio Pagina Iniziale ed Header.
@@ -87,7 +88,7 @@ import { Bs5UnixCronModule } from '@sbzen/ng-cron';
         AuthModule,
         FormsModule,        
         ReactiveFormsModule,
-        InfiniteScrollModule,
+        InfiniteScrollDirective,
         TranslateModule.forChild({
             compiler: { provide: TranslateCompiler, useClass: CustomTranslationCompiler },
             loader: {
@@ -100,7 +101,8 @@ import { Bs5UnixCronModule } from '@sbzen/ng-cron';
         LeafletModule,
         LeafletMarkerClusterModule,
         NgSelectModule,
-        Bs5UnixCronModule
+        Bs5UnixCronModule,
+        NgxColorsModule
     ],
     exports: [
         AuthModule,

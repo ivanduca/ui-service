@@ -6,7 +6,7 @@ import { Rule, SelectRule } from '../rule/rule.model';
 import { TranslateService } from '@ngx-translate/core';
 import { DatePipe } from '@angular/common';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
-import { debounceTime, Observable } from 'rxjs';
+import { debounceTime } from 'rxjs';
 import { DurationFormatPipe } from '../../shared/pipes/durationFormat.pipe';
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
@@ -18,14 +18,14 @@ import * as am5 from '@amcharts/amcharts5';
 import * as am5percent from "@amcharts/amcharts5/percent";
 import am5locales_it_IT from "@amcharts/amcharts5/locales/it_IT";
 import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
+import { ConfigurationService } from '../configuration/configuration.service';
 
 @Component({
   selector: 'app-result-pie',
   templateUrl: './result-pie.component.html',
   encapsulation: ViewEncapsulation.None,
   providers: [DatePipe, DurationFormatPipe],
-  styles : `
-  `
+  styles : ``
 })
 export class ResultPieComponent implements OnInit {
 
@@ -47,6 +47,7 @@ export class ResultPieComponent implements OnInit {
 
   protected small: boolean = false;
   protected workflowId: string;
+  protected statusColor: any;
 
   @ViewChild('chartdiv', {static: true}) chartdiv: ElementRef;
   @ViewChild('columnchartdiv', {static: true}) columnchartdiv: ElementRef;
@@ -62,6 +63,7 @@ export class ResultPieComponent implements OnInit {
     private router: Router,
     private datepipe: DatePipe,
     private durationFormatPipe: DurationFormatPipe,
+    private configurationService: ConfigurationService,
     private resultService: ResultService) {
   }
 
@@ -75,6 +77,9 @@ export class ResultPieComponent implements OnInit {
 
   ngOnInit(): void {
     this.pieChartLabels();
+    this.configurationService.getStatusColor().subscribe((color: any) => {
+      this.statusColor = color;
+    }); 
     this.route.queryParams.subscribe((queryParams) => {
       this.ruleName = queryParams.ruleName || Rule.AMMINISTRAZIONE_TRASPARENTE;
       this.workflowId = queryParams.workflowId;
@@ -322,8 +327,8 @@ export class ResultPieComponent implements OnInit {
             name: this.translateService.instant(`it.rule.status.${key}.ruletitle`),
             value: result2[key],
             sliceSettings: {
-              fill: am5.color(StatusColor[`STATUS_${key}`]),
-              stroke: am5.color(StatusColor[`STATUS_${key}`])
+              fill: am5.color(this.statusColor[`status_${key}`]),
+              stroke: am5.color(this.statusColor[`status_${key}`])
             },
             extra: {
               key: key  
@@ -349,7 +354,7 @@ export class ResultPieComponent implements OnInit {
 
       series.slices.template.events.on("click", function(ev) {
         var status = ev.target.dataItem.dataContext.extra.key;
-        if (status != 500) {
+        if (status != 501) {
           this.router.navigate(['/search'],  { queryParams: {
             workflowId: this.filterFormSearch.value.workflowId,
             ruleName: this.filterFormSearch.value.ruleName,
@@ -364,8 +369,8 @@ export class ResultPieComponent implements OnInit {
           name: this.translateService.instant(`it.rule.status.${key}.ruletitle`),
           value: result[key],
           sliceSettings: {
-            fill: am5.color(StatusColor[`STATUS_${key}`]),
-            stroke: am5.color(StatusColor[`STATUS_${key}`])
+            fill: am5.color(this.statusColor[`status_${key}`]),
+            stroke: am5.color(this.statusColor[`status_${key}`])
           },
           extra: {
             key: key  

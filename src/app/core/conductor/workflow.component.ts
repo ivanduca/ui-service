@@ -8,6 +8,7 @@ import { AuthGuard } from '../../auth/auth-guard';
 import { RoleEnum } from '../../auth/role.enum';
 import { StatusColor } from '../../common/model/status-color.enum';
 import saveAs from 'file-saver';
+import { ConfigurationService } from '../configuration/configuration.service';
 
 @Component({
   selector: 'app-workflow-card',
@@ -116,10 +117,12 @@ export class WorkflowCardComponent implements OnInit{
 
   constructor(
     private resultService: ResultService,
-    private authGuard: AuthGuard
+    private authGuard: AuthGuard,
+    private configurationService: ConfigurationService
   ) {}
   isLoadingCsv: boolean = false;
   isCSVVisible: boolean = false;
+  protected statusColor: any;
 
   @Input() workflow: Workflow;
   @Input() title: boolean = true;
@@ -127,6 +130,9 @@ export class WorkflowCardComponent implements OnInit{
   ngOnInit(): void {
     this.authGuard.hasRole([RoleEnum.ADMIN, RoleEnum.SUPERUSER]).subscribe((hasRole: boolean) => {
       this.isCSVVisible = hasRole;
+    });
+    this.configurationService.getStatusColor().subscribe((color: any) => {
+      this.statusColor = color;
     });
   }
 
@@ -152,7 +158,7 @@ export class WorkflowCardComponent implements OnInit{
   }
 
   public getBGColor(key) {
-    return StatusColor[`STATUS_${key}`] + `!important`; 
+    return this.statusColor[`status_${key}`] + `!important`; 
   }
 
 }

@@ -42,6 +42,7 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
 
   protected workflowBODYForm: FormGroup;
   protected workflowBODYid: number;
+  protected colorid: number;
   protected optionsCategoria: Array<SelectControlOption> = [];
   protected optionsRule: Array<SelectControlOption> = [];
 
@@ -49,6 +50,8 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
 
   protected number_workflows_preserve_id: number;
   protected workflow_id_preserve_id: number;
+
+  protected colorForm: FormGroup;
 
   readonly localization: CronLocalization = {
     common: {
@@ -201,6 +204,14 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
         });
       });
     });
+    this.colorForm = this.formBuilder.group({
+      status_200: new FormControl(''),
+      status_202: new FormControl(''),
+      status_400: new FormControl(''),
+      status_407: new FormControl(''),
+      status_500: new FormControl(''),
+      status_501: new FormControl(''),
+    });
     this.workflowBODYForm = this.formBuilder.group({
       page_size: new FormControl(1000),
       codice_categoria: new FormControl(''),
@@ -241,6 +252,16 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
           if (conf.key === ConfigurationService.WORKFLOW_ID_PRESERVE) {
             this.workflowBODYForm.controls.workflow_id_preserve.patchValue(conf.value.split(","));
             this.workflow_id_preserve_id = conf.id;
+          }
+          if (conf.key === ConfigurationService.COLOR) {
+            this.colorid = conf.id;
+            let jsonvalue = JSON.parse(conf.value);
+            this.colorForm.controls.status_200.patchValue(jsonvalue.status_200);
+            this.colorForm.controls.status_202.patchValue(jsonvalue.status_202);
+            this.colorForm.controls.status_400.patchValue(jsonvalue.status_400);
+            this.colorForm.controls.status_407.patchValue(jsonvalue.status_407);
+            this.colorForm.controls.status_500.patchValue(jsonvalue.status_500);
+            this.colorForm.controls.status_501.patchValue(jsonvalue.status_501);
           }
           if (conf.key === ConfigurationService.WORKFLOW_CRON_BODY) {
             this.workflowBODYid = conf.id;
@@ -333,6 +354,29 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
       this.workflowURLid = result.id;
       this.workflowURL = result.value;
     });
+  }
+
+  confirmColor(): void {
+    let conf: Configuration = new Configuration();
+    conf.id = this.colorid;
+    conf.application = `task-scheduler-service`;
+    conf.profile = `default`;
+    conf.key = ConfigurationService.COLOR;
+    conf.value = JSON.stringify({
+      status_200: this.colorForm.controls.status_200.value,
+      status_202: this.colorForm.controls.status_202.value,
+      status_400: this.colorForm.controls.status_400.value,
+      status_404: this.colorForm.controls.status_400.value,
+      status_407: this.colorForm.controls.status_407.value,
+      status_408: this.colorForm.controls.status_407.value,
+      status_500: this.colorForm.controls.status_500.value,
+      status_501: this.colorForm.controls.status_501.value,
+    });
+    this.configurationService.save(conf).subscribe((result: any) => {
+      this.colorid = result.id;
+      this.configurationService.setCachedStatusColor(JSON.parse(conf.value));
+    });
+
   }
 
   cronConfirmWorkflowBODY(): void {

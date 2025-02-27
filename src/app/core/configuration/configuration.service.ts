@@ -8,6 +8,7 @@ import { ConfigService } from '../config.service';
 import { TranslateService } from '@ngx-translate/core';
 import { environment } from '../../../environments/environment';
 import { Configuration } from './configuration.model';
+import { map } from 'rxjs/operators';
 
 @Injectable()
 export class ConfigurationService extends CommonService<Configuration> {
@@ -21,6 +22,9 @@ export class ConfigurationService extends CommonService<Configuration> {
   public static readonly WORKFLOW_NUMBER_PRESERVE = `workflow.number.preserve`;
   public static readonly WORKFLOW_ID_PRESERVE = `workflow.id.preserve`;
   public static readonly JSONRULES_KEY = `jsonrules`;
+  public static readonly COLOR = `color`;
+
+  private cachedStatusColor: any;
 
   public constructor(protected httpClient: HttpClient,
                      protected apiMessageService: ApiMessageService,
@@ -66,4 +70,19 @@ export class ConfigurationService extends CommonService<Configuration> {
     return gateway + ConfigService.API_BASE + this.getRequestMapping() + (entity?.id ? `\\${entity.id}`:``);
   }
 
+  public setCachedStatusColor(color: any) {
+    this.cachedStatusColor = color;
+  }
+
+  public getStatusColor(): Observable<any> {
+    if (this.cachedStatusColor) {
+      return observableOf(this.cachedStatusColor);
+    }
+    return this.getAll().pipe(
+        map((configurations: Configuration[]) => {
+          this.cachedStatusColor = JSON.parse(configurations.filter((conf: Configuration) => conf.key === ConfigurationService.COLOR)[0].value);
+          return this.cachedStatusColor;
+        })
+    );
+  }
 }

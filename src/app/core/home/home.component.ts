@@ -17,6 +17,7 @@ import * as am5percent from "@amcharts/amcharts5/percent";
 import am5locales_it_IT from "@amcharts/amcharts5/locales/it_IT";
 
 import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
+import { ConfigurationService } from '../configuration/configuration.service';
 
 @Component({
   selector: 'app-home',
@@ -52,6 +53,7 @@ export class HomeComponent implements OnInit {
   chartDivStyle: string = 'height:75vh !important';
 
   public filterFormSearch: FormGroup;
+  protected statusColor: any;
 
   @ViewChild('chartdiv', {static: true}) chartdiv: ElementRef;
   @ViewChild('columnchartdiv', {static: true}) columnchartdiv: ElementRef;
@@ -61,6 +63,7 @@ export class HomeComponent implements OnInit {
     private formBuilder: FormBuilder,
     private conductorService: ConductorService,
     private translateService: TranslateService,
+    private configurationService: ConfigurationService,
     private responsive: BreakpointObserver,
     private resultService: ResultService) {
   }
@@ -78,6 +81,9 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.configurationService.getStatusColor().subscribe((color: any) => {
+      this.statusColor = color;
+    });
     this.filterFormSearch = this.formBuilder.group({
       workflowId: new FormControl(''),
     });
@@ -161,8 +167,8 @@ export class HomeComponent implements OnInit {
           name: this.translateService.instant(`it.rule.status.${key}.title`),
           value: result[key],
           sliceSettings: {
-            fill: am5.color(StatusColor[`STATUS_${key}`]),
-            stroke: am5.color(StatusColor[`STATUS_${key}`])
+            fill: am5.color(this.statusColor[`status_${key}`]),
+            stroke: am5.color(this.statusColor[`status_${key}`])
           },
           extra: {
             key: key,
@@ -178,6 +184,6 @@ export class HomeComponent implements OnInit {
   }
 
   public getBGColor(key) {
-    return StatusColor[`STATUS_${key}`] + `!important`; 
+    return this.statusColor[`status_${key}`] + `!important`; 
   }
 }
