@@ -333,7 +333,7 @@ export class ResultPieComponent implements OnInit {
         
         series2.slices.template.events.on("click", function(ev) {
           var status = ev.target.dataItem.dataContext.extra.key;
-          if (status != 500) {
+          if (status != 501) {
             this.router.navigate(['/search'],  { queryParams: {
               workflowId: this.filterFormSearch.value.workflowId,
               ruleName: this.filterFormSearch.value.ruleName,
