@@ -1,14 +1,14 @@
 import { EnumKeyConverter } from "../helpers/EnumKeyConverter";
 
 export enum StatusColor {
-  STATUS_200='#1ea233',
-  STATUS_202='#6ab357',
-  STATUS_400='#e31b19',
-  STATUS_407='#ea670c',
-  STATUS_404='#e31b19',
-  STATUS_408='#ea670c',
-  STATUS_500='#484a43',
-  STATUS_501='#ffe000'
+  status_200='#1ea233',
+  status_202='#6ab357',
+  status_400='#e31b19',
+  status_407='#ea670c',
+  status_404='#e31b19',
+  status_408='#ea670c',
+  status_500='#484a43',
+  status_501='#ffe000'
 } 
 
 export class StatusColorConverter extends EnumKeyConverter<StatusColor> {

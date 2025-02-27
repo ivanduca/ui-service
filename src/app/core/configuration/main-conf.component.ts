@@ -13,8 +13,9 @@ import { environment } from '../../../environments/environment';
 import * as parser from 'cron-parser';
 import { RuleService } from '../rule/rule.service';
 import { ConductorService } from '../conductor/conductor.service';
-import { Workflow } from '../conductor/workflow.model';
+import { Status, Workflow } from '../conductor/workflow.model';
 import { DatePipe } from '@angular/common';
+import { StatusColor } from '../../common/model/status-color.enum';
 
 @Component({
   selector: 'app-main-conf',
@@ -205,12 +206,12 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
       });
     });
     this.colorForm = this.formBuilder.group({
-      status_200: new FormControl(''),
-      status_202: new FormControl(''),
-      status_400: new FormControl(''),
-      status_407: new FormControl(''),
-      status_500: new FormControl(''),
-      status_501: new FormControl(''),
+      status_200: new FormControl(StatusColor.status_200),
+      status_202: new FormControl(StatusColor.status_202),
+      status_400: new FormControl(StatusColor.status_400),
+      status_407: new FormControl(StatusColor.status_407),
+      status_500: new FormControl(StatusColor.status_500),
+      status_501: new FormControl(StatusColor.status_501),
     });
     this.workflowBODYForm = this.formBuilder.group({
       page_size: new FormControl(1000),

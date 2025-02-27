@@ -9,6 +9,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { environment } from '../../../environments/environment';
 import { Configuration } from './configuration.model';
 import { map } from 'rxjs/operators';
+import { StatusColor } from '../../common/model/status-color.enum';
 
 @Injectable()
 export class ConfigurationService extends CommonService<Configuration> {
@@ -80,8 +81,12 @@ export class ConfigurationService extends CommonService<Configuration> {
     }
     return this.getAll().pipe(
         map((configurations: Configuration[]) => {
-          this.cachedStatusColor = JSON.parse(configurations.filter((conf: Configuration) => conf.key === ConfigurationService.COLOR)[0].value);
-          return this.cachedStatusColor;
+          let colors = configurations.filter((conf: Configuration) => conf.key === ConfigurationService.COLOR);
+          if (colors && colors.length === 1) {
+            this.cachedStatusColor = JSON.parse(colors[0].value);
+            return this.cachedStatusColor;
+          }
+          return StatusColor;
         })
     );
   }
