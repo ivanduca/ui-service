@@ -150,6 +150,7 @@
     "rule": {
       "main": "Regola",
       "title": "Regole",
+      "child": "Regole figlie non trovate",
       "failed": "Fallite",
       "satisfy": "Report Regole",
       "all": "Check regole {{rulesOK}} / {{all}} ({{percent}}%)",
