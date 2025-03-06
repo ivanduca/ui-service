@@ -5,13 +5,14 @@ import {Component, Input} from '@angular/core';
   template: `
     <span *ngIf="value" class="me-1">
       <span class="label-show-text">{{ label | translate }}</span>
-      <a class="ms-1" [ngClass]="{'fw-bolder': strong}" href="{{url}}" [target]="target">{{ value }}</a>
+      <a class="ms-1" [style.color]="fill" [ngClass]="{'fw-bolder': strong}" href="{{url}}" [target]="target">{{ value }}</a>
     </span>
   `
 })
 export class ShowURLComponent {
 
   @Input() label;
+  @Input() fill;
   @Input() value;
   @Input() strong = false;
   @Input() target = '_blank';

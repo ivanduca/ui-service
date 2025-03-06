@@ -176,7 +176,7 @@ export class ResultPieComponent implements OnInit {
         this.resultService.getWorkflowMap(parentKey, [wokflowId]).subscribe((result: any) => {
           let total = Number(result[wokflowId][200]||0) + Number(result[wokflowId][202]||0); 
           chart[501] = total - Number(Object.values(chart).reduce((a: number, b: number) => a + b, 0)); 
-          this.loadChart(result[wokflowId], true, chart, titleParent, title);
+          this.loadChart(result[wokflowId], true, chart, titleParent, title, parentKey);
         });
       } else {        
         this.loadChart(chart, false);
@@ -184,7 +184,7 @@ export class ResultPieComponent implements OnInit {
     }); 
   }
   
-  loadChart(result: any, double: boolean, result2?: any, titleParent?: string, title?: string) {
+  loadChart(result: any, double: boolean, result2?: any, titleParent?: string, title?: string, parentKey?: string) {
     this.isPieLoaded = true;
     if (this.chartdiv) {
       this.root.setThemes([
@@ -344,6 +344,12 @@ export class ResultPieComponent implements OnInit {
               ruleName: this.filterFormSearch.value.ruleName,
               status: status 
             }});  
+          } else {
+            this.router.navigate(['/search'],  { queryParams: {
+              workflowId: this.filterFormSearch.value.workflowId,
+              ruleName: parentKey || this.filterFormSearch.value.ruleName,
+              child: true 
+            }});
           }
         }, this);
   
@@ -357,9 +363,15 @@ export class ResultPieComponent implements OnInit {
         if (status != 501) {
           this.router.navigate(['/search'],  { queryParams: {
             workflowId: this.filterFormSearch.value.workflowId,
-            ruleName: this.filterFormSearch.value.ruleName,
+            ruleName: parentKey || this.filterFormSearch.value.ruleName,
             status: status 
           }});  
+        } else {
+          this.router.navigate(['/search'],  { queryParams: {
+            workflowId: this.filterFormSearch.value.workflowId,
+            ruleName: parentKey || this.filterFormSearch.value.ruleName,
+            child: true 
+          }});
         }
       }, this);
 

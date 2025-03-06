@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
 import { CommonListComponent } from '../../common/controller/common-list.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup } from '@angular/forms';
@@ -7,6 +7,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { animate, keyframes, style, transition, trigger } from '@angular/animations';
 import { Result } from './result.model';
 import { ResultService } from './result.service';
+import * as _ from "lodash";
+import { ConfigurationService } from '../configuration/configuration.service';
 
 @Component({
   selector: 'result-list',
@@ -33,7 +35,10 @@ import { ResultService } from './result.service';
           (scrolled)="onScroll()">
           <div *ngFor="let item of items" class="col-sm-12 px-md-2 pb-2" @scale [ngClass]="classForDisplayCard()">
             <app-list-item-result [item]="item" [codiceIpa]="codiceIpa" [filterForm]="filterForm">
-              <it-callout [appearance]="'highlight'" [icon]="'pa'" [color]="item.color" [label]="item.company.denominazioneEnte">
+              <div class="callout callout-highlight" [style.color]="getColor(item.status)" [style.border-color]="getColor(item.status)">
+                <div class="callout-title mb-1" [style.color]="getColor(item.status)">
+                  <svg class="icon" [style.fill]="getColor(item.status)"><use href="/bootstrap-italia/dist/svg/sprites.svg#it-pa"></use></svg>{{item.company.denominazioneEnte}}
+                </div>
                 <div class="col-sm-12">
                   <app-show-text [label]="'it.company.codiceIpa'" [value]="item.company.codiceIpa"></app-show-text>
                   <app-show-text class="pull-right" [label]="'it.company.acronimo'" [value]="item.company.acronimo"></app-show-text>
@@ -49,9 +54,9 @@ import { ResultService } from './result.service';
                   <app-show-text [label]="'it.company.tipologia'" [value]="item.company.tipologia"></app-show-text>
                 </div>
                 <div class="col-sm-12">
-                  <app-show-url [label]="'it.company.sitoIstituzionale'" [value]="item.company.sitoIstituzionale"></app-show-url>
+                  <app-show-url [fill]="getColor(item.status)" [label]="'it.company.sitoIstituzionale'" [value]="item.company.sitoIstituzionale"></app-show-url>
                 </div>
-              </it-callout>
+              </div>
               <div class="col-sm-12">
                 @if (item.errorMessage) {
                   <app-show-text-popover 
@@ -86,8 +91,14 @@ import { ResultService } from './result.service';
     </app-grid-layout>
   `,
   styles : [
-    `.callout { max-width: unset!important; }`
-  ],  
+    ` 
+      .callout { max-width: unset!important; }
+    `
+  ],
+  host: {
+    '[class.callout.success.callout-title]':'0.9 * height',
+  },
+  encapsulation: ViewEncapsulation.None,
   animations: [
     trigger('scale', [
       transition('void => *', animate('500ms ease-in-out', keyframes([
@@ -104,15 +115,20 @@ export class ResultListComponent extends CommonListComponent<Result> implements 
   @Input() showPageOnTop: boolean = false;
   @Input() showPage: boolean = false;
   @Input() infiniteScroll: boolean = true;
+  protected statusColor: any;
 
   pageOffset = ResultService.PAGE_OFFSET;
   public constructor(public service: ResultService,
                      protected route: ActivatedRoute,
                      protected router: Router,
                      protected changeDetector: ChangeDetectorRef,
+                     protected configurationService: ConfigurationService,
                      protected navigationService: NavigationService,
                      protected translateService: TranslateService) {
     super(service, route, router, changeDetector, navigationService);
+    this.configurationService.getStatusColor().subscribe((color: any) => {
+      this.statusColor = color;
+    });
   }
   
   protected get codiceIpa() {
@@ -150,4 +166,19 @@ export class ResultListComponent extends CommonListComponent<Result> implements 
     return true;
   }
 
+  public filterFormValue() {
+    if (this.filterForm) {
+      if (this.filterForm.controls.child.value) {
+        let filter = _.cloneDeep(this.filterForm.value);
+        filter.ruleName = `${filter.ruleName}/child`;
+        return filter;
+      }
+      return this.filterForm.value;
+    }
+    return undefined;
+  }
+  
+  public getColor(key) {
+    return this.statusColor[`status_${key}`] + `!important`; 
+  }
 }

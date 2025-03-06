@@ -61,7 +61,7 @@ export class SearchComponent implements OnInit {
     if (ruleName === Rule.AMMINISTRAZIONE_TRASPARENTE) {
       return status == 404;
     } 
-    return (status != 200 && status != 202 && status != 404);
+    return false;
   }
 
   manageOptionStatus(ruleName: string) {
@@ -81,13 +81,14 @@ export class SearchComponent implements OnInit {
       if (this.filterFormSearch) {
         this.filterFormSearch.controls['workflowId'].patchValue(workflowId);
         this.filterFormSearch.controls['ruleName'].patchValue(this.ruleName);
+        this.filterFormSearch.controls['child'].patchValue(queryParams.child);
         this.filterFormSearch.controls['codiceIpa'].patchValue(queryParams.codiceIpa);
         this.filterFormSearch.controls['status'].patchValue(queryParams.status||'');
         this.filterFormSearch.controls['sort'].patchValue(queryParams.sort);
       } else {
         this.filterFormSearch = this.formBuilder.group({
           workflowId: new FormControl(workflowId),
-          //ruleName: new FormControl(ruleName),
+          child: new FormControl(queryParams.child),
           status: new FormControl(queryParams.status||''),
           denominazioneEnte: new FormControl(),
           codiceFiscaleEnte: new FormControl(),
@@ -154,6 +155,12 @@ export class SearchComponent implements OnInit {
 
   loadFromRule(name: string, rule: any) {
     let rules: SelectRule[] = rule.getKeys(undefined, undefined, Rule.AMMINISTRAZIONE_TRASPARENTE, [], -1);
+    this.optionsRule.push({
+      value: '',
+      text: '*',
+      level: 0,
+      name: name
+    });
     Object.keys(rules).forEach((index) => {
       this.optionsRule.push({
         value: rules[index].key,
