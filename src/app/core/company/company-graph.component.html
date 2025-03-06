@@ -87,7 +87,19 @@
             <span class="font-monospace">{{ 'it.rule.all' | translate: {rulesOK: rulesOK, all: data?.length, percent: rulesOK * 100/data?.length | number:'1.2-2' } }}</span>
           </div>
         }
-      </div>  
+      </div>
+      @if (optionsRuleDetail && optionsRuleDetail.length > 0) {
+        <ng-select placeholder="Cerca regola" (change)="optionsRuleSelected($event)" [items]="optionsRuleDetail" bindLabel="term" [searchFn]="searchRuleFn" class="px-1">
+          <ng-template ng-option-tmp let-item="item">
+            <b>{{ item.term }}</b>
+            @if(item?.alternativeTerm?.length > 0) {
+              @for (term of item.alternativeTerm; track term) {
+                <p class="ps-3"><small>{{ term }}</small></p>
+              }
+            }
+          </ng-template>
+        </ng-select>
+      }
       <it-tab-container #tab dark="true" (tabSelected)="tabSelected($event)">
         @if (company) {
           <it-tab-item #tabPA label="PA" icon="pa" [active]="tabPAActive">

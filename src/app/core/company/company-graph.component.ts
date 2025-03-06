@@ -93,6 +93,7 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
   @ViewChild("newModal") newModal: ItModalComponent;
   optionsCategoria: Array<SelectControlOption> = [];
   protected newRuleForm: FormGroup;
+  optionsRuleDetail: RuleChart[];
 
   constructor(private formBuilder: FormBuilder,
               private route: ActivatedRoute,
@@ -255,12 +256,14 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
       }
       this.rulesOK = results.filter(result => result.status == 200 || result.status == 202).length;
       this.rulesFailed = [];
+      this.optionsRuleDetail = [];
       this.ruleService.getRules().subscribe((rules: Map<String, Rule>) => {
         let rule = rules.get(ruleName);
         this.data = rule.getCharts(undefined, ruleName, []);
         this.rating = Math.trunc((this.rulesOK * 100 / this.data.length) / 20);
         this.loadChart();
         this.data.forEach((ruleChart: RuleChart) => {
+          this.optionsRuleDetail.push(ruleChart);
           let nodeId = (ruleName == ruleChart.nodeId) ? Rule.AMMINISTRAZIONE_TRASPARENTE : ruleChart.nodeId;
           let childStatus : Number[] = [];
           this.data.filter(result => result.parentNodeId == ruleChart.nodeId).forEach((childRule: RuleChart) => {
@@ -837,6 +840,21 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
     }
     return result;
   }
+
+  searchRuleFn(term: string, item: RuleChart) {
+		term = term.toLowerCase();
+		let result = item.term.toLowerCase().indexOf(term) > -1 || 
+      item.alternativeTerm?.filter((alternativeterm) => {
+        return alternativeterm.toLowerCase().indexOf(term) > -1
+      }).length > 0;
+    return result;
+  }
+
+  optionsRuleSelected(item?: RuleChart) {
+    console.log('1');
+    this.centerNode(item);
+  }
+
   // -------------------------------
   // On Destroy.
   // -------------------------------
