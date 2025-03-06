@@ -114,6 +114,12 @@
     <it-navbar-item>
       <it-dropdown mode="nav">
         <span button translate>it.navigation.sezioni</span>
+        <span listHeading>
+          <a class="pb-1" href="#" (click)="toggleCollapse()" routerLink="/search" [queryParams]="{ruleName: ''}">
+            Tutte le Regole
+          </a>
+          <hr class="my-0">
+        </span>
         <ng-container list>
           <it-dropdown-item href="#" (click)="toggleCollapse()" routerLink="/search" [queryParams]="{ruleName: 'amministrazione-trasparente'}">
             <span>Amministrazione Trasparente</span>
