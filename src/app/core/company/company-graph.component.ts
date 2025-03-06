@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, ViewChild, ElementRef, OnChanges, HostListener } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, ViewChild, ElementRef, OnChanges, HostListener, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { OrgChart } from "d3-org-chart";
@@ -33,6 +33,7 @@ import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
   selector: 'company-graph',
   changeDetection: ChangeDetectionStrategy.Default,
   templateUrl: './company-graph.component.html',
+  encapsulation: ViewEncapsulation.None,
   providers: [DatePipe],
   styles: `
     #chartContainer {
@@ -45,9 +46,14 @@ import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
         min-height: 60vh;
       }  
     }
+
     .select-wrapper {
       margin-bottom: 1rem !important;
-    }  
+    }
+ 
+    .ng-select .ng-arrow-wrapper {
+        display: none !important;
+    }
   `
 })
 export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
@@ -638,11 +644,14 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
   }
 
   centerNode(node) {
-    this.chart.setCentered(node.nodeId).render();    
-    const attrs = this.chart.getChartState();
-    const root = attrs.generateRoot(attrs.data)
-    const descendants = root.descendants();
-    this.currentNode = descendants.filter(({ data }) => attrs.nodeId(data) == node.nodeId)[0];
+    if (node) {
+      this.chart.setCentered(node.nodeId).render();    
+      const attrs = this.chart.getChartState();
+      const root = attrs.generateRoot(attrs.data)
+      const descendants = root.descendants();
+      this.currentNode = descendants.filter(({ data }) => attrs.nodeId(data) == node.nodeId)[0];
+  
+    }
     return false;
   }
 
