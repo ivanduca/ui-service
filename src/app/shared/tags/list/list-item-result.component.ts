@@ -85,12 +85,12 @@ export class ListItemResultComponent {
   safeHtml: string = '';
 
   get imagesrc(): string {
-    return `${environment.apiUrl}${this.item?.storageData?.screenshotBucket}/${this.item?.storageData?.screenshotId}`;
+    return `${environment.apiUrl}/${this.item?.storageData?.screenshotBucket}/${this.item?.storageData?.screenshotId}`;
   }
 
   downloadhtml() {
     if (this.item?.storageData?.objectBucket && this.item?.storageData?.objectId) {
-      this.httpClient.get(`${environment.apiUrl}${this.item.storageData.objectBucket}/${this.item.storageData.objectId}`, {
+      this.httpClient.get(`${environment.apiUrl}/${this.item.storageData.objectBucket}/${this.item.storageData.objectId}`, {
         responseType: 'text'
       }).subscribe((base64: string) => {
         let result = base64.replace("\'","").replace("b", "").replace("\'","");

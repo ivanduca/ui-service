@@ -73,7 +73,7 @@ export class ShowStorageResultComponent {
   safeHtml: string = '';
 
   get imagesrc(): string {
-    return `${environment.apiUrl}${this.storageData?.screenshotBucket}/${this.storageData?.screenshotId}`;
+    return `${environment.apiUrl}/${this.storageData?.screenshotBucket}/${this.storageData?.screenshotId}`;
   }
 
   downloadhtml() {
