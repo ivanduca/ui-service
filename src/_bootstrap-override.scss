@@ -38,3 +38,8 @@ ng-select.break-spaces .ng-option {
 .form-group {
     margin-bottom: 1rem;
 }
+
+:focus:not(.focus--mouse),.form-check [type=checkbox]:focus+label,.form-check [type=radio]:focus+label,.toggles label input[type=checkbox]:focus+.lever {
+    border-color: unset!important;
+    box-shadow: unset!important;
+}
