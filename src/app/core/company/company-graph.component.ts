@@ -237,7 +237,9 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
 
   loadRuleData(key: string, rule: Rule) {
     this.data = rule.getCharts(undefined, key, []);
+    this.optionsRuleDetail = [];
     this.data.forEach((ruleChart: RuleChart) => {
+      this.optionsRuleDetail.push(ruleChart);
       if (ruleChart.nodeId === key) {
         this.currentNode = {
           data: ruleChart
@@ -465,12 +467,12 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
     setTimeout(() => {
       this.chart?.svgHeight(this.chartContainer.nativeElement.offsetHeight).render();
     }, 1000);
-    if (tab.id === this.tabPA.id) {
+    if (tab.id === this.tabPA?.id) {
       this.tabRuleActive = false;
       this.tabPAActive = true;
       this.tabFailedActive = false;
     }
-    if (tab.id === this.tabRule.id) {
+    if (tab.id === this.tabRule?.id) {
       this.tabRuleActive = true;
       this.tabPAActive = false;
       this.tabFailedActive = false;
