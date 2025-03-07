@@ -89,17 +89,24 @@
         }
       </div>
       @if (optionsRuleDetail && optionsRuleDetail.length > 0) {
-        <div class="bg-white my-2 pt-3 shadow rounded border border-dark">
-          <ng-select placeholder="Cerca regola ...."  (change)="optionsRuleSelected($event)" [items]="optionsRuleDetail" bindLabel="term" [searchFn]="searchRuleFn" class="px-1">
-            <ng-template ng-option-tmp let-item="item">
-              <b>{{ item.term }}</b>
-              @if(item?.alternativeTerm?.length > 0) {
-                @for (term of item.alternativeTerm; track term) {
-                  <p class="ps-3"><small>{{ term }}</small></p>
-                }
-              }
-            </ng-template>
-          </ng-select>  
+        <div class="bg-white my-2 pt-3 shadow rounded border border-primary">
+          <div class="row">
+            <div class="col-1 mt-3 me-n2">
+              <it-icon [name]="'search'" size="sm" color="primary"></it-icon>
+            </div>
+            <div class="col-11">
+              <ng-select placeholder="Cerca regola ...."  (change)="optionsRuleSelected($event)" [items]="optionsRuleDetail" bindLabel="term" [searchFn]="searchRuleFn" class="px-1">
+                <ng-template ng-option-tmp let-item="item">
+                  <b>{{ item.term }}</b>
+                  @if(item?.alternativeTerm?.length > 0) {
+                    @for (term of item.alternativeTerm; track term) {
+                      <p class="ps-3"><small>{{ term }}</small></p>
+                    }
+                  }
+                </ng-template>
+              </ng-select>  
+            </div>
+          </div>
         </div>
       }
       <it-tab-container #tab dark="true" (tabSelected)="tabSelected($event)">
