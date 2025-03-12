@@ -817,6 +817,9 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
         if (parentRule) {
           delete parentRule.childs[currentNode.id];
         }
+        this.chart.removeNode(currentNode.data.nodeId);
+        this.currentNode = undefined;
+        this.saveRules();
         this.loadSelectRules();
       } else {
         this.conductorService.getAll({
@@ -838,14 +841,14 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
             );  
           } else {
             this.rules.delete(currentNode.data.nodeId);
-            this.loadSelectRules();
             this.filterFormSearch.controls.rootRule.patchValue(undefined);    
+            this.chart.removeNode(currentNode.data.nodeId);
+            this.currentNode = undefined;
+            this.saveRules();
+            this.loadSelectRules();    
           }
         });
       }
-      this.chart.removeNode(currentNode.data.nodeId);
-      this.currentNode = undefined;
-      this.saveRules();
     }
   }
 
