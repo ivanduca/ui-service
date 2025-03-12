@@ -842,9 +842,9 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
           }
         });
       }
-      //this.chart.removeNode(this.currentNode.data.nodeId);
-      //this.currentNode = undefined;
-      //this.saveRules();
+      this.chart.removeNode(this.currentNode.data.nodeId);
+      this.currentNode = undefined;
+      this.saveRules();
     }
   }
 
