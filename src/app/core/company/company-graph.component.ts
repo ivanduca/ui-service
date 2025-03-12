@@ -804,17 +804,18 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
   }
 
   delete() {
-    if (this.currentNode) {      
+    let currentNode = this.currentNode;
+    if (currentNode) {      
       let rule: Rule = this.rules.get(this.filterFormSearch.controls.rootRule.value);
-      if (this.currentNode.parent) {
+      if (currentNode.parent) {
         let parentRule: Rule;
-        if (this.currentNode.parent.id === this.filterFormSearch.controls.rootRule.value) {
+        if (currentNode.parent.id === this.filterFormSearch.controls.rootRule.value) {
           parentRule = rule;
         } else {
-          parentRule = this.findRule(rule.childs, this.currentNode.parent.id);
+          parentRule = this.findRule(rule.childs, currentNode.parent.id);
         }
         if (parentRule) {
-          delete parentRule.childs[this.currentNode.id];
+          delete parentRule.childs[currentNode.id];
         }
         this.loadSelectRules();
       } else {
@@ -822,27 +823,27 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
           includeClosed: true,
           includeTasks: false
         }).subscribe((workflows: Workflow[]) => {
-          let numero = workflows.filter((workflow: Workflow) => workflow.input.root_rule == this.currentNode.data.nodeId).length;
+          let numero = workflows.filter((workflow: Workflow) => workflow.input.root_rule == currentNode.data.nodeId).length;
           if (numero > 0) {
             this.apiMessageService.sendMessage(
               MessageType.ERROR, 
               this.translateService.instant(
                 'it.configuration.rule.delete.error',
                 {
-                  'name': this.currentNode.data.nodeId,
+                  'name': currentNode.data.nodeId,
                   'numero': numero
                 }
               ), 
               NotificationPosition.Top
             );  
           } else {
-            this.rules.delete(this.currentNode.data.nodeId);
+            this.rules.delete(currentNode.data.nodeId);
             this.loadSelectRules();
             this.filterFormSearch.controls.rootRule.patchValue(undefined);    
           }
         });
       }
-      this.chart.removeNode(this.currentNode.data.nodeId);
+      this.chart.removeNode(currentNode.data.nodeId);
       this.currentNode = undefined;
       this.saveRules();
     }
