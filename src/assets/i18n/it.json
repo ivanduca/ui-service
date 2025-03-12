@@ -73,7 +73,8 @@
       "rule": {
         "delete": {
           "title": "Conferma cancellazione",
-          "text": "Sei sicuro di voler eliminare la regola <b>\"{{term}}\"</b>, e tutte le sue eventuali regole figlie?"
+          "text": "Sei sicuro di voler eliminare la regola <b>\"{{term}}\"</b>, e tutte le sue eventuali regole figlie?",
+          "error": "Non è possibile eliminare la regola \"{{name}}\", in quanto è utilizata in {{numero}} flussi!"
         },
         "edit": {
           "title": "Modifica regola {{id}}"
