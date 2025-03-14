@@ -53,22 +53,22 @@
             </div>
             <div class="form-group col-md-2">
               <it-input type="number" required [min]="1000" 
-                [max]="30000" [step]="1000" formControlName="connection_timeout" 
+                [max]="60000" [step]="1000" formControlName="connection_timeout" 
                 [label]="'it.configuration.cron.body.connection_timeout'| translate"></it-input>
             </div>
             <div class="form-group col-md-2">
               <it-input type="number" required [min]="1000" 
-                [max]="30000" [step]="1000" formControlName="read_timeout" 
+                [max]="60000" [step]="1000" formControlName="read_timeout" 
                 [label]="'it.configuration.cron.body.read_timeout'| translate"></it-input>
             </div>
             <div class="form-group col-md-2">
               <it-input type="number" required [min]="1000" 
-                [max]="60000" [step]="1000" formControlName="connection_timeout_max" 
+                [max]="120000" [step]="1000" formControlName="connection_timeout_max" 
                 [label]="'it.configuration.cron.body.connection_timeout_max'| translate"></it-input>
             </div>
             <div class="form-group col-md-2">
               <it-input type="number" required [min]="1000" 
-                [max]="60000" [step]="1000" formControlName="read_timeout_max" 
+                [max]="120000" [step]="1000" formControlName="read_timeout_max" 
                 [label]="'it.configuration.cron.body.read_timeout_max'| translate"></it-input>
             </div>
           </div>
