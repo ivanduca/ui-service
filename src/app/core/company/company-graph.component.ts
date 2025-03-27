@@ -100,6 +100,7 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
   optionsCategoria: Array<SelectControlOption> = [];
   protected newRuleForm: FormGroup;
   optionsRuleDetail: RuleChart[];
+  protected statusColor: any;
 
   constructor(private formBuilder: FormBuilder,
               private route: ActivatedRoute,
@@ -115,6 +116,9 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
               protected router: Router) {}
 
   ngOnInit(): void {
+    this.configurationService.getStatusColor().subscribe((color: any) => {
+      this.statusColor = color;
+    });
     Object.keys(CodiceCategoria).forEach((key) => {
       this.optionsCategoria.push({ value: key, text: CodiceCategoria[key]});
     });    
@@ -289,6 +293,7 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
           ruleChart.ruleStatus = this.ruleStatus;
           if (result) {
             ruleChart.status = result.status;
+            ruleChart.dynamicColor = this.getDynamicColor(result.status);
             ruleChart.destinationUrl = result.destinationUrl;
             ruleChart.color = result.color;
             ruleChart.childStatus = childStatus;
@@ -321,6 +326,10 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
         this.updateChart();
       });  
     });
+  }
+
+  public getDynamicColor(key) {
+    return this.statusColor[`status_${key}`] + `!important`; 
   }
 
   loadChart() {
@@ -537,12 +546,12 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
             ultraLarge = isTermUltraLarge? `pt-0 px-1` : ``; 
           return `
           <div class="card-wrapper card-space hmin-100">
-            <div class="card card-bg shadow-lg border border-${d.data.color} border-5">
+            <div class="card card-bg shadow-lg border border-5" style="border-color: ${d.data.dynamicColor}">
               <div class="card-body pb-0 ${ultraLarge}">
-                <span class="text-break d-flex ${classBox}">${d.data.term}</span>
+                <span class="text-break d-flex ${classBox}" style="color: ${d.data.dynamicColor}">${d.data.term}</span>
                 ${
                   d.data.status
-                    ? `<span class="fst-italic text-${d.data.color}">${d.data.ruleStatus[d.data.status].ruletitle}</span>`
+                    ? `<span class="fst-italic" style="color: ${d.data.dynamicColor}">${d.data.ruleStatus[d.data.status].ruletitle}</span>`
                     : ``
                 }
                 </div>

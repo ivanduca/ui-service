@@ -32,6 +32,7 @@ export class RuleChart {
     public updatedAt: Date;
     public workflowChildId: string;
     public content: string;
+    public dynamicColor: string;
 
     constructor(nodeId: string, parentNodeId: string, term: string, alternativeTerm?: string[], childStatus?: Number[]) {
         this.nodeId = nodeId;
