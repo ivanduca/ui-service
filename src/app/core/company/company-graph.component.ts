@@ -318,6 +318,7 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
             }
           } else {
             ruleChart.status = 404;
+            ruleChart.dynamicColor = this.getDynamicColor(404);
             ruleChart.color = 'danger';
             ruleChart.buttonColor = 'danger';
             this.rulesFailed.push(ruleChart);
