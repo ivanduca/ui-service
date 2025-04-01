@@ -30,6 +30,8 @@ export class Task {
 export class Workflow implements Base {
     @JsonProperty('workflowId')
     public workflowId: string;
+    @JsonProperty('correlationId')
+    public correlationId: string;
     @JsonProperty('workflowName')
     public workflowName: string;    
     @JsonProperty('version')
@@ -116,6 +118,10 @@ export class Workflow implements Base {
 
     public get isRunning(): boolean {
         return this.status === Status.RUNNING;
+    }
+
+    public get isFailed(): boolean {
+        return this.status === Status.FAILED;
     }
 
 }

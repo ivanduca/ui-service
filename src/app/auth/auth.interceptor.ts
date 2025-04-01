@@ -21,6 +21,7 @@ export class AuthInterceptor implements HttpInterceptor {
           req.url.indexOf(environment.resultAggregatorapiUrl) != -1 ||
           req.url.indexOf(environment.resultApiUrl) != -1 ||
           req.url.indexOf(environment.ruleApiUrl) != -1 ||
+          req.url.indexOf(environment.taskSchedulerApiUrl) != -1 ||
           req.url.indexOf(ConfigurationService.ROUTE) != -1) {            
         return this.oidcSecurityService.checkAuth().pipe(          
           switchMap((isAuthenticated) => {

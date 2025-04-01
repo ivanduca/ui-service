@@ -3,7 +3,6 @@ import { CoreRoutingModule} from './core-routing.module';
 import { HeaderComponent} from './header/header.component';
 import { FooterComponent} from './footer/footer.component';
 
-
 import { HomeComponent} from './home/home.component';
 import { SearchComponent} from './search/search.component';
 
@@ -78,7 +77,7 @@ import { NgxColorsModule } from 'ngx-colors';
         WorkflowCardComponent,
         CreditsComponent,
         RuleSelectComponent,
-        MainConfigurationComponent
+        MainConfigurationComponent,
     ],
     imports: [
         AppRoutingModule,
@@ -122,7 +121,7 @@ import { NgxColorsModule } from 'ngx-colors';
         WorkflowCardComponent,
         RuleSelectComponent,
         MainConfigurationComponent,
-        DesignAngularKitModule
+        DesignAngularKitModule,
     ],
     providers: [
         // Capire il discorso del root-injector e child-injector.

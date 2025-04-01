@@ -36,6 +36,7 @@ ENV COMPANY_API_URL=$API_URL/public-sites-service
 ENV CONDUCTOR_API_URL=$API_URL/conductor-server
 ENV RESULT_API_URL=$API_URL/result-service
 ENV RESULT_AGGREGATOR_API_URL=$API_URL/result-aggregator-service
+ENV TASK_SCHEDULER_API_URL=$API_URL/task-scheduler-service
 ENV RULE_API_URL=$API_URL/rule-service
 ENV CRAWLER_API_URL=$API_URL/crawl
 

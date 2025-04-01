@@ -50,5 +50,12 @@ export class AuthGuard implements CanActivate, CanActivateChild, CanDeactivate<u
         }));
     }
 
+    getRoles(): Observable<string[]> {
+        return this.oidcSecurityService.getUserData().pipe(map((userData: any) => {
+            return userData?.realm_access?.roles || [];
+        }));
+    }
+
+
 }
   

@@ -231,8 +231,14 @@
       "last-execution": "Cronologia controlli sezione Amministrazione Trasparente siti PA",
       "text": "Controllo del {{startTime}}, stato {{status}}",
       "textfull": "Controllo del {{startTime}}, concluso in {{duration}}",
+      "restart": "Riavvia",
+      "resume": "Riprendi",
+      "retry": "Riprova",
+      "remove": "Rimuovi",
       "message": {
-        "new": "Operazione sottomessa con successo."
+        "new": "Operazione sottomessa con successo.",
+        "delete": "Sei sicuro di voler cancellare il controllo e tutti i dati ad esso associati?",
+        "restart": "Sei sicuro di voler riavviare il controllo?"
       },
       "rule": {
         "total": "Totale:",

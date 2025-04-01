@@ -1,4 +1,4 @@
-<section class="home-main py-4 px-4" aria-labelledby="intro">
+<section class="home-main py-4 px-4" aria-labelledby="intro" [class]="currentWorkflow ? 'd-block' : 'd-none'">
   <div class="row g-2">
     <h2 class="text-dark">{{'it.home.header1' | translate}}</h2>
     <div class="col-xl-3">
@@ -97,7 +97,7 @@
       <div class="row">
         <h2 class="text-white">{{'it.workflow.last-execution' | translate}}</h2>
       </div>
-      <it-carousel type="three-cols-arrow-visible" class="shadow" lined="true">
+      <it-carousel #carousel type="three-cols-arrow-visible" class="shadow" lined="true">
         @for (workflow of workflows; track workflow) {
           @if(workflow?.workflowId !== currentWorkflow?.workflowId) {
             <it-carousel-item>

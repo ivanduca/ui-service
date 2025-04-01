@@ -25,6 +25,7 @@ export class ConductorService extends CommonService<Workflow> {
     super(httpClient, apiMessageService, translateService, router, configService);
   }
   public static AMMINISTRAZIONE_TRASPARENTE_FLOW: string = 'crawler_amministrazione_trasparente';
+  public static AMMINISTRAZIONE_TRASPARENTE_CORRELATION: string = 'crawler_amministrazione_trasparente';
   public static API_SERVICE = `conductor-server`;
 
   protected createNewInstance(): new () => any {
@@ -53,7 +54,7 @@ export class ConductorService extends CommonService<Workflow> {
   
   public getAll(filter?: {}, path?: string): Observable<Workflow[]> {
     if (!path) {
-      path = `/${ConductorService.AMMINISTRAZIONE_TRASPARENTE_FLOW}/correlated/${ConductorService.AMMINISTRAZIONE_TRASPARENTE_FLOW}`;
+      path = `/${ConductorService.AMMINISTRAZIONE_TRASPARENTE_FLOW}/correlated/${ConductorService.AMMINISTRAZIONE_TRASPARENTE_CORRELATION}`;
     }
     return this.authGuard.hasRole([RoleEnum.ADMIN, RoleEnum.SUPERUSER]).pipe(switchMap((hasRole: boolean) => {
       return super.getAll(filter, path).pipe(switchMap((workflows: Workflow[]) => {
@@ -90,6 +91,98 @@ export class ConductorService extends CommonService<Workflow> {
       })[0]);
     }));
   }
+
+  public removeAllDataFromWorkflow(workflowId: string): Observable<string> {
+    return this.httpClient.delete(`${environment.taskSchedulerApiUrl}/tasks/deleteWorkflow?workflowId=${workflowId}`, {responseType: 'json'})
+      .pipe(
+        map((result: string) => {
+          return result;
+        }),
+        catchError((httpErrorResponse: HttpErrorResponse) => {
+          const springError = new SpringError(httpErrorResponse, this.translateService);
+          this.apiMessageService.sendMessage(MessageType.ERROR, springError.getRestErrorMessage());
+          return observableThrowError(springError);
+        })
+      );
+  }
+
+  public removeWorkflow(workflowId: string): Observable<string> {
+    return this.getGateway()
+      .pipe(
+        switchMap((gateway) => {
+          return this.httpClient.delete(`${gateway}${this.getApiService()}/api/workflow/${workflowId}/remove`, {responseType: 'json'})
+            .pipe(
+              map((result: string) => {
+                return result;
+              }),
+              catchError((httpErrorResponse: HttpErrorResponse) => {
+                const springError = new SpringError(httpErrorResponse, this.translateService);
+                this.apiMessageService.sendMessage(MessageType.ERROR, springError.getRestErrorMessage());
+                return observableThrowError(springError);
+              })
+            );
+        })
+    );
+  }
+
+
+  public retryWorkflow(workflowId: string): Observable<string> {
+    return this.getGateway()
+      .pipe(
+        switchMap((gateway) => {
+          return this.httpClient.post(`${gateway}${this.getApiService()}/api/workflow/${workflowId}/retry?resumeSubworkflowTasks=false`, {responseType: 'json'})
+            .pipe(
+              map((result: string) => {
+                return result;
+              }),
+              catchError((httpErrorResponse: HttpErrorResponse) => {
+                const springError = new SpringError(httpErrorResponse, this.translateService);
+                this.apiMessageService.sendMessage(MessageType.ERROR, springError.getRestErrorMessage());
+                return observableThrowError(springError);
+              })
+            );
+        })
+    );
+  }
+
+  public resumeWorkflow(workflowId: string): Observable<string> {
+    return this.getGateway()
+      .pipe(
+        switchMap((gateway) => {
+          return this.httpClient.put(`${gateway}${this.getApiService()}/api/workflow/${workflowId}/resume`, {responseType: 'json'})
+            .pipe(
+              map((result: string) => {
+                return result;
+              }),
+              catchError((httpErrorResponse: HttpErrorResponse) => {
+                const springError = new SpringError(httpErrorResponse, this.translateService);
+                this.apiMessageService.sendMessage(MessageType.ERROR, springError.getRestErrorMessage());
+                return observableThrowError(springError);
+              })
+            );
+        })
+    );
+  }
+
+  public restartWorkflow(workflowId: string): Observable<string> {
+    return this.getGateway()
+      .pipe(
+        switchMap((gateway) => {
+          return this.httpClient.post(`${gateway}${this.getApiService()}/api/workflow/${workflowId}/restart`, {responseType: 'json'})
+            .pipe(
+              map((result: string) => {
+                return result;
+              }),
+              catchError((httpErrorResponse: HttpErrorResponse) => {
+                const springError = new SpringError(httpErrorResponse, this.translateService);
+                this.apiMessageService.sendMessage(MessageType.ERROR, springError.getRestErrorMessage());
+                return observableThrowError(springError);
+              })
+            );
+        })
+    );
+  }
+
 
   public startMainWorkflow(codiceIpa?: string, ruleName?: string): Observable<string> {
     return this.getGateway()

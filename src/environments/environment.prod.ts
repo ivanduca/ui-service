@@ -6,6 +6,7 @@ export const environment = {
   resultApiUrl: window["env"]["resultApiUrl"],
   resultAggregatorapiUrl: window["env"]["resultAggregatorapiUrl"],
   ruleApiUrl: window["env"]["ruleApiUrl"],
+  taskSchedulerApiUrl: window["env"]["taskSchedulerApiUrl"],
   crawlerApiUrl: window["env"]["crawlerApiUrl"],
   debug: window["env"]["debug"] || false,
   baseHref: window["env"]["baseHref"] || "/",

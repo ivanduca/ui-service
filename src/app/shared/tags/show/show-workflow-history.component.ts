@@ -8,7 +8,7 @@ import { Rule } from '../../../core/rule/rule.model';
 import { RuleService } from '../../../core/rule/rule.service';
 import { ApiMessageService, MessageType } from '../../../core/api-message.service';
 import { TranslateService } from '@ngx-translate/core';
-import { ItModalComponent, SelectControlOption } from 'design-angular-kit';
+import { ItModalComponent, NotificationPosition, SelectControlOption } from 'design-angular-kit';
 import { Status, Workflow } from '../../../core/conductor/workflow.model';
 import { HttpParams } from '@angular/common/http';
 import { ResultService } from '../../../core/result/result.service';
@@ -37,7 +37,7 @@ import saveAs from 'file-saver';
             <div class="d-flex justify-content-start w-100">
               <div class="d-flex">
                 <span class="text-monospace">
-                  @if (!workflow.isRunning) {
+                  @if (!workflow.isRunning) {                  
                     {{'it.workflow.full_label' | translate: { startTime: workflow.startTime | date:'dd/MM/yyyy', endTime: workflow.endTime | date:'dd/MM/yyyy HH:mm:ss', executionTime: workflow.executionTime | durationFormat} }}                  
                   }
                   @if (workflow.isRunning){
@@ -54,9 +54,19 @@ import saveAs from 'file-saver';
                       [itBadge]="workflow.badge" 
                       class="h6 align-top pull-right">
                       <div class="d-flex">
-                      <div>{{'it.workflow.status.'+ workflow.status | translate}}</div>
+                        <div>{{'it.workflow.status.'+ workflow.status | translate}}</div>
                       </div>
                   </a>
+                  @if (isAbleToStartWorkflow && workflow.correlationId == codiceIpa) {
+                    <a 
+                        itButton="danger"
+                        (click)="removeWorkflow(workflow)" 
+                        class="h6 align-top pull-right">
+                        <div class="d-flex">
+                          <div>{{'delete' | translate}}</div>
+                        </div>
+                    </a>
+                  }
                   @if (workflow.isCompleted && isCSVVisible) {
                     <a href="" (click)="downloadCsv(workflow, codiceIpa)" class="align-top me-1 pull-right">
                       <it-icon *ngIf="!workflow.isLoadingCsv" name="file-csv" class="bg-light" color="success"></it-icon>
@@ -230,4 +240,19 @@ export class ShowWorkflowHistoryComponent implements OnInit{
     }));
   }
  
+  public removeWorkflow(workflow: Workflow) {
+    this.translateService.get('it.workflow.message.delete').subscribe((label) => {
+      if(confirm(label)) {
+        this.conductorService.removeAllDataFromWorkflow(workflow.workflowId).subscribe((result: any) => {
+          this.apiMessageService.sendMessage(
+            MessageType.SUCCESS, 
+            this.translateService.instant('it.workflow.message.new'), 
+            NotificationPosition.Top
+          );
+        });  
+        this.workflowModal.toggle();
+      }  
+    })
+  }
+
 }

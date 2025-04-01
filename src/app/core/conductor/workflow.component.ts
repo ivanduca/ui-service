@@ -1,4 +1,4 @@
-import {Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild, viewChild, ViewEncapsulation } from '@angular/core';
 import { Workflow } from './workflow.model';
 import { HttpParams } from '@angular/common/http';
 import { animate, keyframes, style, transition, trigger } from '@angular/animations';
@@ -6,9 +6,12 @@ import { Rule } from '../rule/rule.model';
 import { ResultService } from '../result/result.service';
 import { AuthGuard } from '../../auth/auth-guard';
 import { RoleEnum } from '../../auth/role.enum';
-import { StatusColor } from '../../common/model/status-color.enum';
-import saveAs from 'file-saver';
 import { ConfigurationService } from '../configuration/configuration.service';
+import { ConductorService } from './conductor.service';
+import { ApiMessageService, MessageType } from '../api-message.service';
+import { NotificationPosition } from 'design-angular-kit';
+import { TranslateService } from '@ngx-translate/core';
+import saveAs from 'file-saver';
 
 @Component({
   selector: 'app-workflow-card',
@@ -21,7 +24,7 @@ import { ConfigurationService } from '../configuration/configuration.service';
         </div>
       }
       <div class="category-top">
-            <div class="d-flex justify-content-end">
+            <div class="d-flex justify-content-end flex-column flex-md-row">
             @if (title) {
                 <div class="d-flex">
                     <a class="category" [routerLink]="['/search']" [queryParams]="{workflowId: workflow.workflowId, ruleName: 'amministrazione-trasparente'}">{{'it.workflow.label' | translate: { startTime: workflow.startTime | date:'dd/MM/yyyy'} }}</a>
@@ -29,23 +32,52 @@ import { ConfigurationService } from '../configuration/configuration.service';
                 </div>
             }
             @if (!workflow.isRunning) {
-                <div class="ms-auto">
+                <div class="ms-auto d-flex">
                 @if (workflow.isCompleted && isCSVVisible) {
                     <a href="" (click)="downloadCsv(workflow.workflowId)" class="align-top me-1">
-                    <it-icon *ngIf="!isLoadingCsv" name="file-csv" class="bg-light" color="success"></it-icon>
-                    <it-spinner *ngIf="isLoadingCsv" small="true" double="true"></it-spinner>
+                      <it-icon *ngIf="!isLoadingCsv" name="file-csv" class="bg-light" color="success"></it-icon>
+                      <it-spinner *ngIf="isLoadingCsv" small="true" double="true"></it-spinner>
                     </a>
                 }
-                <span 
-                    itPopover="Concluso il {{workflow.endTime | date:'dd/MM/yyyy HH:mm:ss'}} in {{workflow.executionTime | durationFormat}}"  
-                    popoverPlacement="top"
-                    [popoverTrigger]="workflow.isCompleted ? 'hover' : 'manual'" 
-                    [itBadge]="workflow.badge" 
-                    class="h6 align-top">
-                    <div class="d-flex">
-                    <div>{{'it.workflow.status.'+ workflow.status | translate}}</div>
-                    </div>                   
-                </span>
+                @if (isAdmin) {
+                  <it-dropdown
+                    [color]="workflow.badge"
+                    [dark]="false">
+                    <span 
+                      itPopover="Concluso il {{workflow.endTime | date:'dd/MM/yyyy HH:mm:ss'}} in {{workflow.executionTime | durationFormat}}"  
+                      popoverPlacement="top"
+                      [popoverTrigger]="workflow.isCompleted ? 'hover' : 'manual'"                    
+                      button                     
+                      translate>{{'it.workflow.status.'+ workflow.status | translate}}</span>
+                    <ng-container list>
+                      @if (workflow.isFailed) {
+                        <it-dropdown-item iconPosition="left" externalLink="true" (click)="retryWorkflow()" iconName="restore">
+                          <span class="ms-1" translate>it.workflow.retry</span>
+                        </it-dropdown-item>
+                        <it-dropdown-item iconPosition="left" externalLink="true" (click)="resumeWorkflow()" iconName="refresh">
+                          <span class="ms-1" translate>it.workflow.resume</span>
+                        </it-dropdown-item>
+                        <it-dropdown-item iconPosition="left" externalLink="true" (click)="restartWorkflow();" iconName="exchange-circle">
+                          <span class="ms-1" translate>it.workflow.restart</span>
+                        </it-dropdown-item>
+                      }
+                      <it-dropdown-item iconPosition="left" externalLink="true" (click)="removeWorkflow();" iconName="delete">
+                        <span class="ms-1" translate>it.workflow.remove</span>
+                      </it-dropdown-item>
+                    </ng-container>
+                  </it-dropdown>
+                } @else {
+                  <span 
+                      itPopover="Concluso il {{workflow.endTime | date:'dd/MM/yyyy HH:mm:ss'}} in {{workflow.executionTime | durationFormat}}"  
+                      popoverPlacement="top"
+                      [popoverTrigger]="workflow.isCompleted ? 'hover' : 'manual'" 
+                      [itBadge]="workflow.badge" 
+                      class="h6 align-top">
+                      <div class="d-flex">
+                        <div>{{'it.workflow.status.'+ workflow.status | translate}}</div>
+                      </div>
+                  </span>             
+                }
                 </div>
             } 
             @if (workflow.isRunning){
@@ -113,31 +145,87 @@ import { ConfigurationService } from '../configuration/configuration.service';
         style({ transform: 'scale(1)' })
       ]))) 
     ])
-  ]
+  ],
+  encapsulation: ViewEncapsulation.None,
+  styles: `
+  `
 })
 export class WorkflowCardComponent implements OnInit{
 
   constructor(
     private resultService: ResultService,
+    protected apiMessageService: ApiMessageService,
     private authGuard: AuthGuard,
-    private configurationService: ConfigurationService
+    private configurationService: ConfigurationService,
+    private translateService: TranslateService,
+    private conductorService: ConductorService
   ) {}
   isLoadingCsv: boolean = false;
   isCSVVisible: boolean = false;
+  isAdmin: boolean = false;
   protected statusColor: any;
 
   @Input() workflow: Workflow;
   @Input() title: boolean = true;
 
   ngOnInit(): void {
-    this.authGuard.hasRole([RoleEnum.ADMIN, RoleEnum.SUPERUSER]).subscribe((hasRole: boolean) => {
-      this.isCSVVisible = hasRole;
+    this.authGuard.getRoles().subscribe((roles: string[]) => {
+      this.isCSVVisible = roles.filter(role => roles.indexOf(RoleEnum.ADMIN) != -1 || roles.indexOf(RoleEnum.SUPERUSER) != -1).length != 0;
+      this.isAdmin = roles.filter(role => roles.indexOf(RoleEnum.ADMIN) != -1).length != 0;
     });
     this.configurationService.getStatusColor().subscribe((color: any) => {
       this.statusColor = color;
     });
   }
 
+  public removeWorkflow() {
+    this.translateService.get('it.workflow.message.delete').subscribe((label) => {
+      if(confirm(label)) {
+        return this.conductorService.removeAllDataFromWorkflow(this.workflow.workflowId).subscribe((result: any) => {
+          this.apiMessageService.sendMessage(
+            MessageType.SUCCESS, 
+            this.translateService.instant('it.workflow.message.new'), 
+            NotificationPosition.Top
+          );
+        });  
+      }  
+    })
+  }
+
+  public restartWorkflow() {
+    this.translateService.get('it.workflow.message.restart').subscribe((label) => {
+      if(confirm(label)) {
+        return this.conductorService.restartWorkflow(this.workflow.workflowId).subscribe((result: any) => {
+          this.apiMessageService.sendMessage(
+            MessageType.SUCCESS, 
+            this.translateService.instant('it.workflow.message.new'), 
+            NotificationPosition.Top
+          );
+        });
+      }
+    })
+  }
+
+  public retryWorkflow() {
+    return this.conductorService.retryWorkflow(this.workflow.workflowId).subscribe((result: any) => {
+      this.apiMessageService.sendMessage(
+        MessageType.SUCCESS, 
+        this.translateService.instant('it.workflow.message.new'), 
+        NotificationPosition.Top
+      );
+    });
+  }
+
+  public resumeWorkflow() {
+    return this.conductorService.resumeWorkflow(this.workflow.workflowId).subscribe((result: any) => {
+      this.apiMessageService.sendMessage(
+        MessageType.SUCCESS, 
+        this.translateService.instant('it.workflow.message.new'), 
+        NotificationPosition.Top
+      );
+    });
+  }
+  
   downloadCsv(workflowId: string) {
     this.isLoadingCsv = true;
     let httpParams = new HttpParams();

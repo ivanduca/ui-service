@@ -10,14 +10,14 @@ import { debounceTime } from 'rxjs';
 import { DurationFormatPipe } from '../../shared/pipes/durationFormat.pipe';
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
-import { StatusColor } from '../../common/model/status-color.enum';
+import { ConfigurationService } from '../configuration/configuration.service';
 
 import * as am5 from '@amcharts/amcharts5';
 import * as am5percent from "@amcharts/amcharts5/percent";
 import am5locales_it_IT from "@amcharts/amcharts5/locales/it_IT";
 
 import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
-import { ConfigurationService } from '../configuration/configuration.service';
+import { ItCarouselComponent } from 'design-angular-kit';
 
 @Component({
   selector: 'app-home',
@@ -57,6 +57,7 @@ export class HomeComponent implements OnInit {
 
   @ViewChild('chartdiv', {static: true}) chartdiv: ElementRef;
   @ViewChild('columnchartdiv', {static: true}) columnchartdiv: ElementRef;
+  @ViewChild('carousel') carousel: ItCarouselComponent;
 
   constructor(
     protected httpClient: HttpClient,
@@ -162,20 +163,22 @@ export class HomeComponent implements OnInit {
       });
 
       this.single = [];
-      Object.keys(result).forEach((key) => {
-        this.single.push({
-          name: this.translateService.instant(`it.rule.status.${key}.title`),
-          value: result[key],
-          sliceSettings: {
-            fill: am5.color(this.statusColor[`status_${key}`]),
-            stroke: am5.color(this.statusColor[`status_${key}`])
-          },
-          extra: {
-            key: key,
-            workflowId: workflowId  
-          }
-        });
-      });
+      if (result) {
+        Object.keys(result).forEach((key) => {
+          this.single.push({
+            name: this.translateService.instant(`it.rule.status.${key}.title`),
+            value: result[key],
+            sliceSettings: {
+              fill: am5.color(this.statusColor[`status_${key}`]),
+              stroke: am5.color(this.statusColor[`status_${key}`])
+            },
+            extra: {
+              key: key,
+              workflowId: workflowId  
+            }
+          });
+        });  
+      }
       series.data.setAll(this.single);
       series.appear(1000, 100);
       this.series = series;
