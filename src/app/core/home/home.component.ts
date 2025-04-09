@@ -18,6 +18,7 @@ import am5locales_it_IT from "@amcharts/amcharts5/locales/it_IT";
 
 import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
 import { ItCarouselComponent } from 'design-angular-kit';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -61,6 +62,7 @@ export class HomeComponent implements OnInit {
 
   constructor(
     protected httpClient: HttpClient,
+    private router: Router,
     private formBuilder: FormBuilder,
     private conductorService: ConductorService,
     private translateService: TranslateService,
@@ -179,6 +181,14 @@ export class HomeComponent implements OnInit {
           });
         });  
       }
+      series.slices.template.events.on("click", function(ev) {
+        var status = ev.target.dataItem.dataContext['extra'].key;
+        this.router.navigate(['/search'],  { queryParams: {
+          workflowId: workflowId,
+          ruleName: Rule.AMMINISTRAZIONE_TRASPARENTE,
+          status: status 
+        }});
+      }, this);
       series.data.setAll(this.single);
       series.appear(1000, 100);
       this.series = series;
