@@ -228,6 +228,7 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
       connection_timeout_max: new FormControl(60000),
       read_timeout_max: new FormControl(60000),
       crawler_child_type: new FormControl(`START_WORKFLOW`),
+      crawling_mode: new FormControl(`httpStream`),
       result_base_url: new FormControl(environment.resultApiUrl),
       crawler_uri: new FormControl(environment.crawlerApiUrl),
       rule_base_url: new FormControl(environment.ruleApiUrl),
@@ -281,6 +282,7 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
             this.workflowBODYForm.controls.connection_timeout_max.patchValue(jsonvalue.input.connection_timeout_max);
             this.workflowBODYForm.controls.read_timeout_max.patchValue(jsonvalue.input.read_timeout_max);
             this.workflowBODYForm.controls.crawler_child_type.patchValue(jsonvalue.input.crawler_child_type);
+            this.workflowBODYForm.controls.crawling_mode.patchValue(jsonvalue.input.crawling_mode);
             this.workflowBODYForm.controls.result_base_url.patchValue(jsonvalue.input.result_base_url);
             this.workflowBODYForm.controls.crawler_uri.patchValue(jsonvalue.input.crawler_uri);
             this.workflowBODYForm.controls.rule_base_url.patchValue(jsonvalue.input.rule_base_url);
@@ -406,6 +408,7 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
         connection_timeout_max: this.workflowBODYForm.controls.connection_timeout_max.value,
         read_timeout_max: this.workflowBODYForm.controls.read_timeout_max.value,
         crawler_child_type: this.workflowBODYForm.controls.crawler_child_type.value,
+        crawling_mode: this.workflowBODYForm.controls.crawling_mode.value,
         result_base_url: this.workflowBODYForm.controls.result_base_url.value,
         crawler_uri: this.workflowBODYForm.controls.crawler_uri.value,
         rule_base_url: this.workflowBODYForm.controls.rule_base_url.value,

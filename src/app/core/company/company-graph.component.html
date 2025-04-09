@@ -169,8 +169,17 @@
               @if (currentNode?.data?.storageData?.screenshotId || currentNode?.data?.storageData?.objectId) {
                 <it-list-item>
                   <div class="w-100 d-flex justify-content-around">
-                    <app-show-storage-result class="w-100" [screenshot]="true" [storageData]="currentNode?.data?.storageData" [denominazione]="company.denominazioneEnte"></app-show-storage-result>
-                    <app-show-storage-result class="w-100" [html]="true" [storageData]="currentNode?.data?.storageData" [denominazione]="company.denominazioneEnte"></app-show-storage-result>
+                    <app-show-storage-result class="w-100" 
+                      [screenshot]="true" 
+                      [storageData]="currentNode?.data?.storageData" 
+                      [denominazione]="company.denominazioneEnte"
+                      [ruleName]="currentNode?.data?.nodeId">
+                    </app-show-storage-result>
+                    <app-show-storage-result class="w-100" 
+                      [html]="true" 
+                      [storageData]="currentNode?.data?.storageData" 
+                      [denominazione]="company.denominazioneEnte">
+                    </app-show-storage-result>
                   </div>
                 </it-list-item>  
               }

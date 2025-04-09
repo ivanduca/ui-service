@@ -73,7 +73,16 @@
             </div>
           </div>
           <div class="row">
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-3">
+              <it-select
+                formControlName="crawling_mode"
+                [label]="'it.configuration.cron.body.crawling_mode'| translate"
+                defaultOption="Seleziona un elemento">
+                <option value="httpStream">HTTP STREAM</option>
+                <option value="htmlSource">HTML SOURCE</option>
+              </it-select>
+            </div>
+            <div class="form-group col-md-3">
               <it-select
                 formControlName="crawler_child_type"
                 [label]="'it.configuration.cron.body.crawler_child_type'| translate"
@@ -82,12 +91,12 @@
                 <option value="SUB_WORKFLOW">SUB WORKFLOW</option>
               </it-select>
             </div>
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-3">
               <it-input formControlName="result_base_url" type="url" required [label]="'it.configuration.cron.body.result_base_url'| translate">
                 <it-icon name="link" size="sm" color="primary" prependText></it-icon>
               </it-input>
             </div>
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-3">
               <it-input formControlName="crawler_uri" type="url" required [label]="'it.configuration.cron.body.crawler_uri'| translate">
                 <it-icon name="link" size="sm" color="primary" prependText></it-icon>
               </it-input>

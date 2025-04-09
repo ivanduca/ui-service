@@ -37,7 +37,8 @@ import { HttpClient } from '@angular/common/http';
               <app-show-storage-result
                 [screenshot]="true" 
                 [storageData]="item.storageData" 
-                [denominazione]="item.company.denominazioneEnte">
+                [denominazione]="item.company.denominazioneEnte"
+                [ruleName]="item.ruleName">
               </app-show-storage-result>            
             }
             @if (item?.storageData?.objectId) {
