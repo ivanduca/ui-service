@@ -23,9 +23,8 @@ UI Service è parte della suite di servizi per la verifica delle informazioni su
 # Come iniziare
 
 ## Dipendenze principali
-+----------------------------------------------------------------+----------+
 | Nome                                                           | Versione |
-+----------------------------------------------------------------+----------+
+|----------------------------------------------------------------|----------|
 | [Angular](https://angular.dev/)                                | 18.1.1   |
 | [Amcharts5](https://www.amcharts.com/)                         | 5.10.5   |
 | [Leaflet](https://leafletjs.com/)                              | 1.9.12   |
