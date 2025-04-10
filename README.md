@@ -9,3 +9,58 @@
 ## Introduzione
 UI Service è parte della suite di servizi per la verifica delle informazioni sulla Trasparenza dei siti web delle Pubbliche amministrazioni italiane.
 
+## Immagini
+
+![Recordit GIF](home.png)
+
+# Indice
+
+- [Come iniziare](#come-iniziare)
+- [Come contribuire](#come-contribuire)
+- [Manutenzione](#manutenzione)
+- [Licenza](#licenza)
+
+# Come iniziare
+
+## Dipendenze principali
++----------------------------------------------------------------+----------+
+| Nome                                                           | Versione |
++----------------------------------------------------------------+----------+
+| [Angular](https://angular.dev/)                                | 18.1.1   |
+| [Amcharts5](https://www.amcharts.com/)                         | 5.10.5   |
+| [Leaflet](https://leafletjs.com/)                              | 1.9.12   |
+| [d3-org-chart](https://github.com/bumbeishvili/org-chart)      | 3.1.1    |
+| [bootstrap-italia](https://italia.github.io/bootstrap-italia/) | 2.8.8    |
+
+## Come installare
+
+```js
+console.log("Questo è un esempio di blocco di codice")
+```
+
+## Documentazione
+### Link a documentazione esterna 
+
+# Come contribuire
+
+## Installare le dipendenze di sviluppo
+
+## Struttura del progetto
+
+## Community
+
+### Code of conduct
+
+### Responsible Disclosure
+
+### Segnalazione bug e richieste di aiuto
+
+# Manutenzione 
+
+# Licenza 
+
+## Licenza generale 
+
+## Autori e Copyright
+
+## Licenze software dei componenti di terze parti
