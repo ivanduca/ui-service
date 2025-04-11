@@ -54,6 +54,11 @@ import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
     .ng-select .ng-arrow-wrapper {
         display: none !important;
     }
+   
+    .btn-icon .icon.icon-lg {
+      width: 48px!important;
+      height: 48px!important;
+    }
   `
 })
 export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
