@@ -9,9 +9,7 @@
 ## Introduzione
 UI Service è parte della suite di servizi per la verifica delle informazioni sulla Trasparenza dei siti web delle Pubbliche amministrazioni italiane.
 
-## Immagini
-
-![Recordit GIF](home.png)
+![Home Page](home.png)
 
 # Indice
 
@@ -22,14 +20,17 @@ UI Service è parte della suite di servizi per la verifica delle informazioni su
 
 # Come iniziare
 
+
 ## Dipendenze principali
-| Nome                                                           | Versione |
-|----------------------------------------------------------------|----------|
-| [Angular](https://angular.dev/)                                | 18.1.1   |
-| [Amcharts5](https://www.amcharts.com/)                         | 5.10.5   |
-| [Leaflet](https://leafletjs.com/)                              | 1.9.12   |
-| [d3-org-chart](https://github.com/bumbeishvili/org-chart)      | 3.1.1    |
-| [bootstrap-italia](https://italia.github.io/bootstrap-italia/) | 2.8.8    |
+| Nome                                                              | Versione |
+|-------------------------------------------------------------------|----------|
+| [Angular](https://angular.dev/)                                   | 18.1.1   |
+| [Amcharts5](https://www.amcharts.com/)                            | 5.10.5   |
+| [Leaflet](https://leafletjs.com/)                                 | 1.9.12   |
+| [d3-org-chart](https://github.com/bumbeishvili/org-chart)         | 3.1.1    |
+| [bootstrap-italia](https://italia.github.io/bootstrap-italia/)    | 2.14.0   |
+| [Design Angular Kit](https://italia.github.io/design-angular-kit) | 1.3.0    |
+
 
 ## Come installare
 
@@ -38,6 +39,7 @@ console.log("Questo è un esempio di blocco di codice")
 ```
 
 ## Documentazione
+
 ### Link a documentazione esterna 
 
 # Come contribuire
