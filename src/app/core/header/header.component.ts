@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
 import { ItHeaderComponent, ItNotificationService, NotificationPosition } from 'design-angular-kit';
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 import { environment } from '../../../environments/environment';
-import { OidcSecurityService } from 'angular-auth-oidc-client';
+import { LoginResponse, OidcSecurityService } from 'angular-auth-oidc-client';
 import { AuthGuard } from '../../auth/auth-guard';
 import { RoleEnum } from '../../auth/role.enum';
 
@@ -79,16 +79,28 @@ export class HeaderComponent implements OnInit, OnDestroy {
         this.titleService.setTitle(title);
       });
     });
-    if (environment.oidc.enable) {
-      this.oidcSecurityService.isAuthenticated$.subscribe(
-        ({ isAuthenticated }) => {
+    if (environment.oidc.enable) { 
+      if (!environment.oidc.force) {
+        this.oidcSecurityService
+        .checkAuth()
+        .subscribe((loginResponse: LoginResponse) => {
+          const { isAuthenticated, userData, accessToken, idToken, configId } =
+            loginResponse;
+            this.authenticated = isAuthenticated;
+            this.oidcSecurityService.userData$.subscribe(({ userData }) => {
+              this.userData = userData;
+              this.isAdmin = this.authGuard.hasRolesFromUserData([RoleEnum.ADMIN], userData);
+            });
+        });
+      } else {
+        this.oidcSecurityService.isAuthenticated$.subscribe(({ isAuthenticated }) => {
           this.authenticated = isAuthenticated;
           this.oidcSecurityService.userData$.subscribe(({ userData }) => {
             this.userData = userData;
             this.isAdmin = this.authGuard.hasRolesFromUserData([RoleEnum.ADMIN], userData);
           });    
-        }
-      );
+        });
+      }    
     }
     this.responsiveFn();
   }

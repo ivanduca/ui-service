@@ -17,23 +17,23 @@ export class SpringError {
     public redirectOnError: boolean = true
   ) {
 
-    let message = this.httpErrorResponse.error.error;
-    if (httpErrorResponse.error.message) {
+    let message = this.httpErrorResponse?.error?.error;
+    if (httpErrorResponse.error?.message) {
       message = httpErrorResponse.error.message;
     }
-    let i18n = httpErrorResponse.error.i18n;
+    let i18n = httpErrorResponse?.error?.i18n;
     if (i18n) {
       this.translateService.get(i18n.key, i18n.params).subscribe((label: string) => {
         message = label;
       })
     }
-    this.restError = new SpringRestError(this.httpErrorResponse.error.timestamp,
-      message, this.httpErrorResponse.error.path, this.httpErrorResponse.error.errors);
+    this.restError = new SpringRestError(this.httpErrorResponse?.error?.timestamp,
+      message, this.httpErrorResponse?.error?.path, this.httpErrorResponse?.error?.errors);
   }
 
   public isZuulGeneralException() {
-    return this.httpErrorResponse.error.exception === 'com.netflix.zuul.exception.ZuulException'
-      && this.httpErrorResponse.error.message === 'GENERAL';
+    return this.httpErrorResponse?.error?.exception === 'com.netflix.zuul.exception.ZuulException'
+      && this.httpErrorResponse?.error?.message === 'GENERAL';
   }
 
   public getRestError(): SpringRestError {

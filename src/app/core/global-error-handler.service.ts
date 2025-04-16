@@ -8,9 +8,12 @@ export class GlobalErrorHandler implements ErrorHandler {
   constructor(private router: Router) { }
 
   handleError(error: any) {
-    console.error(error);
     if ((error instanceof SpringError && error?.redirectOnError) || !(error instanceof SpringError)) {
-      this.router.navigate(['error/server-error']);
+      if (error?.httpErrorResponse?.status === 401) {
+        this.router.navigate(['error/unauthorized']);
+      } else {
+        this.router.navigate(['error/server-error']);
+      }
     }
     // IMPORTANT: Rethrow the error otherwise it gets swallowed
     throw error;

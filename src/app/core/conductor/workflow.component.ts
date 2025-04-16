@@ -71,9 +71,8 @@ import saveAs from 'file-saver';
                       itPopover="Concluso il {{workflow.endTime | date:'dd/MM/yyyy HH:mm:ss'}} in {{workflow.executionTime | durationFormat}}"  
                       popoverPlacement="top"
                       [popoverTrigger]="workflow.isCompleted ? 'hover' : 'manual'" 
-                      [itBadge]="workflow.badge" 
-                      class="h6 align-top">
-                      <div class="d-flex">
+                      [itBadge]="workflow.badge">
+                      <div class="d-flex h6 align-middle my-1 px-2">
                         <div>{{'it.workflow.status.'+ workflow.status | translate}}</div>
                       </div>
                   </span>             

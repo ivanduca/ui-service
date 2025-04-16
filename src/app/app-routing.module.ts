@@ -29,9 +29,17 @@ const appRoutes: Routes = [
   ]},
   { path: 'privacy-policy', component: PrivacyPolicyComponent },
   { path: 'note-legali', component: NoteLegaliComponent },
+  { path: 'error/unauthorized', 
+    component: ItErrorPageComponent, 
+    data: { 
+      errorCode: 401,
+      errorTitle: "Accesso negato",
+      errorDescription: "L'accesso alla risorsa richiesta richiede una autenticazione che non è stata fornita!" 
+    } 
+  },
   { path: 'error/not-found', component: ItErrorPageComponent, data: { errorCode: 404 } },
   { path: 'error/forbidden', component: ItErrorPageComponent, data: { errorCode: 403 } },
-  { path: 'error/server-error', component: ItErrorPageComponent, data: { errorCode: 500 } },    
+  { path: 'error/server-error', component: ItErrorPageComponent, data: { errorCode: 500 } },
   { path: 'error/not-found-no-back', component: ItErrorPageComponent, data: { errorCode: 404, showBackButton: false } }
 ];
 
