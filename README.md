@@ -19,7 +19,6 @@ Integra e mostra i dati presenti nei vari servizi fornendo la possibilità, aven
 - [Autorizzazioni](#autorizzazioni)
 - [Come installare](#come-installare)
 - [Come contribuire](#come-contribuire)
-- [Manutenzione](#manutenzione)
 - [Licenza](#licenza)
 
 ## Dipendenze principali
@@ -131,39 +130,30 @@ npm -v
 node -v
 npm -v
 ```
-## Installare le dipendenze
-Dopo aver installato npm si può procedere all'installazzione dei pacchetti definiti all'interno del file [package.json](package.json)
+
+## Installare le dipendenze e avviare il servizio
+Dopo aver installato npm si può procedere all'installazzione dei pacchetti definiti all'interno del file [package.json](package.json) con la seguente istruzione:
 
 ```bash
 npm install
 ```
 
+Dopo aver installato le dipendenze e modificato il file [env.js](src/assets/env.js) con i parametri corretti si può avviare il servizio con la seguente istruzione:
 
+```bash
+npm start
+```
 
-## Documentazione
+Verrà aperta un finestra del browser predefinito alla URL http://localhost:4200/#/
 
-### Link a documentazione esterna 
+## 👏 Come Contribuire 
 
-# Come contribuire
+E' possibile contribuire a questo progetto utilizzando le modalità standard della comunità opensource 
+(issue + pull request) e siamo grati alla comunità per ogni contribuito a correggere bug e miglioramenti.
 
-## Installare le dipendenze di sviluppo
+## 📄 Licenza
 
-## Struttura del progetto
+Transparency Results Service è concesso in licenza GNU AFFERO GENERAL PUBLIC LICENSE, come si trova 
+nel file [LICENSE][l].
 
-## Community
-
-### Code of conduct
-
-### Responsible Disclosure
-
-### Segnalazione bug e richieste di aiuto
-
-# Manutenzione 
-
-# Licenza 
-
-## Licenza generale 
-
-## Autori e Copyright
-
-## Licenze software dei componenti di terze parti
+[l]: LICENSE
