@@ -153,7 +153,7 @@ E' possibile contribuire a questo progetto utilizzando le modalità standard del
 
 ## 📄 Licenza
 
-Transparency Results Service è concesso in licenza GNU AFFERO GENERAL PUBLIC LICENSE, come si trova 
+UI Service è concesso in licenza GNU AFFERO GENERAL PUBLIC LICENSE, come si trova 
 nel file [LICENSE][l].
 
 [l]: LICENSE
