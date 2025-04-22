@@ -18,6 +18,7 @@ Integra e mostra i dati presenti nei vari servizi fornendo la possibilità, aven
 - [Variabili di Ambiente](#variabili-di-ambiente)
 - [Autorizzazioni](#autorizzazioni)
 - [Come installare](#come-installare)
+- [Docker](#docker)
 - [Come contribuire](#come-contribuire)
 - [Licenza](#licenza)
 
@@ -146,6 +147,19 @@ npm start
 
 Verrà aperta un finestra del browser predefinito alla URL http://localhost:4200/#/
 
+# 🐳 Docker
+
+### Installazione
+- Installa Docker Linux: Segui la guida su https://docs.docker.com/engine/install/
+- Windows/Mac: Scarica Docker Desktop da https://www.docker.com/products/docker-desktop
+
+Il servizio è dotato di un [Dockerfile](Dockerfile) e tramite [GitHub Action](.github/workflows/build.yml) pubblica le immagini su [ghcr.io](https://github.com/cnr-anac/ui-service/pkgs/container/ui-service).
+
+Per avviare il servizio tramite docker, impostando correttamente le [variabili d'ambiente](#variabili-di-ambiente), basta eseguire la seguente istruzione:  
+
+```bash
+docker run -p 80:80 -e OIDC_ENABLE=true ghcr.io/cnr-anac/ui-service:latest
+```
 ## 👏 Come Contribuire 
 
 E' possibile contribuire a questo progetto utilizzando le modalità standard della comunità opensource 
