@@ -21,9 +21,9 @@ jobs:
           ref: 'main'
       - name: Upgrade version
         run: |
-          npm version $NEW_VERSION
           git config --global user.email "${{ github.actor }}@users.noreply.github.com"
           git config --global user.name "${{ github.actor }}"
+          npm version $NEW_VERSION
           git push
       - name: Build and publish a Docker image for $IMAGE_NAME:$NEW_VERSION
         uses: macbre/push-to-ghcr@master
