@@ -25,8 +25,8 @@ jobs:
           git config --global user.name "${{ github.actor }}"
           npm version $NEW_VERSION
           git push
-      - name: Build and publish a Docker image for $IMAGE_NAME:$NEW_VERSION
+      - name: Build and publish a Docker image for ${{ github.repository }}
         uses: macbre/push-to-ghcr@master
         with:
-          image_name: $IMAGE_NAME:$NEW_VERSION  # it will be lowercased internally
+          image_name: ${{ github.repository }}  # it will be lowercased internally
           github_token: ${{ secrets.GITHUB_TOKEN }}
