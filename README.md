@@ -26,8 +26,8 @@ Integra e mostra i dati presenti nei vari servizi fornendo la possibilità, aven
 | Nome                                                              | Versione |
 |-------------------------------------------------------------------|----------|
 | [Angular](https://angular.dev/)                                   | 18.1.1   |
-| [Amcharts5](https://www.amcharts.com/)                            | 5.10.5   |
-| [Leaflet](https://leafletjs.com/)                                 | 1.9.12   |
+| [Amcharts5](https://www.amcharts.com/)                            | 5.12.1   |
+| [Leaflet](https://leafletjs.com/)                                 | 1.9.4    |
 | [d3-org-chart](https://github.com/bumbeishvili/org-chart)         | 3.1.1    |
 | [bootstrap-italia](https://italia.github.io/bootstrap-italia/)    | 2.14.0   |
 | [Design Angular Kit](https://italia.github.io/design-angular-kit) | 1.3.0    |

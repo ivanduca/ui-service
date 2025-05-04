@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild, viewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild, viewChild, ViewEncapsulation } from '@angular/core';
 import { Workflow } from './workflow.model';
 import { HttpParams } from '@angular/common/http';
 import { animate, keyframes, style, transition, trigger } from '@angular/animations';
@@ -42,7 +42,7 @@ import saveAs from 'file-saver';
                 @if (isAdmin) {
                   <it-dropdown
                     [color]="workflow.badge"
-                    [dark]="false">
+                    [dark]="true">
                     <span 
                       itPopover="Concluso il {{workflow.endTime | date:'dd/MM/yyyy HH:mm:ss'}} in {{workflow.executionTime | durationFormat}}"  
                       popoverPlacement="top"
@@ -50,16 +50,22 @@ import saveAs from 'file-saver';
                       button                     
                       translate>{{'it.workflow.status.'+ workflow.status | translate}}</span>
                     <ng-container list>
-                      @if (workflow.isFailed) {
-                        <it-dropdown-item iconPosition="left" externalLink="true" (click)="retryWorkflow()" iconName="restore">
-                          <span class="ms-1" translate>it.workflow.retry</span>
-                        </it-dropdown-item>
-                        <it-dropdown-item iconPosition="left" externalLink="true" (click)="resumeWorkflow()" iconName="refresh">
-                          <span class="ms-1" translate>it.workflow.resume</span>
-                        </it-dropdown-item>
-                        <it-dropdown-item iconPosition="left" externalLink="true" (click)="restartWorkflow();" iconName="exchange-circle">
-                          <span class="ms-1" translate>it.workflow.restart</span>
-                        </it-dropdown-item>
+                      @if (workflow.isFailed || workflow.isPaused || workflow.isTerminated) {
+                        @if (!workflow.isPaused) {
+                          <it-dropdown-item iconPosition="left" externalLink="true" (click)="retryWorkflow()" iconName="restore">
+                            <span class="ms-1" translate>it.workflow.retry</span>
+                          </it-dropdown-item>
+                        }
+                        @if (workflow.isPaused) {
+                          <it-dropdown-item iconPosition="left" externalLink="true" (click)="resumeWorkflow()" iconName="refresh">
+                            <span class="ms-1" translate>it.workflow.resume</span>
+                          </it-dropdown-item>
+                        }
+                        @if (!workflow.isPaused) {
+                          <it-dropdown-item iconPosition="left" externalLink="true" (click)="restartWorkflow();" iconName="exchange-circle">
+                            <span class="ms-1" translate>it.workflow.restart</span>
+                          </it-dropdown-item>
+                        }
                       }
                       <it-dropdown-item iconPosition="left" externalLink="true" (click)="removeWorkflow();" iconName="delete">
                         <span class="ms-1" translate>it.workflow.remove</span>
@@ -78,12 +84,38 @@ import saveAs from 'file-saver';
                   </span>             
                 }
                 </div>
-            } 
+            }
             @if (workflow.isRunning){
-                <button [itButton]="'outline-primary'" size="xs" class="ms-auto align-top" (click)="workflowTotalElements(workflow)">
-                <span>{{'it.workflow.status.'+ workflow.status | translate}}</span>
-                <span class="visually-hidden">Aggiorna i dati</span>
-                </button>                  
+              <div class="ms-auto d-flex">
+                <button 
+                  itPopover="Aggiorna i dati"
+                  popoverPlacement="top"
+                  popoverTrigger="hover" 
+                  itButton="outline-primary" 
+                  size="xs" 
+                  class="ms-auto align-top me-1" 
+                  (click)="workflowTotalElements(workflow)">
+                  <it-icon name="refresh" color="primary" class="me-2"></it-icon>
+                  <span class="visually-hidden">Aggiorna i dati</span>
+                </button>
+                @if (isAdmin) {
+                  <it-dropdown
+                    [color]="workflow.badge"
+                    [dark]="true">
+                    <span                     
+                      button                     
+                      translate>{{'it.workflow.status.'+ workflow.status | translate}}</span>
+                    <ng-container list>
+                      <it-dropdown-item iconPosition="left" externalLink="true" (click)="pauseWorkflow();" iconName="locked">
+                        <span class="ms-1" translate>it.workflow.pause</span>
+                      </it-dropdown-item>
+                      <it-dropdown-item iconPosition="left" externalLink="true" (click)="terminateWorkflow();" iconName="delete">
+                        <span class="ms-1" translate>it.workflow.terminate</span>
+                      </it-dropdown-item>
+                    </ng-container>
+                  </it-dropdown>
+                }
+              </div>    
             }
             </div> 
         </div>
@@ -155,6 +187,7 @@ export class WorkflowCardComponent implements OnInit{
     private resultService: ResultService,
     protected apiMessageService: ApiMessageService,
     private authGuard: AuthGuard,
+    private changeDetectorRef: ChangeDetectorRef,
     private configurationService: ConfigurationService,
     private translateService: TranslateService,
     private conductorService: ConductorService
@@ -177,6 +210,13 @@ export class WorkflowCardComponent implements OnInit{
     });
   }
 
+  private detectWorkflow() {
+    this.conductorService.getById(this.workflow.workflowId).subscribe((workflow: Workflow) => {
+      this.workflow = workflow;
+      this.workflowTotalElements(workflow);
+    })
+  }
+
   public removeWorkflow() {
     this.translateService.get('it.workflow.message.delete').subscribe((label) => {
       if(confirm(label)) {
@@ -186,8 +226,42 @@ export class WorkflowCardComponent implements OnInit{
             this.translateService.instant('it.workflow.message.new'), 
             NotificationPosition.Top
           );
+          this.detectWorkflow();
+          this.changeDetectorRef.detectChanges();
         });  
       }  
+    })
+  }
+
+  public pauseWorkflow() {
+    this.translateService.get('it.workflow.message.pause').subscribe((label) => {
+      if(confirm(label)) {
+        return this.conductorService.pauseWorkflow(this.workflow.workflowId).subscribe((result: any) => {
+          this.apiMessageService.sendMessage(
+            MessageType.SUCCESS, 
+            this.translateService.instant('it.workflow.message.new'), 
+            NotificationPosition.Top
+          );
+          this.detectWorkflow();
+          this.changeDetectorRef.detectChanges();
+        });
+      }
+    })
+  }
+
+  public terminateWorkflow() {
+    this.translateService.get('it.workflow.message.terminate').subscribe((label) => {
+      if(confirm(label)) {
+        return this.conductorService.terminateWorkflow(this.workflow.workflowId).subscribe((result: any) => {
+          this.apiMessageService.sendMessage(
+            MessageType.SUCCESS, 
+            this.translateService.instant('it.workflow.message.new'), 
+            NotificationPosition.Top
+          );
+          this.detectWorkflow();
+          this.changeDetectorRef.detectChanges();
+        });
+      }
     })
   }
 
@@ -200,6 +274,8 @@ export class WorkflowCardComponent implements OnInit{
             this.translateService.instant('it.workflow.message.new'), 
             NotificationPosition.Top
           );
+          this.detectWorkflow();
+          this.changeDetectorRef.detectChanges();
         });
       }
     })
@@ -212,6 +288,8 @@ export class WorkflowCardComponent implements OnInit{
         this.translateService.instant('it.workflow.message.new'), 
         NotificationPosition.Top
       );
+      this.detectWorkflow();
+      this.changeDetectorRef.detectChanges();
     });
   }
 
@@ -222,6 +300,8 @@ export class WorkflowCardComponent implements OnInit{
         this.translateService.instant('it.workflow.message.new'), 
         NotificationPosition.Top
       );
+      this.detectWorkflow();
+      this.changeDetectorRef.detectChanges();
     });
   }
   

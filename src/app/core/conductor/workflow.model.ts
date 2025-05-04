@@ -124,4 +124,12 @@ export class Workflow implements Base {
         return this.status === Status.FAILED;
     }
 
+    public get isPaused(): boolean {
+        return this.status === Status.PAUSED;
+    }
+
+    public get isTerminated(): boolean {
+        return this.status === Status.TERMINATED;
+    }
+
 }

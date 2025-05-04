@@ -183,6 +183,43 @@ export class ConductorService extends CommonService<Workflow> {
     );
   }
 
+  public pauseWorkflow(workflowId: string): Observable<string> {
+    return this.getGateway()
+      .pipe(
+        switchMap((gateway) => {
+          return this.httpClient.put(`${gateway}${this.getApiService()}/api/workflow/${workflowId}/pause`, {responseType: 'json'})
+            .pipe(
+              map((result: string) => {
+                return result;
+              }),
+              catchError((httpErrorResponse: HttpErrorResponse) => {
+                const springError = new SpringError(httpErrorResponse, this.translateService);
+                this.apiMessageService.sendMessage(MessageType.ERROR, springError.getRestErrorMessage());
+                return observableThrowError(springError);
+              })
+            );
+        })
+    );
+  }
+
+  public terminateWorkflow(workflowId: string): Observable<string> {
+    return this.getGateway()
+      .pipe(
+        switchMap((gateway) => {
+          return this.httpClient.delete(`${gateway}${this.getApiService()}/api/workflow/${workflowId}`, {responseType: 'json'})
+            .pipe(
+              map((result: string) => {
+                return result;
+              }),
+              catchError((httpErrorResponse: HttpErrorResponse) => {
+                const springError = new SpringError(httpErrorResponse, this.translateService);
+                this.apiMessageService.sendMessage(MessageType.ERROR, springError.getRestErrorMessage());
+                return observableThrowError(springError);
+              })
+            );
+        })
+    );
+  }
 
   public startMainWorkflow(codiceIpa?: string, ruleName?: string): Observable<string> {
     return this.getGateway()

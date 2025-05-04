@@ -1,6 +1,7 @@
 {
-  "/": {
-    "target": "http://localhost:5555",
+  "/conductor-server": {
+    "target": "http://localhost:8080/",
+    "pathRewrite": {"^/conductor-server" : ""},
     "secure": false
   }
 }

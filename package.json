@@ -8,7 +8,7 @@
     "mobile": "tns run",
     "preview": "tns preview",
     "ng": "ng",
-    "start": "ng serve --poll=1000 --disable-host-check --live-reload -o",
+    "start": "ng serve --poll=1000 --disable-host-check --proxy-config proxy.conf.json --live-reload -o",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",

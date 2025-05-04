@@ -237,10 +237,14 @@
       "resume": "Riprendi",
       "retry": "Riprova",
       "remove": "Rimuovi",
+      "pause": "Pausa",
+      "terminate": "Termina",
       "message": {
         "new": "Operazione sottomessa con successo.",
         "delete": "Sei sicuro di voler cancellare il controllo e tutti i dati ad esso associati?",
-        "restart": "Sei sicuro di voler riavviare il controllo?"
+        "restart": "Sei sicuro di voler riavviare il controllo?",
+        "pause": "Sei sicuro di voler mettere in pausa il controllo?",
+        "terminate": "Sei sicuro di voler terminare il controllo?"
       },
       "rule": {
         "total": "Totale:",
