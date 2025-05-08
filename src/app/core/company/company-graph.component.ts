@@ -606,7 +606,7 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
     let filename = this.codiceIpa || Rule.AMMINISTRAZIONE_TRASPARENTE;
     this.chart.exportImg({
       save: false,
-      scale: 10,
+      scale: 2,
       backgroundColor: "#5d7083",
       onLoad: (base64) => {
         var pdf = new jsPDF({

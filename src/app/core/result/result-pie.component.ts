@@ -376,19 +376,21 @@ export class ResultPieComponent implements OnInit {
       }, this);
 
       let single = [];
-      Object.keys(result).forEach((key) => {
-        single.push({
-          name: this.translateService.instant(`it.rule.status.${key}.ruletitle`),
-          value: result[key],
-          sliceSettings: {
-            fill: am5.color(this.statusColor[`status_${key}`]),
-            stroke: am5.color(this.statusColor[`status_${key}`])
-          },
-          extra: {
-            key: key  
-          }
-        });
-      });
+      if (result) {
+        Object.keys(result).forEach((key) => {
+          single.push({
+            name: this.translateService.instant(`it.rule.status.${key}.ruletitle`),
+            value: result[key],
+            sliceSettings: {
+              fill: am5.color(this.statusColor[`status_${key}`]),
+              stroke: am5.color(this.statusColor[`status_${key}`])
+            },
+            extra: {
+              key: key  
+            }
+          });
+        });  
+      }
       series.data.setAll(single);
       series.appear(1000, 100);
       this.series = series;
