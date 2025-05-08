@@ -619,8 +619,8 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
           pdf.addImage(
             img,
             'JPEG',
-            5,
-            5,
+            0,
+            0,
             pdf.internal.pageSize.getWidth(),
             pdf.internal.pageSize.getHeight(),
             undefined,
