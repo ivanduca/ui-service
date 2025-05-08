@@ -622,7 +622,9 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
             5,
             5,
             pdf.internal.pageSize.getWidth(),
-            pdf.internal.pageSize.getHeight()
+            pdf.internal.pageSize.getHeight(),
+            undefined,
+            "FAST"
           );
           pdf.save(`${filename}.pdf`);
         };
