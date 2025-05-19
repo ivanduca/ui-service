@@ -5,8 +5,18 @@ import {Component, Input} from '@angular/core';
   template: `
     <span *ngIf="value" class="me-1">
       <span class="label-show-text">{{ label | translate }}</span>
-      <a class="ms-1" [ngClass]="{'fw-bolder': strong}" href="{{url}}" [target]="target">{{ value }}</a>
+      <a class="ms-1 multiline-truncate" [ngClass]="{'fw-bolder': strong}" href="{{url}}" [target]="target">{{ value }}</a>
     </span>
+  `,
+  styles: `
+    .multiline-truncate {
+      display: -webkit-box;
+      -webkit-line-clamp: 2; /* Numero di righe da mostrare */
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+    }  
   `
 })
 export class ShowEMailComponent {
