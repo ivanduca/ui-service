@@ -1,6 +1,5 @@
 <it-header
   [loginStyle]="'none'"
-  [light]="light"
   [showSearch]="search"
   [sticky]="sticky"
   [megamenu]="true"
@@ -9,9 +8,9 @@
   (searchClick)="onSearch()">
   <ul class="link-list" slimLinkList>
     <li><a class="list-item" [routerLinkActive]="['active']" routerLink="/credits">CREDITS</a></li>
+    <li><a class="list-item" href="https://trasparenzai.github.io" target="_blank">DOCUMENTAZIONE</a></li>
   </ul>
   <ng-container slimRightZone>
-    <it-language-switcher mode="nav"></it-language-switcher>
     @if (!authenticated) {
       <a itButton="primary" class="btn-full btn-icon" routerLink="auth/signin">
         <span class="rounded-icon">
@@ -21,7 +20,7 @@
       </a>  
     }
     @if (authenticated && userData) {
-      <div class="d-flex border-start border-end border-light border-thin ps-2 pe-1">
+      <div class="d-flex ps-2 pe-1 pt-1">
         <div itAvatar size="lg" color="green">
           <p aria-hidden="true">{{userData.given_name| firstLetter}}{{userData.family_name| firstLetter}}</p>
           <span class="visually-hidden">{{userData.name}}</span>
@@ -52,10 +51,14 @@
   </ng-container>
   <ng-container brand>
     <a routerLink="/">
-      <it-icon name="pa"></it-icon>
-      <div class="it-brand-text">
-        <div class="it-brand-title">{{'header.title' | translate}}</div>
-        <div class="it-brand-tagline d-none d-md-block">{{'header.subtitle' | translate}}</div>
+      <div class="it-brand-text d-flex align-items-center">
+        <svg width="82" height="82" class="icon" aria-hidden="true">       
+          <image xlink:href="./assets/images/logo.png" width="82" height="82"></image>    
+        </svg>
+        <div class="it-brand-text">
+          <div class="it-brand-title">{{'header.title' | translate}}</div>
+          <div class="it-brand-tagline d-none d-md-block">{{'header.subtitle' | translate}}</div>
+        </div>
       </div>
     </a>
   </ng-container>

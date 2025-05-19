@@ -43,3 +43,9 @@ ng-select.break-spaces .ng-option {
     border-color: unset!important;
     box-shadow: unset!important;
 }
+@media (max-width: 992px) {
+    .it-header-wrapper .it-brand-wrapper .icon image {
+        width: 48px;
+        height: 48px;
+    }
+}
