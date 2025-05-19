@@ -5,7 +5,7 @@ import {Component} from '@angular/core';
   template:
      `
     <div class="px-2">
-      <div class="pl-0 pr-0 mb-2 col-12">
+      <div class="ps-0 pe-0 mb-2">
         <ng-content></ng-content>
       </div>
     </div>

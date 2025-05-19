@@ -179,6 +179,8 @@ export class ResultListComponent extends CommonListComponent<Result> implements 
   }
   
   public getColor(key) {
-    return this.statusColor[`status_${key}`] + `!important`; 
+    if (this.statusColor) {
+      return this.statusColor[`status_${key}`] + `!important`;      
+    }
   }
 }

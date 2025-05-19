@@ -39,6 +39,10 @@ ng-select.break-spaces .ng-option {
     margin-bottom: 1rem;
 }
 
+.form-group label {
+    z-index: 1!important;
+}
+
 :focus:not(.focus--mouse),.form-check [type=checkbox]:focus+label,.form-check [type=radio]:focus+label,.toggles label input[type=checkbox]:focus+.lever {
     border-color: unset!important;
     box-shadow: unset!important;
