@@ -10,6 +10,10 @@ import { Component } from '@angular/core';
       max-height: 150px;
       max-width: 100%;
     }
+    .it-footer-main .it-brand-wrapper a .icon {
+      width: auto;
+      height: auto;    
+    }  
   `
 })
 export class FooterComponent {

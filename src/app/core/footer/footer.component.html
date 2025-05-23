@@ -5,13 +5,17 @@
                 <div class="row clearfix">
                     <div class="col-sm-12">
                         <div class="it-brand-wrapper">
-                        <a [routerLink]="['/']" class="navbar-brand logo">
-                            <it-icon name="pa"></it-icon>
-                            <div class="it-brand-text ps-2">
-                                <h2 class="no_toc">{{'header.title' | translate}}</h2>
-                                <h3 class="no_toc d-none d-md-block">{{'header.subtitle' | translate}}</h3>
-                            </div>
-                        </a>
+                            <a routerLink="/">
+                                <div class="it-brand-text d-flex align-items-center">
+                                    <svg width="82" height="82" class="icon" aria-hidden="true">       
+                                        <image xlink:href="./assets/images/logo.png" width="82" height="82"></image>    
+                                    </svg>
+                                    <div class="it-brand-text">
+                                        <div class="it-brand-title">{{'header.title' | translate}}</div>
+                                        <div class="it-brand-tagline d-none d-md-block">{{'header.subtitle' | translate}}</div>
+                                    </div>
+                                </div>
+                            </a>
                         </div>
                     </div>
                     <div class="col-sm-12">
