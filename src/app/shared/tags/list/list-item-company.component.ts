@@ -1,5 +1,9 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewEncapsulation } from '@angular/core';
 import { Company } from '../../../core/company/company.model';
+import { AuthGuard } from '../../../auth/auth-guard';
+import { environment } from '../../../../environments/environment';
+import { LoginResponse, OidcSecurityService } from 'angular-auth-oidc-client';
+import { RoleEnum } from '../../../auth/role.enum';
 
 @Component({
   selector: 'app-list-item-company',
@@ -21,10 +25,12 @@ import { Company } from '../../../core/company/company.model';
         </div>
         <div class="card-footer px-1 py-0">
           <div class="d-flex justify-content-around">
-            <app-show-workflow-history [codiceIpa]="item.codiceIpa"></app-show-workflow-history>
-            <a itButton="outline-warning" size="xs" class="mt-1" translate routerLink="/search" [queryParams]="{workflowId: '',codiceIpa: item.codiceIpa, sort: 'createdAt,desc'}">
-              <it-icon name="chart-line" color="warning"></it-icon>it.company.history
-            </a>
+            @if (authenticated) {
+              <app-show-workflow-history [codiceIpa]="item.codiceIpa"></app-show-workflow-history>
+              <a itButton="outline-warning" size="xs" class="mt-1" translate routerLink="/search" [queryParams]="{workflowId: '',codiceIpa: item.codiceIpa, sort: 'createdAt,desc'}">
+                <it-icon name="chart-line" color="warning"></it-icon>it.company.history
+              </a>
+            }
             <a itButton="outline-success" size="xs" class="mt-1" translate routerLink="/company-map" [queryParams]="{codiceIpa: item.codiceIpa}">
               <it-icon name="map-marker-circle" color="success"></it-icon>it.company.map
             </a>
@@ -44,6 +50,38 @@ import { Company } from '../../../core/company/company.model';
   ]
 })
 export class ListItemCompanyComponent {
+  authenticated = false;
+  isAdmin: boolean;
+  userData: any;
+
+  constructor(
+    private oidcSecurityService: OidcSecurityService,
+    private authGuard: AuthGuard
+  ) {
+    if (environment.oidc.enable) { 
+      if (!environment.oidc.force) {
+        this.oidcSecurityService
+        .checkAuth()
+        .subscribe((loginResponse: LoginResponse) => {
+          const { isAuthenticated, userData, accessToken, idToken, configId } =
+            loginResponse;
+            this.authenticated = isAuthenticated;
+            this.oidcSecurityService.userData$.subscribe(({ userData }) => {
+              this.userData = userData;
+              this.isAdmin = this.authGuard.hasRolesFromUserData([RoleEnum.ADMIN], userData);
+            });
+        });
+      } else {
+        this.oidcSecurityService.isAuthenticated$.subscribe(({ isAuthenticated }) => {
+          this.authenticated = isAuthenticated;
+          this.oidcSecurityService.userData$.subscribe(({ userData }) => {
+            this.userData = userData;
+            this.isAdmin = this.authGuard.hasRolesFromUserData([RoleEnum.ADMIN], userData);
+          });
+        });
+      }
+    }
+  }
 
   @Input() item: Company = null;
 

@@ -32,7 +32,7 @@ export class AuthInterceptor implements HttpInterceptor {
                     headers: req.headers
                       .set(`Authorization`, `Bearer ${accessToken}`)
                   });
-                  return next.handle(copiedReq);  
+                  return next.handle(accessToken ? copiedReq : req);
                 })
               );
             } else {
@@ -42,7 +42,7 @@ export class AuthInterceptor implements HttpInterceptor {
                     headers: req.headers
                       .set(`Authorization`, `Bearer ${accessToken}`)
                   });
-                  return next.handle(copiedReq);  
+                  return next.handle(accessToken ? copiedReq : req);
                 })
               );
             }

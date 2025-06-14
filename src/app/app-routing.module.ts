@@ -15,11 +15,13 @@ import { AutoLoginAllRoutesGuard } from 'angular-auth-oidc-client';
 import { MainConfigurationComponent } from './core/configuration/main-conf.component';
 import { AuthGuard } from './auth/auth-guard';
 import { RoleEnum } from './auth/role.enum';
+import { AuthRedirectGuard } from './auth-redirect.guard';
 
 const appRoutes: Routes = [
   {path: '', canActivateChild:(environment.oidc.enable && environment.oidc.force)?[AutoLoginAllRoutesGuard]:[], children: [
-    { path: '', component: HomeComponent },
-    { path: 'search', component: SearchComponent },
+    { path: '', canActivate: [AuthRedirectGuard], component: HomeComponent },
+    { path: 'home', component: HomeComponent },
+    { path: 'search', canActivate: [AuthRedirectGuard], component: SearchComponent },
     { path: 'company-search', component: CompanySearchComponent },
     { path: 'company-map', component: CompanyMapComponent },
     { path: 'company-graph', component: CompanyGraphComponent },

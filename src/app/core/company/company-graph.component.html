@@ -52,7 +52,7 @@
       </it-dropdown>
     </div>
   </div>
-  <form *ngIf="filterFormSearch" [formGroup]="filterFormSearch">
+  <form *ngIf="filterFormSearch && authenticated" [formGroup]="filterFormSearch">
     @if (company) {
       <div class="form-group mb-0 px-2">
           <it-select [options]="optionsWorkflow" formControlName="workflowId"></it-select>
@@ -125,10 +125,12 @@
               <app-show-list-text [label]="'it.company.regione'" [value]="company.denominazioneRegione"></app-show-list-text>
               <it-list-item>
                 <div class="d-flex justify-content-around w-100">
-                  <app-show-workflow-history [codiceIpa]="company.codiceIpa"></app-show-workflow-history>
-                  <a itButton="outline-warning" size="xs" class="mt-1" translate routerLink="/search" [queryParams]="{workflowId: '',codiceIpa: company.codiceIpa, sort: 'createdAt,desc'}">
-                    <it-icon name="chart-line" color="warning"></it-icon>it.company.history
-                  </a>
+                  @if (authenticated) {
+                    <app-show-workflow-history [codiceIpa]="company.codiceIpa"></app-show-workflow-history>
+                    <a itButton="outline-warning" size="xs" class="mt-1" translate routerLink="/search" [queryParams]="{workflowId: '',codiceIpa: company.codiceIpa, sort: 'createdAt,desc'}">
+                      <it-icon name="chart-line" color="warning"></it-icon>it.company.history
+                    </a>
+                  }
                   <a itButton="outline-success" size="xs" class="mt-1" translate routerLink="/company-map" [queryParams]="{codiceIpa: company.codiceIpa}">
                     <it-icon name="map-marker-circle" color="success"></it-icon>it.company.map
                   </a>

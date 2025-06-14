@@ -1,0 +1,22 @@
+import { Injectable } from "@angular/core";
+import { CanActivate, Router } from "@angular/router";
+import { OidcSecurityService } from "angular-auth-oidc-client";
+import { environment } from '../environments/environment';
+
+@Injectable({ providedIn: 'root' })
+export class AuthRedirectGuard implements CanActivate {
+  constructor(private auth: OidcSecurityService, private router: Router) {}
+
+  canActivate(): boolean {
+    if (environment.oidc.enable && !environment.oidc.force) {
+        this.auth.checkAuth().subscribe(({ isAuthenticated }) => {
+            if (isAuthenticated) {
+                this.router.navigate(['/home']);
+            } else {
+                this.router.navigate(['/company-map']);
+            }
+        });
+    }
+    return false; // impedisce accesso alla route "/"
+  }
+}

@@ -22,6 +22,8 @@ import { AuthGuard } from '../../auth/auth-guard';
 import { Configuration } from '../configuration/configuration.model';
 import { ConfigurationService } from '../configuration/configuration.service';
 import { CodiceCategoria } from '../../common/model/codice-categoria.enum';
+import { environment } from '../../../environments/environment';
+import { LoginResponse, OidcSecurityService } from 'angular-auth-oidc-client';
 
 import * as _ from "lodash";
 import * as am5 from '@amcharts/amcharts5';
@@ -107,6 +109,10 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
   optionsRuleDetail: RuleChart[];
   protected statusColor: any;
 
+  authenticated = false;
+  isAdmin: boolean;
+  userData: any;
+
   constructor(private formBuilder: FormBuilder,
               private route: ActivatedRoute,
               protected apiMessageService: ApiMessageService,
@@ -117,10 +123,34 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
               private authGuard: AuthGuard,
               private companyService: CompanyService,
               private translateService: TranslateService,
+              private oidcSecurityService: OidcSecurityService,
               private datepipe: DatePipe,
               protected router: Router) {}
 
   ngOnInit(): void {
+    if (environment.oidc.enable) { 
+      if (!environment.oidc.force) {
+        this.oidcSecurityService
+        .checkAuth()
+        .subscribe((loginResponse: LoginResponse) => {
+          const { isAuthenticated, userData, accessToken, idToken, configId } =
+            loginResponse;
+            this.authenticated = isAuthenticated;
+            this.oidcSecurityService.userData$.subscribe(({ userData }) => {
+              this.userData = userData;
+              this.isAdmin = this.authGuard.hasRolesFromUserData([RoleEnum.ADMIN], userData);
+            });
+        });
+      } else {
+        this.oidcSecurityService.isAuthenticated$.subscribe(({ isAuthenticated }) => {
+          this.authenticated = isAuthenticated;
+          this.oidcSecurityService.userData$.subscribe(({ userData }) => {
+            this.userData = userData;
+            this.isAdmin = this.authGuard.hasRolesFromUserData([RoleEnum.ADMIN], userData);
+          });
+        });
+      }
+    }
     this.configurationService.getStatusColor().subscribe((color: any) => {
       this.statusColor = color;
     });
@@ -267,7 +297,7 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
       codiceIpa: this.codiceIpa,
       size: 500,
       noCache: true
-    }).subscribe((results: Result[]) => {
+    }, `/codiceipa`).subscribe((results: Result[]) => {
       if (results.length === 0) {
         this.apiMessageService.sendMessage(MessageType.WARNING, `Risultati non presenti per la PA: ${this.company.denominazioneEnte}!`);
       }

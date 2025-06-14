@@ -14,6 +14,8 @@ import { HttpParams } from '@angular/common/http';
 import { ResultService } from '../../../core/result/result.service';
 import { AuthGuard } from '../../../auth/auth-guard';
 import { RoleEnum } from '../../../auth/role.enum';
+import { environment } from '../../../../environments/environment';
+import { LoginResponse, OidcSecurityService } from 'angular-auth-oidc-client';
 
 import saveAs from 'file-saver';
 
@@ -23,102 +25,103 @@ import saveAs from 'file-saver';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template:
   `
-    <a itButton="outline-primary" size="xs" translate class="mt-1" (click)="workflowModal.toggle()">
-      <it-icon name="presentation" color="primary"></it-icon>it.workflow.list
-    </a>
-    <it-modal #workflowModal="itModal" alignment="left" scrollable="true" footerShadow="true" (showEvent)="openWorkflowList()">
-      <it-icon color="primary" name="presentation" beforeTitle></it-icon>
-      <ng-container modalTitle>
-        <div innerHtml="{{ 'it.workflow.modal-list' | translate: {codiceIpa: codiceIpa} }}"></div>
-      </ng-container>
-      <it-list>
-        @for (workflow of workflows; track workflow) {
-          <it-list-item>
-            <div class="d-flex justify-content-start w-100">
-              <div class="d-flex">
-                <span class="text-monospace">
-                  @if (!workflow.isRunning) {                  
-                    {{'it.workflow.full_label' | translate: { startTime: workflow.startTime | date:'dd/MM/yyyy', endTime: workflow.endTime | date:'dd/MM/yyyy HH:mm:ss', executionTime: workflow.executionTime | durationFormat} }}                  
-                  }
-                  @if (workflow.isRunning){
-                    {{'it.workflow.label' | translate: { startTime: workflow.startTime | date:'dd/MM/yyyy'} }}                                    
-                  }
-                </span>
-              </div>
-              <div class="w-100 ms-auto">
-                @if (!workflow.isRunning) {
-                  <a 
-                      (click)="workflowModal.toggle()" 
-                      [routerLink]="['/company-graph']" 
-                      [queryParams]="{codiceIpa: codiceIpa, workflowId: workflow.workflowId, ruleName: 'amministrazione-trasparente'}"
-                      [itBadge]="workflow.badge" 
-                      class="h6 align-top pull-right">
-                      <div class="d-flex">
-                        <div>{{'it.workflow.status.'+ workflow.status | translate}}</div>
-                      </div>
-                  </a>
-                  @if (isAbleToStartWorkflow && workflow.correlationId == codiceIpa) {
+    @if (authenticated) {    
+      <a itButton="outline-primary" size="xs" translate class="mt-1" (click)="workflowModal.toggle()">
+        <it-icon name="presentation" color="primary"></it-icon>it.workflow.list
+      </a>
+      <it-modal #workflowModal="itModal" alignment="left" scrollable="true" footerShadow="true" (showEvent)="openWorkflowList()">
+        <it-icon color="primary" name="presentation" beforeTitle></it-icon>
+        <ng-container modalTitle>
+          <div innerHtml="{{ 'it.workflow.modal-list' | translate: {codiceIpa: codiceIpa} }}"></div>
+        </ng-container>
+        <it-list>
+          @for (workflow of workflows; track workflow) {
+            <it-list-item>
+              <div class="d-flex justify-content-start w-100">
+                <div class="d-flex">
+                  <span class="text-monospace">
+                    @if (!workflow.isRunning) {                  
+                      {{'it.workflow.full_label' | translate: { startTime: workflow.startTime | date:'dd/MM/yyyy', endTime: workflow.endTime | date:'dd/MM/yyyy HH:mm:ss', executionTime: workflow.executionTime | durationFormat} }}                  
+                    }
+                    @if (workflow.isRunning){
+                      {{'it.workflow.label' | translate: { startTime: workflow.startTime | date:'dd/MM/yyyy'} }}                                    
+                    }
+                  </span>
+                </div>
+                <div class="w-100 ms-auto">
+                  @if (!workflow.isRunning) {
                     <a 
-                        itButton="danger"
-                        (click)="removeWorkflow(workflow)" 
+                        (click)="workflowModal.toggle()" 
+                        [routerLink]="['/company-graph']" 
+                        [queryParams]="{codiceIpa: codiceIpa, workflowId: workflow.workflowId, ruleName: 'amministrazione-trasparente'}"
+                        [itBadge]="workflow.badge" 
                         class="h6 align-top pull-right">
                         <div class="d-flex">
-                          <div>{{'delete' | translate}}</div>
+                          <div>{{'it.workflow.status.'+ workflow.status | translate}}</div>
                         </div>
                     </a>
-                  }
-                  @if (workflow.isCompleted && isCSVVisible) {
-                    <a href="" (click)="downloadCsv(workflow, codiceIpa)" class="align-top me-1 pull-right">
-                      <it-icon *ngIf="!workflow.isLoadingCsv" name="file-csv" class="bg-light" color="success"></it-icon>
-                      <it-spinner *ngIf="workflow.isLoadingCsv" small="true" double="true"></it-spinner>
+                    @if (isAbleToStartWorkflow && workflow.correlationId == codiceIpa) {
+                      <a 
+                          itButton="danger"
+                          (click)="removeWorkflow(workflow)" 
+                          class="h6 align-top pull-right">
+                          <div class="d-flex">
+                            <div>{{'delete' | translate}}</div>
+                          </div>
+                      </a>
+                    }
+                    @if (workflow.isCompleted && isCSVVisible) {
+                      <a href="" (click)="downloadCsv(workflow, codiceIpa)" class="align-top me-1 pull-right">
+                        <it-icon *ngIf="!workflow.isLoadingCsv" name="file-csv" class="bg-light" color="success"></it-icon>
+                        <it-spinner *ngIf="workflow.isLoadingCsv" small="true" double="true"></it-spinner>
+                      </a>
+                    }
+                  } 
+                  @if (workflow.isRunning){
+                    <a 
+                        (click)="refresh(workflow)"
+                        itButton="primary"
+                        size="sm" 
+                        class="h6 align-top pull-right p-2">
+                        <div class="d-flex">
+                        <div>{{'it.workflow.status.'+ workflow.status | translate}}</div>
+                        </div>
                     </a>
+                    @if (isRefreshing) {
+                      <a href="" class="align-top me-1 pull-right">
+                        <it-spinner small="true" double="true"></it-spinner>
+                      </a>
+                    }
                   }
-                } 
-                @if (workflow.isRunning){
-                  <a 
-                      (click)="refresh(workflow)"
-                      itButton="primary"
-                      size="sm" 
-                      class="h6 align-top pull-right p-2">
-                      <div class="d-flex">
-                      <div>{{'it.workflow.status.'+ workflow.status | translate}}</div>
-                      </div>
-                  </a>
-                  @if (isRefreshing) {
-                    <a href="" class="align-top me-1 pull-right">
-                      <it-spinner small="true" double="true"></it-spinner>
-                    </a>
-                  }
-                }
-              </div>
-            </div> 
-          </it-list-item>
+                </div>
+              </div> 
+            </it-list-item>
+          }
+        </it-list>
+        @if (isAbleToStartWorkflow) {
+          <ng-container footer>
+            <it-dropdown
+              [color]="'primary'"
+              [dark]="false">
+              <span button translate>it.workflow.new</span>
+              <span listHeading translate>it.rule.name</span>
+
+              <ng-container list>
+                <it-dropdown-item divider="true"></it-dropdown-item>
+
+                <it-dropdown-item
+                  *ngFor="let item of optionsRule"
+                  (click)="startMainWorkflow(item.value)"
+                  externalLink="true"
+                  [large]="true">
+                  {{ item.text }}
+                </it-dropdown-item>
+              </ng-container>
+            </it-dropdown>
+          </ng-container>
         }
-      </it-list>
-      @if (isAbleToStartWorkflow) {
-        <ng-container footer>
-          <it-dropdown
-            [color]="'primary'"
-            [dark]="false">
-            <span button translate>it.workflow.new</span>
-            <span listHeading translate>it.rule.name</span>
-
-            <ng-container list>
-              <it-dropdown-item divider="true"></it-dropdown-item>
-
-              <it-dropdown-item
-                *ngFor="let item of optionsRule"
-                (click)="startMainWorkflow(item.value)"
-                externalLink="true"
-                [large]="true">
-                {{ item.text }}
-              </it-dropdown-item>
-            </ng-container>
-          </it-dropdown>
-        </ng-container>
-      }
-    </it-modal>
-
+      </it-modal>
+    }
     `
 })
 export class ShowWorkflowHistoryComponent implements OnInit{
@@ -131,6 +134,7 @@ export class ShowWorkflowHistoryComponent implements OnInit{
     private ruleService: RuleService,
     private resultService: ResultService,
     private changeDetectorRef: ChangeDetectorRef,
+    private oidcSecurityService: OidcSecurityService,
     private authGuard: AuthGuard
   ) {
   }
@@ -142,12 +146,38 @@ export class ShowWorkflowHistoryComponent implements OnInit{
   isAbleToStartWorkflow: boolean = false;
   isCSVVisible: boolean = false;
   protected optionsRule: Array<SelectControlOption> = [];
+  authenticated = false;
+  isAdmin: boolean;
+  userData: any;
 
   ngOnInit(): void {
     this.authGuard.hasRole([RoleEnum.ADMIN, RoleEnum.SUPERUSER]).subscribe((hasRole: boolean) => {
       this.isAbleToStartWorkflow = hasRole;
       this.isCSVVisible = hasRole;
     });
+    if (environment.oidc.enable) { 
+      if (!environment.oidc.force) {
+        this.oidcSecurityService
+        .checkAuth()
+        .subscribe((loginResponse: LoginResponse) => {
+          const { isAuthenticated, userData, accessToken, idToken, configId } =
+            loginResponse;
+            this.authenticated = isAuthenticated;
+            this.oidcSecurityService.userData$.subscribe(({ userData }) => {
+              this.userData = userData;
+              this.isAdmin = this.authGuard.hasRolesFromUserData([RoleEnum.ADMIN], userData);
+            });
+        });
+      } else {
+        this.oidcSecurityService.isAuthenticated$.subscribe(({ isAuthenticated }) => {
+          this.authenticated = isAuthenticated;
+          this.oidcSecurityService.userData$.subscribe(({ userData }) => {
+            this.userData = userData;
+            this.isAdmin = this.authGuard.hasRolesFromUserData([RoleEnum.ADMIN], userData);
+          });    
+        });
+      }    
+    }
   }
 
   openWorkflowList() {
