@@ -167,7 +167,7 @@
                 </div>
               </it-list-item>
             }
-            @if (company) {
+            @if (company && authenticated) {
               @if (currentNode?.data?.storageData?.screenshotId || currentNode?.data?.storageData?.objectId) {
                 <it-list-item>
                   <div class="w-100 d-flex justify-content-around">
