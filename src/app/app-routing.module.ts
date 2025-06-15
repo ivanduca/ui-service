@@ -21,7 +21,7 @@ const appRoutes: Routes = [
   {path: '', canActivateChild:(environment.oidc.enable && environment.oidc.force)?[AutoLoginAllRoutesGuard]:[], children: [
     { path: '', canActivate: [AuthRedirectGuard], component: HomeComponent },
     { path: 'home', component: HomeComponent },
-    { path: 'search', canActivate: [AuthRedirectGuard], component: SearchComponent },
+    { path: 'search', component: SearchComponent },
     { path: 'company-search', component: CompanySearchComponent },
     { path: 'company-map', component: CompanyMapComponent },
     { path: 'company-graph', component: CompanyGraphComponent },

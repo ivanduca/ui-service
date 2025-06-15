@@ -182,7 +182,7 @@ export abstract class CommonService<T extends Base> {
               catchError( (error: HttpErrorResponse) => {
                 const springError = new SpringError(error, this.translateService);
                 this.apiMessageService.sendMessage(MessageType.ERROR,  springError.getRestErrorMessage());
-                return observableThrowError(error.error);
+                return observableThrowError(springError);
               })
             );
         })
