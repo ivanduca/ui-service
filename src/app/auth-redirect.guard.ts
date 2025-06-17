@@ -13,7 +13,7 @@ export class AuthRedirectGuard implements CanActivate {
             if (isAuthenticated) {
                 this.router.navigate(['/home']);
             } else {
-                this.router.navigate(['/company-map']);
+                this.router.navigate(['/company-search']);
             }
         });
     }

@@ -55,7 +55,7 @@ export class CompanySearchComponent implements OnInit, OnDestroy{
         regione: new FormControl(''),
         provincia: new FormControl(''),
         comune: new FormControl(''),
-        sort: new FormControl(''),
+        sort: new FormControl('denominazioneEnte'),
       });
     });
   }
