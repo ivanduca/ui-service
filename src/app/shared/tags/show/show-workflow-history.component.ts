@@ -21,10 +21,9 @@ import saveAs from 'file-saver';
 
 
 @Component({
-  selector: 'app-show-workflow-history',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template:
-  `
+    selector: 'app-show-workflow-history',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    template: `
     @if (authenticated) {    
       <a itButton="outline-primary" size="xs" translate class="mt-1" (click)="workflowModal.toggle()">
         <it-icon name="presentation" color="primary"></it-icon>it.workflow.list
@@ -122,7 +121,8 @@ import saveAs from 'file-saver';
         }
       </it-modal>
     }
-    `
+    `,
+    standalone: false
 })
 export class ShowWorkflowHistoryComponent implements OnInit{
 

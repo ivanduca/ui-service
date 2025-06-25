@@ -2,8 +2,8 @@ import {Component, Input} from '@angular/core';
 import {Breadcrumbs} from '../../../common/model/breadcrumbs.model';
 
 @Component({
-  selector: 'app-layout-breadcrumbs',
-  template: `
+    selector: 'app-layout-breadcrumbs',
+    template: `
       <nav *ngIf="breadcrumbs" aria-label="breadcrumb">
           <ol class="breadcrumb bg-light mb-0">
               <li *ngFor="let breadcrumb of breadcrumbs.items" class="breadcrumb-item" [ngClass]="{ 'active': breadcrumb.active }">
@@ -12,7 +12,8 @@ import {Breadcrumbs} from '../../../common/model/breadcrumbs.model';
               </li>
           </ol>
       </nav>
-      `
+      `,
+    standalone: false
 })
 export class LayoutBreadcrumbsComponent {
 

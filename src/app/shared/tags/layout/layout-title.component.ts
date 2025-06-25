@@ -1,8 +1,8 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 
 @Component({
-  selector: 'app-layout-title',
-  template: `
+    selector: 'app-layout-title',
+    template: `
     <div 
       class="d-flex justify-content-center shadow-none p-3 mb-4 bg-light pe-1 ps-1 pb-3 pt-3 mb-3" 
       (click)="toggle(!collapsediv)"
@@ -18,7 +18,8 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
         </svg>
       </div>
     </div>
-      `
+      `,
+    standalone: false
 })
 export class LayoutTitleComponent implements OnInit{
 

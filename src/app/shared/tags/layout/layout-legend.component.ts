@@ -2,10 +2,8 @@ import {Component, Input} from '@angular/core';
 import {Legend} from '../../../common/model/legend.model';
 
 @Component({
-  selector: 'app-layout-legend',
-  template:
-
-     `
+    selector: 'app-layout-legend',
+    template: `
         <div *ngIf="legend" class="btn-group">
           <div class="magic-menu-container">
             <i class="fa fa-2x fa-list-ul text-secondary pe-2 pb-1"></i>
@@ -30,12 +28,12 @@ import {Legend} from '../../../common/model/legend.model';
         </div>
 
     `,
-  styles:
-    [
-      '.magic-menu-container { position: relative; z-index: initial; }',
-      'div.magic-menu { display: none; position: absolute; z-index: 10; width: 250px; }',
-      '.magic-menu-container:hover .magic-menu { display: block; left: 0px; top: 35px; }'
+    styles: [
+        '.magic-menu-container { position: relative; z-index: initial; }',
+        'div.magic-menu { display: none; position: absolute; z-index: 10; width: 250px; }',
+        '.magic-menu-container:hover .magic-menu { display: block; left: 0px; top: 35px; }'
     ],
+    standalone: false
 })
 export class LayoutLegendComponent {
 

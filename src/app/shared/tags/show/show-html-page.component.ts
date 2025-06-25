@@ -5,17 +5,16 @@ import { Task, Workflow } from '../../../core/conductor/workflow.model';
 import { Rule } from '../../../core/rule/rule.model';
 
 @Component({
-  selector: 'app-show-html-page',
-  changeDetection: ChangeDetectionStrategy.Default,
-  encapsulation: ViewEncapsulation.None,
-  styles:`
+    selector: 'app-show-html-page',
+    changeDetection: ChangeDetectionStrategy.Default,
+    encapsulation: ViewEncapsulation.None,
+    styles: `
     ul.nav-tabs {
       position: sticky !important;
       top: 0;
     }
-  `, 
-  template:
-  `
+  `,
+    template: `
     @if (workflowChildId) {
       <a itButton="outline-success" size="xs" translate class="my-1" (click)="downloadhtml()">
         <it-icon name="files" color="success"></it-icon>it.result.html
@@ -37,7 +36,8 @@ import { Rule } from '../../../core/rule/rule.model';
         </it-tab-container>  
       </it-modal>
     }
-  `
+  `,
+    standalone: false
 })
 export class ShowHtmlPageComponent {
 

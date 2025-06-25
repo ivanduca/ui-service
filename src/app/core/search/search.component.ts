@@ -16,10 +16,11 @@ import { RoleEnum } from '../../auth/role.enum';
 import saveAs from 'file-saver';
 
 @Component({
-  selector: 'app-search',
-  changeDetection: ChangeDetectionStrategy.Default,
-  templateUrl: './search.component.html',
-  providers: [DatePipe]
+    selector: 'app-search',
+    changeDetection: ChangeDetectionStrategy.Default,
+    templateUrl: './search.component.html',
+    providers: [DatePipe],
+    standalone: false
 })
 export class SearchComponent implements OnInit {
   

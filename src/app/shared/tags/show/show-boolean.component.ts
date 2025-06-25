@@ -1,14 +1,15 @@
 import {Component, Input} from '@angular/core';
 
 @Component({
-  selector: 'app-show-boolean',
-  template: `
+    selector: 'app-show-boolean',
+    template: `
     <app-show-layout [strong]='strong' [label]="label">
         <span>
           {{ value.toString() | translate }}
         </span>
     </app-show-layout>
-  `
+  `,
+    standalone: false
 })
 export class ShowBooleanComponent {
 

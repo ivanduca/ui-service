@@ -6,10 +6,9 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
-  selector: 'app-list-item-result',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template:
-  `
+    selector: 'app-list-item-result',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    template: `
     <div *ngIf="item" class="h-100 hover-shadow">
       <div class="card card-bg h-100">        
         <div class="card-body">
@@ -53,13 +52,14 @@ import { HttpClient } from '@angular/common/http';
       </div>
     </div>  
   `,
-  styles : [
-    `
+    styles: [
+        `
     .card::after { 
       margin-top: unset!important; 
     }
     `
-  ]
+    ],
+    standalone: false
 })
 export class ListItemResultComponent {
 

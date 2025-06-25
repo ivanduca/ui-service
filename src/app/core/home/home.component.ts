@@ -21,11 +21,11 @@ import { ItCarouselComponent } from 'design-angular-kit';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  encapsulation: ViewEncapsulation.None,
-  providers: [DatePipe, DurationFormatPipe],
-  styles : `
+    selector: 'app-home',
+    templateUrl: './home.component.html',
+    encapsulation: ViewEncapsulation.None,
+    providers: [DatePipe, DurationFormatPipe],
+    styles: `
   .home-main {
     background: #d1e7ff left center no-repeat;
   }
@@ -39,7 +39,8 @@ import { Router } from '@angular/router';
   .legend {
     margin: -24px;
   }
-  `
+  `,
+    standalone: false
 })
 export class HomeComponent implements OnInit {
   workflows: Workflow[];

@@ -14,9 +14,8 @@ import { TranslateService } from '@ngx-translate/core';
 import saveAs from 'file-saver';
 
 @Component({
-  selector: 'app-workflow-card',
-  template:
-  `
+    selector: 'app-workflow-card',
+    template: `
     <it-card space="true" background="true">
       @if (!title) {
         <div class="d-flex bg-dark text-white legend h3 mb-2 justify-content-center">
@@ -169,17 +168,18 @@ import saveAs from 'file-saver';
         }
     </it-card>
   `,
-  animations: [
-    trigger('scale', [
-      transition('void => *', animate('500ms ease-in-out', keyframes([
-        style({ transform: 'scale(0.3)' }),
-        style({ transform: 'scale(1)' })
-      ]))) 
-    ])
-  ],
-  encapsulation: ViewEncapsulation.None,
-  styles: `
-  `
+    animations: [
+        trigger('scale', [
+            transition('void => *', animate('500ms ease-in-out', keyframes([
+                style({ transform: 'scale(0.3)' }),
+                style({ transform: 'scale(1)' })
+            ])))
+        ])
+    ],
+    encapsulation: ViewEncapsulation.None,
+    styles: `
+  `,
+    standalone: false
 })
 export class WorkflowCardComponent implements OnInit{
 

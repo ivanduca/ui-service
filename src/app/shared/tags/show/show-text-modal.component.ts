@@ -1,8 +1,8 @@
 import { Component, Input } from '@angular/core';
 
 @Component({
-  selector: 'app-show-text-modal',
-  template: `
+    selector: 'app-show-text-modal',
+    template: `
     <span *ngIf="value" class="me-1">
       <span>{{ label | translate }}</span>
       <a class="ms-1" [ngClass]="{'font-weight-bold': strong}" href="javascript:" (click)="modal.toggle()">{{ value }}</a>
@@ -22,7 +22,8 @@ import { Component, Input } from '@angular/core';
         <button type="button" class="btn btn-outline-primary" (click)="modal.hide()">Close</button>
       </ng-container>
     </it-modal>
-  `
+  `,
+    standalone: false
 })
 export class ShowTextModalComponent {
 

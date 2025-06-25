@@ -18,15 +18,16 @@ import { DatePipe } from '@angular/common';
 import { StatusColor } from '../../common/model/status-color.enum';
 
 @Component({
-  selector: 'app-main-conf',
-  templateUrl: './main-conf.component.html',
-  encapsulation: ViewEncapsulation.None,
-  styles: `
+    selector: 'app-main-conf',
+    templateUrl: './main-conf.component.html',
+    encapsulation: ViewEncapsulation.None,
+    styles: `
     .callout-highlight {
       overflow: unset !important;
     }
   `,
-  providers: [DatePipe]  
+    providers: [DatePipe],
+    standalone: false
 })
 export class MainConfigurationComponent implements OnInit, AfterViewInit {
   @ViewChild('cron') cronComponent: Bs5UnixCronComponent;

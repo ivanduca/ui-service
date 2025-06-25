@@ -32,12 +32,12 @@ import * as am5radar from "@amcharts/amcharts5/radar";
 import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
 
 @Component({
-  selector: 'company-graph',
-  changeDetection: ChangeDetectionStrategy.Default,
-  templateUrl: './company-graph.component.html',
-  encapsulation: ViewEncapsulation.None,
-  providers: [DatePipe],
-  styles: `
+    selector: 'company-graph',
+    changeDetection: ChangeDetectionStrategy.Default,
+    templateUrl: './company-graph.component.html',
+    encapsulation: ViewEncapsulation.None,
+    providers: [DatePipe],
+    styles: `
     #chartContainer {
       min-height: 40vh;
       height: 100%;
@@ -61,7 +61,8 @@ import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
       width: 48px!important;
       height: 48px!important;
     }
-  `
+  `,
+    standalone: false
 })
 export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
   

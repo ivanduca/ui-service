@@ -19,11 +19,11 @@ import Leaflet from 'leaflet';
 import 'leaflet.markercluster';
 
 @Component({
-  selector: 'company-map',
-  templateUrl: './company-map.component.html',
-  encapsulation: ViewEncapsulation.None,
-  providers: [DatePipe, DurationFormatPipe],  
-  styles: `
+    selector: 'company-map',
+    templateUrl: './company-map.component.html',
+    encapsulation: ViewEncapsulation.None,
+    providers: [DatePipe, DurationFormatPipe],
+    styles: `
     .marker-cluster-small, .marker-cluster-small div{
       background-color: lightblue
     }
@@ -34,7 +34,8 @@ import 'leaflet.markercluster';
     .marker-cluster-large, .marker-cluster-large div {
       background-color: violet
     }
-  `
+  `,
+    standalone: false
 })
 export class CompanyMapComponent implements OnInit {
   protected static ZOOM: number = 18;

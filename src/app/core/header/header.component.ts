@@ -12,10 +12,10 @@ import { AuthGuard } from '../../auth/auth-guard';
 import { RoleEnum } from '../../auth/role.enum';
 
 @Component({
-  selector: 'app-header1',
-  templateUrl: './header.component.html',
-  encapsulation: ViewEncapsulation.None,
-  styles: `
+    selector: 'app-header1',
+    templateUrl: './header.component.html',
+    encapsulation: ViewEncapsulation.None,
+    styles: `
     .border-thin {
       border-color: rgba(255, 255, 255, 0.2) !important;
     }
@@ -23,7 +23,8 @@ import { RoleEnum } from '../../auth/role.enum';
       width: 32px!important;
       height: 32px!important;
     }
-  `
+  `,
+    standalone: false
 })
 export class HeaderComponent implements OnInit, OnDestroy {
 

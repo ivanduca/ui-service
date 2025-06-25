@@ -1,9 +1,8 @@
 import {Component, Input} from '@angular/core';
 
 @Component({
-  selector: 'app-show-layout',
-  template:
-     `
+    selector: 'app-show-layout',
+    template: `
     <div class="row mt-3 mb-3">
       <div class="col-sm-2 text-end">
         <strong *ngIf="strong"> {{ label | translate }} </strong>
@@ -14,6 +13,7 @@ import {Component, Input} from '@angular/core';
       </div>
     </div>
     `,
+    standalone: false
 })
 export class ShowLayoutComponent {
 

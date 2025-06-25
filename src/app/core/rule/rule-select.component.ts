@@ -4,9 +4,8 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { RuleService } from './rule.service';
 
 @Component({
-  selector: 'app-rule-select',
-  template:
-  `
+    selector: 'app-rule-select',
+    template: `
     <form *ngIf="form" [formGroup]="form">
         <ng-select 
             *ngIf="optionsRule" 
@@ -26,7 +25,8 @@ import { RuleService } from './rule.service';
           </ng-template>  
         </ng-select>
     </form>
-  `
+  `,
+    standalone: false
 })
 export class RuleSelectComponent implements OnInit{
 

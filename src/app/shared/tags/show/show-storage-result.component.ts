@@ -5,17 +5,16 @@ import { HttpClient } from '@angular/common/http';
 import saveAs from 'file-saver';
 
 @Component({
-  selector: 'app-show-storage-result',
-  changeDetection: ChangeDetectionStrategy.Default,
-  encapsulation: ViewEncapsulation.None,
-  styles:`
+    selector: 'app-show-storage-result',
+    changeDetection: ChangeDetectionStrategy.Default,
+    encapsulation: ViewEncapsulation.None,
+    styles: `
     ul.nav-tabs {
       position: sticky !important;
       top: 0;
     }
-  `, 
-  template:
-  `
+  `,
+    template: `
     @if (screenshot && storageData?.screenshotId) {
       <a itButton="outline-warning" size="xs" translate class="my-1" (click)="screenshotModal?.toggle()">
         <it-icon name="file" color="warning"></it-icon>it.result.screenshot
@@ -61,7 +60,8 @@ import saveAs from 'file-saver';
         </it-tab-container>  
       </it-modal>
     }
-  `
+  `,
+    standalone: false
 })
 export class ShowStorageResultComponent {
 

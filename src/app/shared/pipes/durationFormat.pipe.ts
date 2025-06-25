@@ -2,7 +2,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 @Pipe({
-  name: 'durationFormat'
+    name: 'durationFormat',
+    standalone: false
 })
 export class DurationFormatPipe implements PipeTransform {
   constructor(private translateService: TranslateService) {}

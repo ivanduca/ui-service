@@ -6,10 +6,9 @@ import { LoginResponse, OidcSecurityService } from 'angular-auth-oidc-client';
 import { RoleEnum } from '../../../auth/role.enum';
 
 @Component({
-  selector: 'app-list-item-company',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template:
-  `
+    selector: 'app-list-item-company',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    template: `
     <div *ngIf="item" class="h-100 hover-shadow">
       <div class="card card-bg border-bottom-card h-100">        
         <div class="card-header ps-2 py-2">
@@ -41,13 +40,14 @@ import { RoleEnum } from '../../../auth/role.enum';
       </div>
     </div>
   `,
-  styles:[
-    `
+    styles: [
+        `
     .card:after { 
       margin-top: 1rem!important;  
     }
     `
-  ]
+    ],
+    standalone: false
 })
 export class ListItemCompanyComponent {
   authenticated = false;

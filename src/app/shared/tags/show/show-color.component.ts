@@ -1,8 +1,8 @@
 import {Component, Input} from '@angular/core';
 
 @Component({
-  selector: 'app-show-color',
-  template: `
+    selector: 'app-show-color',
+    template: `
       <app-show-layout [strong]='strong' [label]="label">
 
         <span *ngIf="value">
@@ -13,7 +13,8 @@ import {Component, Input} from '@angular/core';
           <em class="text-secondary">Non presente</em>
         </span>
       </app-show-layout>
-  `
+  `,
+    standalone: false
 })
 export class ShowColorComponent {
 

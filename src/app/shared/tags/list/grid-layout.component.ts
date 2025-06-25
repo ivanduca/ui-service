@@ -3,10 +3,9 @@ import { Table } from '../../../common/model/table.model';
 import { CommonService } from '../../../common/controller/common.service';
 
 @Component({
-  selector: 'app-grid-layout',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template:
-     `
+    selector: 'app-grid-layout',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    template: `
     <div class="container">
 
         <div *ngIf="loading" class="text-center">
@@ -32,7 +31,8 @@ import { CommonService } from '../../../common/controller/common.service';
         <div *ngIf="!loading && count == 0" class="alert alert-warning text-monospace" innerHtml="{{ noItem | translate }}"></div>
 
     </div>
-    `
+    `,
+    standalone: false
 })
 export class GridLayoutComponent {
 

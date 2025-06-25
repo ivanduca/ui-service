@@ -1,8 +1,8 @@
 import {Component, Input} from '@angular/core';
 
 @Component({
-  selector: 'app-show-text-popover',
-  template: `
+    selector: 'app-show-text-popover',
+    template: `
     <span *ngIf="value" class="d-flex gap-1 align-items-center">
       <span class="label-show-text">{{ label | translate }}</span>
       <span class="ms-1" [ngClass]="{'fw-bolder': strong}">{{ value }}</span>
@@ -21,7 +21,8 @@ import {Component, Input} from '@angular/core';
           </span>  
       }
     </span>
-  `
+  `,
+    standalone: false
 })
 export class ShowTextPopoverComponent {
 

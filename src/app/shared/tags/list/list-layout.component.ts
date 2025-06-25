@@ -3,10 +3,9 @@ import {Table} from '../../../common/model/table.model';
 import { CommonService } from '../../../common/controller/common.service';
 
 @Component({
-  selector: 'app-list-layout',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  template:
-     `
+    selector: 'app-list-layout',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    template: `
     <div class="px-1">
 
         <div *ngIf="loading ; else results_table" class="text-center">
@@ -44,7 +43,8 @@ import { CommonService } from '../../../common/controller/common.service';
         <ng-template #nessun_item style="text-align: center;"> {{ 'no_item' | translate }}</ng-template>
 
     </div>
-    `
+    `,
+    standalone: false
 })
 export class ListLayoutComponent {
 

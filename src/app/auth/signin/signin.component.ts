@@ -9,6 +9,7 @@ import { environment } from '../../../environments/environment';
 @Component({
     selector: 'app-signin',
     templateUrl: './signin.component.html',
+    standalone: false
 })
 export class SigninComponent implements OnInit {
 

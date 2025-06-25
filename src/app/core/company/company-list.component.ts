@@ -10,9 +10,8 @@ import { CompanyService } from './company.service';
 import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
 
 @Component({
-  selector: 'company-list',
-  template:
-  `
+    selector: 'company-list',
+    template: `
     <!-- List -->
     <app-grid-layout 
       [loading]="loading" 
@@ -81,14 +80,15 @@ import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
       }
     </app-grid-layout>
   `,
-  animations: [
-    trigger('scale', [
-      transition('void => *', animate('500ms ease-in-out', keyframes([
-        style({ transform: 'scale(0.3)' }),
-        style({ transform: 'scale(1)' })
-      ]))) 
-    ])
-  ]
+    animations: [
+        trigger('scale', [
+            transition('void => *', animate('500ms ease-in-out', keyframes([
+                style({ transform: 'scale(0.3)' }),
+                style({ transform: 'scale(1)' })
+            ])))
+        ])
+    ],
+    standalone: false
 })
 export class CompanyListComponent extends CommonListComponent<Company> implements OnInit {
 

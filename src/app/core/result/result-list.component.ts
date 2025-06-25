@@ -11,9 +11,8 @@ import * as _ from "lodash";
 import { ConfigurationService } from '../configuration/configuration.service';
 
 @Component({
-  selector: 'result-list',
-  template:
-  `
+    selector: 'result-list',
+    template: `
     <!-- List -->
     <app-grid-layout 
       [loading]="loading" 
@@ -90,23 +89,24 @@ import { ConfigurationService } from '../configuration/configuration.service';
       }
     </app-grid-layout>
   `,
-  styles : [
-    ` 
+    styles: [
+        ` 
       .callout { max-width: unset!important; }
     `
-  ],
-  host: {
-    '[class.callout.success.callout-title]':'0.9 * height',
-  },
-  encapsulation: ViewEncapsulation.None,
-  animations: [
-    trigger('scale', [
-      transition('void => *', animate('500ms ease-in-out', keyframes([
-        style({ transform: 'scale(0.3)' }),
-        style({ transform: 'scale(1)' })
-      ]))) 
-    ])
-  ]
+    ],
+    host: {
+        '[class.callout.success.callout-title]': '0.9 * height',
+    },
+    encapsulation: ViewEncapsulation.None,
+    animations: [
+        trigger('scale', [
+            transition('void => *', animate('500ms ease-in-out', keyframes([
+                style({ transform: 'scale(0.3)' }),
+                style({ transform: 'scale(1)' })
+            ])))
+        ])
+    ],
+    standalone: false
 })
 export class ResultListComponent extends CommonListComponent<Result> implements OnInit {
 

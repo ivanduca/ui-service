@@ -1,8 +1,8 @@
 import {Component, Input} from '@angular/core';
 
 @Component({
-  selector: 'app-show-text',
-  template: `
+    selector: 'app-show-text',
+    template: `
     <span *ngIf="value" class="me-1">
       <span class="label-show-text">{{ label | translate }}</span>
       @if(isArray && value.length > 0) {
@@ -18,7 +18,8 @@ import {Component, Input} from '@angular/core';
         <span class="ms-1" [ngClass]="{'fw-bolder': strong}">{{ value }}</span>
       }
     </span>
-  `
+  `,
+    standalone: false
 })
 export class ShowTextComponent {
 

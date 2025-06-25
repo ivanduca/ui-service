@@ -6,18 +6,19 @@ import { TranslateService } from '@ngx-translate/core';
 import { CodiceCategoria } from '../../common/model/codice-categoria.enum';
 import { Regione } from '../../common/model/regione.enum';
 @Component({
-  selector: 'company-search',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None,
-  templateUrl: './company-search.component.html',
-  styles:` 
+    selector: 'company-search',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    encapsulation: ViewEncapsulation.None,
+    templateUrl: './company-search.component.html',
+    styles: ` 
     @media (max-width: 425px) {
       .btn-xs {
         padding-right: 6px;
         padding-left: 6px;
       }
     }
-  `
+  `,
+    standalone: false
 })
 export class CompanySearchComponent implements OnInit, OnDestroy{
   

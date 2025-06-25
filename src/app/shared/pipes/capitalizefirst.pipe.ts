@@ -2,7 +2,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 import {Helpers} from '../../common/helpers/helpers';
 
 @Pipe({
-  name: 'capitalizeFirst'
+    name: 'capitalizeFirst',
+    standalone: false
 })
 export class CapitalizeFirstPipe implements PipeTransform {
 

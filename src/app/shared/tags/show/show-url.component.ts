@@ -1,14 +1,14 @@
 import {Component, Input} from '@angular/core';
 
 @Component({
-  selector: 'app-show-url',
-  template: `
+    selector: 'app-show-url',
+    template: `
     <span *ngIf="value" class="me-1">
       <span class="label-show-text">{{ label | translate }}</span>
       <a class="ms-1 multiline-truncate" [style.color]="fill" [ngClass]="{'fw-bolder': strong}" href="{{url}}" [target]="target">{{ value }}</a>
     </span>
   `,
-  styles: `
+    styles: `
     .multiline-truncate {
       display: -webkit-box;
       -webkit-line-clamp: 2; /* Numero di righe da mostrare */
@@ -16,7 +16,8 @@ import {Component, Input} from '@angular/core';
       text-overflow: ellipsis;
       max-width: 100%;
     }  
-  ` 
+  `,
+    standalone: false
 })
 export class ShowURLComponent {
 

@@ -2,9 +2,8 @@ import {Component, EventEmitter, Input, Output, OnInit} from '@angular/core';
 import {CommonService} from '../../../common/controller/common.service';
 
 @Component({
-  selector: 'app-list-pagination',
-  template:
-     `
+    selector: 'app-list-pagination',
+    template: `
         <div class="d-flex pt-1">
           <!-- Paging -->
           <div>
@@ -34,6 +33,7 @@ import {CommonService} from '../../../common/controller/common.service';
           </div>
         </div>  
     `,
+    standalone: false
 })
 export class ListPaginationComponent implements OnInit{
 

@@ -21,11 +21,12 @@ import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
 import { ConfigurationService } from '../configuration/configuration.service';
 
 @Component({
-  selector: 'app-result-pie',
-  templateUrl: './result-pie.component.html',
-  encapsulation: ViewEncapsulation.None,
-  providers: [DatePipe, DurationFormatPipe],
-  styles : ``
+    selector: 'app-result-pie',
+    templateUrl: './result-pie.component.html',
+    encapsulation: ViewEncapsulation.None,
+    providers: [DatePipe, DurationFormatPipe],
+    styles: ``,
+    standalone: false
 })
 export class ResultPieComponent implements OnInit {
 
