@@ -61,6 +61,11 @@ import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
       width: 48px!important;
       height: 48px!important;
     }
+    
+    .list-item .it-right-zone {
+      margin-right: 0 !important;
+      margin-left: 0 !important;
+    }
   `,
     standalone: false
 })

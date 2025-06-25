@@ -14,7 +14,8 @@ export class GlobalErrorHandler implements ErrorHandler {
     if ((error instanceof SpringError && error?.redirectOnError) || !(error instanceof SpringError)) {
       if (error?.httpErrorResponse?.status === 401) {
         if (environment.oidc.enable) {
-          this.router.navigate(['auth/signin']);
+          sessionStorage.setItem('redirect', this.router.url);
+          this.router.navigateByUrl('/auth/signin', { state: { redirect: this.router.url } });
         } else {
           this.router.navigate(['error/unauthorized']);
         }
@@ -22,7 +23,6 @@ export class GlobalErrorHandler implements ErrorHandler {
         this.router.navigate(['error/server-error']);
       }
     }
-    // IMPORTANT: Rethrow the error otherwise it gets swallowed
     throw error;
   }
 

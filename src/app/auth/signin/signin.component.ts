@@ -33,7 +33,9 @@ export class SigninComponent implements OnInit {
             this.authenticated = true;
             this.oidcSecurityService.checkAuth().subscribe(({ isAuthenticated, userData, accessToken, idToken }) => {
                 this.authenticated = isAuthenticated;
-                this.router.navigate(['/']);
+                const redirectUrl = sessionStorage.getItem('redirect') || '/';
+                sessionStorage.removeItem('redirect');                
+                this.router.navigateByUrl(redirectUrl);
             });
         }
     }
