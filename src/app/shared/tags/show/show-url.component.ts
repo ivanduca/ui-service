@@ -13,7 +13,6 @@ import {Component, Input} from '@angular/core';
       display: -webkit-box;
       -webkit-line-clamp: 2; /* Numero di righe da mostrare */
       -webkit-box-orient: vertical;
-      overflow: hidden;
       text-overflow: ellipsis;
       max-width: 100%;
     }  
