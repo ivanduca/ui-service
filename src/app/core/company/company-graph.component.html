@@ -4,7 +4,7 @@
       <button itButton class="btn btn-outline-success shadow d-block" (click)="newModal.toggle()">
         <it-icon color="success" size="lg" name="plus-circle"></it-icon>
         <span class="d-none d-xl-block text-success" translate>it.configuration.rule.new.button</span>
-      </button>  
+      </button>
     }
     <button itButton class="btn shadow d-block" [disabled]="!(data && data.length > 0)" (click)="zoomOut()" >
       <it-icon color="primary" size="lg" name="zoom-out"></it-icon>
@@ -52,26 +52,28 @@
       </it-dropdown>
     </div>
   </div>
-  <form *ngIf="filterFormSearch && authenticated" [formGroup]="filterFormSearch">
-    @if (company) {
-      <div class="form-group mb-0 px-2">
+  @if (filterFormSearch && authenticated) {
+    <form [formGroup]="filterFormSearch">
+      @if (company) {
+        <div class="form-group mb-0 px-2">
           <it-select [options]="optionsWorkflow" formControlName="workflowId"></it-select>
-      </div>
-    } @else {
-      <div class="form-group mb-0 px-2 border shadow border-primary rounded">
-        <it-select [options]="optionsRule" formControlName="rootRule"></it-select>
-      </div>
-    }
-  </form>
-  <div class="row mx-0 bg-light">  
+        </div>
+      } @else {
+        <div class="form-group mb-0 px-2 border shadow border-primary rounded">
+          <it-select [options]="optionsRule" formControlName="rootRule"></it-select>
+        </div>
+      }
+    </form>
+  }
+  <div class="row mx-0 bg-light">
     <div class="col-md-9 ps-md-1 pe-md-0">
       @if (!data) {
         <div class="h-100 align-content-md-center">
           <div class="d-flex justify-content-center">
-              <it-spinner double="true"></it-spinner>
+            <it-spinner double="true"></it-spinner>
           </div>
         </div>
-      }      
+      }
       <div #chartContainer id="chartContainer" class="bg-secondary"></div>
     </div>
     <div class="col-md-3 px-md-1">
@@ -104,7 +106,7 @@
                     }
                   }
                 </ng-template>
-              </ng-select>  
+              </ng-select>
             </div>
           </div>
         </div>
@@ -134,7 +136,7 @@
                   <a itButton="outline-success" size="xs" class="mt-1" translate routerLink="/company-map" [queryParams]="{codiceIpa: company.codiceIpa}">
                     <it-icon name="map-marker-circle" color="success"></it-icon>it.company.map
                   </a>
-                </div>      
+                </div>
               </it-list-item>
             </it-list>
           </it-tab-item>
@@ -162,8 +164,8 @@
                     <it-icon name="plus-circle" color="success"></it-icon><span class="ms-1" translate>new</span>
                   </a>
                   <a itButton="outline-danger" size="xs" class="mt-1" (click)="deletePopconfirmModal.toggle()">
-                      <it-icon name="delete" color="danger"></it-icon><span class="ms-1" translate>delete</span>
-                    </a>
+                    <it-icon name="delete" color="danger"></it-icon><span class="ms-1" translate>delete</span>
+                  </a>
                 </div>
               </it-list-item>
             }
@@ -171,19 +173,19 @@
               @if (currentNode?.data?.storageData?.screenshotId || currentNode?.data?.storageData?.objectId) {
                 <it-list-item>
                   <div class="w-100 d-flex justify-content-around">
-                    <app-show-storage-result class="w-100" 
-                      [screenshot]="true" 
-                      [storageData]="currentNode?.data?.storageData" 
+                    <app-show-storage-result class="w-100"
+                      [screenshot]="true"
+                      [storageData]="currentNode?.data?.storageData"
                       [denominazione]="company.denominazioneEnte"
                       [ruleName]="currentNode?.data?.nodeId">
                     </app-show-storage-result>
-                    <app-show-storage-result class="w-100" 
-                      [html]="true" 
-                      [storageData]="currentNode?.data?.storageData" 
+                    <app-show-storage-result class="w-100"
+                      [html]="true"
+                      [storageData]="currentNode?.data?.storageData"
                       [denominazione]="company.denominazioneEnte">
                     </app-show-storage-result>
                   </div>
-                </it-list-item>  
+                </it-list-item>
               }
               @if (!currentNode?.data?.storageData?.objectId) {
                 <it-list-item>
@@ -195,33 +197,33 @@
                     }
                     @if (currentNode?.data?.status != 407 && currentNode?.data?.status != 500 && currentNode?.data?.workflowChildId) {
                       <app-show-html-page
-                        [workflowChildId]="currentNode?.data?.workflowChildId" 
+                        [workflowChildId]="currentNode?.data?.workflowChildId"
                         [denominazione]="company.denominazioneEnte"
                         [searchText]="currentNode?.data?.term">
                       </app-show-html-page>
                     }
                   </div>
-                </it-list-item>  
+                </it-list-item>
               }
             }
-          </it-list>          
+          </it-list>
         </it-tab-item>
         @if (company && rulesFailed.length > 0) {
           <it-tab-item #tabFailed [label]="'it.rule.failed'| translate" icon="error" [active]="tabFailedActive">
-              <it-list>
-                <div style="overflow-y: auto; max-height: 50vh;">
-                  @for (ruleFailed of rulesFailed; track ruleFailed.nodeId) {
+            <it-list>
+              <div style="overflow-y: auto; max-height: 50vh;">
+                @for (ruleFailed of rulesFailed; track ruleFailed.nodeId) {
                   <it-list-item href="#" externalLink="true" (click)="centerNode(ruleFailed);">
                     <div>
                       <h5 class="text m-0">{{ruleFailed.nodeId}}</h5>
-                      <p class="small m-0">{{ruleFailed.term}}</p>  
+                      <p class="small m-0">{{ruleFailed.term}}</p>
                     </div>
                   </it-list-item>
-                  }
-                </div>  
+                }
+              </div>
             </it-list>
-        </it-tab-item>
-        } 
+          </it-tab-item>
+        }
       </it-tab-container>
     </div>
   </div>
@@ -242,7 +244,7 @@
           <div class="d-flex justify-content-end mb-n3">
             <a itButton (click)="editNode.alternativeTerm.push('')">
               <it-icon name="plus-circle" color="success"></it-icon><span class="text-success" translate>add</span>
-            </a>  
+            </a>
           </div>
           <it-callout appearance="highlight" color="success" [label]="'it.rule.alternativeTerm'| translate">
             @for (term of editNode.alternativeTerm; track $index; let idx = $index) {
@@ -253,10 +255,10 @@
                 <div class="col-md-4">
                   <a itButton class="pull-right" (click)="editNode.alternativeTerm.splice(idx, 1)">
                     <it-icon name="minus-circle" color="danger"></it-icon><span class="text-danger" translate>remove</span>
-                  </a>  
+                  </a>
                 </div>
               </div>
-            }  
+            }
           </it-callout>
         </div>
       </div>
@@ -281,7 +283,7 @@
       } @else {
         <it-input formControlName="key" [label]="'it.configuration.rule.new.key'| translate" required></it-input>
       }
-    </div>  
+    </div>
     <div class="form-group col-md-12 pt-4">
       <it-select [options]="optionsRule" [label]="'it.configuration.rule.new.copy-from'| translate" formControlName="copyFrom" required></it-select>
     </div>

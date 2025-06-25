@@ -13,73 +13,75 @@ import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
     selector: 'company-list',
     template: `
     <!-- List -->
-    <app-grid-layout 
-      [loading]="loading" 
+    <app-grid-layout
+      [loading]="loading"
       [items]="items"
-      [noItem]="'message.no_item'" 
-      [showPage]="showPage" 
-      [infiniteScroll]="infiniteScroll" 
-      [page]="getPage()" 
+      [noItem]="'message.no_item'"
+      [showPage]="showPage"
+      [infiniteScroll]="infiniteScroll"
+      [page]="getPage()"
       [showPageOnTop]="showPageOnTop"
       [showTotalOnTop]="showTotalOnTop"
-      [count]="count" 
-      (onChangePage)="onChangePage($event)" 
+      [count]="count"
+      (onChangePage)="onChangePage($event)"
       [page_offset]="pageOffset">
       @if (items) {
-        <div class="row row-eq-height w-100" 
-          infiniteScroll       
+        <div class="row row-eq-height w-100"
+          infiniteScroll
           [infiniteScrollThrottle]="300"
           [infiniteScrollDistance]="1"
           (scrolled)="onScroll()">
-          <div *ngFor="let item of items" class="col-sm-12 px-md-2 pb-2" @scale [ngClass]="classForDisplayCard()">
-            <app-list-item-company [item]="item" [filterForm]="filterForm" (onDelete)="onDelete(item.getId())">
-              <div class="col-sm-12">
-                <app-show-text [label]="'it.company.codiceIpa'" [value]="item.codiceIpa"></app-show-text>
-                <app-show-text class="pull-right" [label]="'it.company.acronimo'" [value]="item.acronimo"></app-show-text>
-              </div>  
-              <div class="col-sm-12">
-                <app-show-text [label]="'it.company.codiceFiscaleEnte'" [value]="item.codiceFiscaleEnte"></app-show-text>
-              </div>
-              <div class="col-sm-12">
-                <app-show-text [label]="'it.company.codiceCategoria'" [value]="item.codiceCategoria"></app-show-text>
-                <app-show-text class="pull-right" [label]="'it.company.codiceNatura'" [value]="item.codiceNatura"></app-show-text>
-              </div>
-              <div class="col-sm-12">
-                <app-show-text [label]="'it.company.tipologia'" [value]="item.tipologia"></app-show-text>
-              </div>
-              <div class="col-sm-12">
-                <app-show-url [label]="'it.company.sitoIstituzionale'" [value]="item.sitoIstituzionale"></app-show-url>
-              </div>            
-              <div class="col-sm-12">
-                <app-show-text [label]="'it.company.indirizzo'" [value]="item.fullIndirizzo"></app-show-text>
-              </div>
-              <div class="col-sm-12">
-                <app-show-text [label]="'it.company.regione'" [value]="item.denominazioneRegione"></app-show-text>
-              </div>
-              <div class="col-sm-12">
-                <app-show-text [label]="item.titoloResponsabile" [value]="item.responsabile"></app-show-text>
-              </div>
-              <div class="col-sm-12">
-                <app-show-email [label]="item.tipoMail1" [value]="item.mail1"></app-show-email>
-              </div>
-              <div class="col-sm-12">
-                <app-show-email [label]="item.tipoMail2" [value]="item.mail2"></app-show-email>
-              </div>
-              <div class="col-sm-12">
-                <app-show-email [label]="item.tipoMail3" [value]="item.mail3"></app-show-email>
-              </div>
-              <div class="col-sm-12">
-                <app-show-email [label]="item.tipoMail4" [value]="item.mail4"></app-show-email>
-              </div>
-              <div class="col-sm-12">
-                <app-show-email [label]="item.tipoMail5" [value]="item.mail5"></app-show-email>
-              </div>
-            </app-list-item-company>
-          </div>
+          @for (item of items; track item) {
+            <div class="col-sm-12 px-md-2 pb-2" @scale [ngClass]="classForDisplayCard()">
+              <app-list-item-company [item]="item" [filterForm]="filterForm" (onDelete)="onDelete(item.getId())">
+                <div class="col-sm-12">
+                  <app-show-text [label]="'it.company.codiceIpa'" [value]="item.codiceIpa"></app-show-text>
+                  <app-show-text class="pull-right" [label]="'it.company.acronimo'" [value]="item.acronimo"></app-show-text>
+                </div>
+                <div class="col-sm-12">
+                  <app-show-text [label]="'it.company.codiceFiscaleEnte'" [value]="item.codiceFiscaleEnte"></app-show-text>
+                </div>
+                <div class="col-sm-12">
+                  <app-show-text [label]="'it.company.codiceCategoria'" [value]="item.codiceCategoria"></app-show-text>
+                  <app-show-text class="pull-right" [label]="'it.company.codiceNatura'" [value]="item.codiceNatura"></app-show-text>
+                </div>
+                <div class="col-sm-12">
+                  <app-show-text [label]="'it.company.tipologia'" [value]="item.tipologia"></app-show-text>
+                </div>
+                <div class="col-sm-12">
+                  <app-show-url [label]="'it.company.sitoIstituzionale'" [value]="item.sitoIstituzionale"></app-show-url>
+                </div>
+                <div class="col-sm-12">
+                  <app-show-text [label]="'it.company.indirizzo'" [value]="item.fullIndirizzo"></app-show-text>
+                </div>
+                <div class="col-sm-12">
+                  <app-show-text [label]="'it.company.regione'" [value]="item.denominazioneRegione"></app-show-text>
+                </div>
+                <div class="col-sm-12">
+                  <app-show-text [label]="item.titoloResponsabile" [value]="item.responsabile"></app-show-text>
+                </div>
+                <div class="col-sm-12">
+                  <app-show-email [label]="item.tipoMail1" [value]="item.mail1"></app-show-email>
+                </div>
+                <div class="col-sm-12">
+                  <app-show-email [label]="item.tipoMail2" [value]="item.mail2"></app-show-email>
+                </div>
+                <div class="col-sm-12">
+                  <app-show-email [label]="item.tipoMail3" [value]="item.mail3"></app-show-email>
+                </div>
+                <div class="col-sm-12">
+                  <app-show-email [label]="item.tipoMail4" [value]="item.mail4"></app-show-email>
+                </div>
+                <div class="col-sm-12">
+                  <app-show-email [label]="item.tipoMail5" [value]="item.mail5"></app-show-email>
+                </div>
+              </app-list-item-company>
+            </div>
+          }
         </div>
       }
     </app-grid-layout>
-  `,
+    `,
     animations: [
         trigger('scale', [
             transition('void => *', animate('500ms ease-in-out', keyframes([

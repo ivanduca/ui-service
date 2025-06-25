@@ -9,49 +9,51 @@ import { HttpClient } from '@angular/common/http';
     selector: 'app-list-item-result',
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
-    <div *ngIf="item" class="h-100 hover-shadow">
-      <div class="card card-bg h-100">        
-        <div class="card-body">
+    @if (item) {
+      <div class="h-100 hover-shadow">
+        <div class="card card-bg h-100">
+          <div class="card-body">
             <ng-content></ng-content>
-        </div>
-        <div class="card-footer px-1">
-          <div class="d-flex justify-content-evenly flex-wrap">
-            <app-show-workflow-history [codiceIpa]="item.company.codiceIpa"></app-show-workflow-history>
-            <button itButton="outline-primary" class="my-1" size="xs" translate routerLink="/company-graph" [queryParams]="{codiceIpa: item.company.codiceIpa, workflowId: item.workflowId}">
-              <it-icon name="chart-line" color="primary"></it-icon>it.rule.title
-            </button>
-            @if (!codiceIpa) {
-              <button itButton="outline-warning" size="xs" class="my-1" translate routerLink="/search" [queryParams]="{workflowId: '',status: '',ruleName: item.ruleName, codiceIpa: item?.company?.codiceIpa, sort: 'createdAt,desc'}">
-                <it-icon name="chart-line" color="warning"></it-icon>it.company.history
+          </div>
+          <div class="card-footer px-1">
+            <div class="d-flex justify-content-evenly flex-wrap">
+              <app-show-workflow-history [codiceIpa]="item.company.codiceIpa"></app-show-workflow-history>
+              <button itButton="outline-primary" class="my-1" size="xs" translate routerLink="/company-graph" [queryParams]="{codiceIpa: item.company.codiceIpa, workflowId: item.workflowId}">
+                <it-icon name="chart-line" color="primary"></it-icon>it.rule.title
               </button>
-            }
-            @if (!item?.storageData?.objectId && item.status != 407 && item.status != 500 && item.workflowChildId) {
-              <app-show-html-page
-                [workflowChildId]="item.workflowChildId" 
-                [denominazione]="item.company.denominazioneEnte"
-                [searchText]="item.term">
-              </app-show-html-page>
-            }
-            @if (item?.storageData?.screenshotId) {
-              <app-show-storage-result
-                [screenshot]="true" 
-                [storageData]="item.storageData" 
-                [denominazione]="item.company.denominazioneEnte"
-                [ruleName]="item.ruleName">
-              </app-show-storage-result>            
-            }
-            @if (item?.storageData?.objectId) {
-              <app-show-storage-result
-                [html]="true" 
-                [storageData]="item.storageData" 
-                [denominazione]="item.company.denominazioneEnte">
-              </app-show-storage-result>
-            }
+              @if (!codiceIpa) {
+                <button itButton="outline-warning" size="xs" class="my-1" translate routerLink="/search" [queryParams]="{workflowId: '',status: '',ruleName: item.ruleName, codiceIpa: item?.company?.codiceIpa, sort: 'createdAt,desc'}">
+                  <it-icon name="chart-line" color="warning"></it-icon>it.company.history
+                </button>
+              }
+              @if (!item?.storageData?.objectId && item.status != 407 && item.status != 500 && item.workflowChildId) {
+                <app-show-html-page
+                  [workflowChildId]="item.workflowChildId"
+                  [denominazione]="item.company.denominazioneEnte"
+                  [searchText]="item.term">
+                </app-show-html-page>
+              }
+              @if (item?.storageData?.screenshotId) {
+                <app-show-storage-result
+                  [screenshot]="true"
+                  [storageData]="item.storageData"
+                  [denominazione]="item.company.denominazioneEnte"
+                  [ruleName]="item.ruleName">
+                </app-show-storage-result>
+              }
+              @if (item?.storageData?.objectId) {
+                <app-show-storage-result
+                  [html]="true"
+                  [storageData]="item.storageData"
+                  [denominazione]="item.company.denominazioneEnte">
+                </app-show-storage-result>
+              }
+            </div>
           </div>
         </div>
       </div>
-    </div>  
-  `,
+    }
+    `,
     styles: [
         `
     .card::after { 

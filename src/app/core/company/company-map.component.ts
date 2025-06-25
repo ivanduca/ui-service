@@ -10,12 +10,11 @@ import { Rule, SelectRule } from '../rule/rule.model';
 import { environment } from '../../../environments/environment';
 import { ConductorService } from '../conductor/conductor.service';
 import { Workflow } from '../conductor/workflow.model';
-import { SelectControlOption } from 'design-angular-kit';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { RuleService } from '../rule/rule.service';
 import { TranslateService } from '@ngx-translate/core';
 import { DurationFormatPipe } from '../../shared/pipes/durationFormat.pipe';
-import Leaflet from 'leaflet';
+import * as Leaflet from 'leaflet';
 import 'leaflet.markercluster';
 
 @Component({

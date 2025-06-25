@@ -7,32 +7,35 @@ import {CommonService} from '../../../common/controller/common.service';
         <div class="d-flex pt-1">
           <!-- Paging -->
           <div>
-           <it-pagination
-                *ngIf="showPage && count > page_offset"
-                [boundaryLinks]="true" 
-                [totalItems]="count" 
+            @if (showPage && count > page_offset) {
+              <it-pagination
+                [boundaryLinks]="true"
+                [totalItems]="count"
                 [itemsPerPage]="page_offset"
-                previousText="&lsaquo;" 
-                nextText="&rsaquo;" 
-                firstText="&laquo;" 
+                previousText="&lsaquo;"
+                nextText="&rsaquo;"
+                firstText="&laquo;"
                 lastText="&raquo;"
                 (pageChanged)="pageChanged($event)"
                 [(ngModel)]="currentPage"
-                [rotate]="true" 
+                [rotate]="true"
                 [maxSize]="5">
-            </it-pagination>
+              </it-pagination>
+            }
           </div>
           <div class="ms-auto">
             <!-- Recap -->
-            <div *ngIf="count > 0" class="d-inline-block float-end" [ngClass]="{'mt-3': showPage && count > page_offset}">
-              <small>
-              {{ 'present' | translate }} <span class="font-weight-bold">{{ count | number: undefined : 'it-IT'}}</span> {{ 'occurrences' | translate}}.
+            @if (count > 0) {
+              <div class="d-inline-block float-end" [ngClass]="{'mt-3': showPage && count > page_offset}">
+                <small>
+                  {{ 'present' | translate }} <span class="font-weight-bold">{{ count | number: undefined : 'it-IT'}}</span> {{ 'occurrences' | translate}}.
                   {{ 'shown_from' | translate }} {{ showFrom() }} {{ 'shown_to' | translate }} {{ showTo() }}.
-              </small>
-            </div>
+                </small>
+              </div>
+            }
           </div>
-        </div>  
-    `,
+        </div>
+        `,
     standalone: false
 })
 export class ListPaginationComponent implements OnInit{

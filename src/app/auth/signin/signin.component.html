@@ -1,29 +1,36 @@
-<div *ngIf="(oidcEnable && oidcForce) || authenticated" class="pt-3">
-  <app-layout-wait [loaded]="!oidcEnable"></app-layout-wait>
-</div>
-<div *ngIf="!oidcForce && !authenticated" class="container row no-gutters pt-3">
-  <div class="col-md-6 col-xl-7">
-
+@if ((oidcEnable && oidcForce) || authenticated) {
+  <div class="pt-3">
+    <app-layout-wait [loaded]="!oidcEnable"></app-layout-wait>
   </div>
-  <div class="col-md-6 col-xl-5">
-    <div class="card shadow-lg">
-      <div class="card-header h1">{{'signin.title' | translate}}</div>
-      <div class="card-body">
-        <form *ngIf="ngForm" (keyup.enter)="onSignin()" [formGroup]="ngForm">
-            <div class="form-group pt-2">             
-              <it-input formControlName="username" [label]="'signin.username'| translate">
-                <it-icon [name]="'user'" size="sm" color="primary" appendText></it-icon>
-              </it-input>
-            </div>
-            <div class="form-group">
-              <it-password-input type="password" formControlName="password" [label]="'signin.password'| translate"></it-password-input>
-            </div>
-        </form>
-      </div>
-      <div class="card-footer d-flex">
-        <button [disabled]="!ngForm.valid"  (click)="onSignin()" class="btn btn-primary w-100" type="submit">{{'signin.title' | translate}}</button>
-        <button *ngIf="oidcEnable" (click)="onSigninSSO()" class="btn btn-primary ms-2 mt-0" type="submit">{{'signin.sso' | translate}}</button>
+}
+@if (!oidcForce && !authenticated) {
+  <div class="container row no-gutters pt-3">
+    <div class="col-md-6 col-xl-7">
+    </div>
+    <div class="col-md-6 col-xl-5">
+      <div class="card shadow-lg">
+        <div class="card-header h1">{{'signin.title' | translate}}</div>
+        <div class="card-body">
+          @if (ngForm) {
+            <form (keyup.enter)="onSignin()" [formGroup]="ngForm">
+              <div class="form-group pt-2">
+                <it-input formControlName="username" [label]="'signin.username'| translate">
+                  <it-icon [name]="'user'" size="sm" color="primary" appendText></it-icon>
+                </it-input>
+              </div>
+              <div class="form-group">
+                <it-password-input type="password" formControlName="password" [label]="'signin.password'| translate"></it-password-input>
+              </div>
+            </form>
+          }
+        </div>
+        <div class="card-footer d-flex">
+          <button [disabled]="!ngForm.valid"  (click)="onSignin()" class="btn btn-primary w-100" type="submit">{{'signin.title' | translate}}</button>
+          @if (oidcEnable) {
+            <button (click)="onSigninSSO()" class="btn btn-primary ms-2 mt-0" type="submit">{{'signin.sso' | translate}}</button>
+          }
+        </div>
       </div>
     </div>
   </div>
-</div>
+}

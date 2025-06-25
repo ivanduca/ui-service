@@ -1,46 +1,48 @@
 @if (filter) {
-    <form *ngIf="filterFormSearch" class="clearfix my-3 px-2 shadow" [formGroup]="filterFormSearch" >
-        <div class="row col-md-12">
-            <div class="form-group mb-1 col-md-5">
-                <ng-select [clearable]="false" formControlName="workflowId" [placeholder]="'it.workflow.id'| translate">
-                    @for (workflow of optionsWorkflow; track workflow.value) {
-                        <ng-option [value]="workflow.value">{{workflow.text}}</ng-option>
-                    }
-                </ng-select>
-            </div>
-            <div class="form-group mb-1 col-md-4">
-                <app-rule-select [optionsRule]="optionsRule" [form]="filterFormSearch" controlName="ruleName" [value]="ruleName"></app-rule-select>
-            </div>
-            <div class="form-group mb-1 col-md-3 pb-5 pb-md-0">
-                <it-checkbox formControlName="preserveZoom" [label]="'it.map.preserve-zoom'| translate" toggle="true"></it-checkbox>
-            </div>
-            <!--
-            <div class="form-group mb-1 col-md-2">
-                <it-checkbox formControlName="cache" [label]="'it.map.cache'| translate" toggle="true"></it-checkbox>
-            </div>
-            -->
+  @if (filterFormSearch) {
+    <form class="clearfix my-3 px-2 shadow" [formGroup]="filterFormSearch" >
+      <div class="row col-md-12">
+        <div class="form-group mb-1 col-md-5">
+          <ng-select [clearable]="false" formControlName="workflowId" [placeholder]="'it.workflow.id'| translate">
+            @for (workflow of optionsWorkflow; track workflow.value) {
+              <ng-option [value]="workflow.value">{{workflow.text}}</ng-option>
+            }
+          </ng-select>
         </div>
+        <div class="form-group mb-1 col-md-4">
+          <app-rule-select [optionsRule]="optionsRule" [form]="filterFormSearch" controlName="ruleName" [value]="ruleName"></app-rule-select>
+        </div>
+        <div class="form-group mb-1 col-md-3 pb-5 pb-md-0">
+          <it-checkbox formControlName="preserveZoom" [label]="'it.map.preserve-zoom'| translate" toggle="true"></it-checkbox>
+        </div>
+        <!--
+        <div class="form-group mb-1 col-md-2">
+          <it-checkbox formControlName="cache" [label]="'it.map.cache'| translate" toggle="true"></it-checkbox>
+        </div>
+        -->
+      </div>
     </form>
+  }
 }
 @if (options) {
-    <div #chartdiv leaflet 
-        [leafletOptions]="options"
-        [leafletMarkerCluster]="markerClusterData"
-        [leafletMarkerClusterOptions]="markerClusterOptions"         
-        [(leafletCenter)]="center"
-        [(leafletZoom)]="zoom"
-        (leafletMapReady)="onMapReady($event)"
-        (leafletMarkerClusterReady)="markerClusterReady($event)"        
-        style="height: 80vh;" 
-        class="mb-n5">
-    </div>
+  <div #chartdiv leaflet
+    [leafletOptions]="options"
+    [leafletMarkerCluster]="markerClusterData"
+    [leafletMarkerClusterOptions]="markerClusterOptions"
+    [(leafletCenter)]="center"
+    [(leafletZoom)]="zoom"
+    (leafletMapReady)="onMapReady($event)"
+    (leafletMarkerClusterReady)="markerClusterReady($event)"
+    style="height: 80vh;"
+    class="mb-n5">
+  </div>
 }
 @if (!isGEOLoaded) {
-    <div style="height: 80vh;" class="mb-n5">
-        <div class="overlay-spinner">
-            <div class="d-flex justify-content-center">
-                <it-spinner double="true"></it-spinner>
-            </div>
-        </div>
+  <div style="height: 80vh;" class="mb-n5">
+    <div class="overlay-spinner">
+      <div class="d-flex justify-content-center">
+        <it-spinner double="true"></it-spinner>
+      </div>
     </div>
+  </div>
 }

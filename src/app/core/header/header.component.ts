@@ -123,11 +123,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
     if (change)
       this.lang = lang;
     if (lang == 'it') {
-      this.translateService.use('it').subscribe((lang: string) =>{
+      this.translateService.use('it').subscribe((lang) =>{
         localStorage.setItem('lang', 'it');  
       });
     } else {
-      this.translateService.use('en').subscribe((lang: string) =>{
+      this.translateService.use('en').subscribe((lang) =>{
         localStorage.setItem('lang', 'en');
       });
     }

@@ -7,41 +7,50 @@ import { CommonService } from '../../../common/controller/common.service';
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
     <div class="px-1">
-
-        <div *ngIf="loading ; else results_table" class="text-center">
+    
+      @if (loading ) {
+        <div class="text-center">
           Caricamento ...
           <i class="fa fa-spinner fa-pulse fa-fw"></i>
         </div>
-
-        <ng-template #results_table>
-          <div *ngIf="count > 0; else nessun_item" >
-            <app-list-pagination *ngIf="!loading && showTotalOnTop && count > page_offset" [showPage]="false" [page]="page" [count]="count" [page_offset]="page_offset" (onChangePage)="select($event)"></app-list-pagination>
-
+      } @else {
+        @if (count > 0) {
+          <div >
+            @if (!loading && showTotalOnTop && count > page_offset) {
+              <app-list-pagination [showPage]="false" [page]="page" [count]="count" [page_offset]="page_offset" (onChangePage)="select($event)"></app-list-pagination>
+            }
             <ul class="list-group" [ngClass]="classForDisplayList()">
               <ng-content></ng-content>
             </ul>
-
-            <table *ngIf="table" class="table table-hover table-bordered table-light" [ngClass]="classForDisplayTable()">
-              <thead class="table-secondary">
-              <th *ngFor="let key of table.keys"> {{ key | translate }}</th>
-              </thead>
-              <tbody>
-              <tr *ngFor="let row of table.rows" app-table-item (delete)="onDelete($event)" [noEdit]="noEdit"
-                  [queryparams]="queryparams" [keys]="table.keys" [row]="row" [hasEditValidita]="hasEditValidita">
-              </tr>
-              </tbody>
-            </table>
-
+            @if (table) {
+              <table class="table table-hover table-bordered table-light" [ngClass]="classForDisplayTable()">
+                <thead class="table-secondary">
+                  @for (key of table.keys; track key) {
+                    <th> {{ key | translate }}</th>
+                  }
+                </thead>
+                <tbody>
+                  @for (row of table.rows; track row) {
+                    <tr app-table-item (delete)="onDelete($event)" [noEdit]="noEdit"
+                      [queryparams]="queryparams" [keys]="table.keys" [row]="row" [hasEditValidita]="hasEditValidita">
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            }
           </div>
-
-          
-        </ng-template>
-
-        <!-- Paging -->
-        <app-list-pagination *ngIf="!loading" [page]="page" [count]="count" [page_offset]="page_offset" (onChangePage)="select($event)"></app-list-pagination>
-
-        <ng-template #nessun_item style="text-align: center;"> {{ 'no_item' | translate }}</ng-template>
-
+        } @else {
+          {{ 'no_item' | translate }}
+        }
+      }
+    
+    
+      <!-- Paging -->
+      @if (!loading) {
+        <app-list-pagination [page]="page" [count]="count" [page_offset]="page_offset" (onChangePage)="select($event)"></app-list-pagination>
+      }
+    
+    
     </div>
     `,
     standalone: false

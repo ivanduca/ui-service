@@ -4,10 +4,14 @@ import {Component, Input} from '@angular/core';
     selector: 'app-show-enum',
     template: `
       <app-show-layout [label]="label">
-        <span *ngIf="enumerate"> {{ enumerate.getEnumValue() | translate }}</span>
-        <span *ngIf="!enumerate"> {{ 'not_assigned' | translate }}</span>
+        @if (enumerate) {
+          <span> {{ enumerate.getEnumValue() | translate }}</span>
+        }
+        @if (!enumerate) {
+          <span> {{ 'not_assigned' | translate }}</span>
+        }
       </app-show-layout>
-  `,
+      `,
     standalone: false
 })
 export class ShowEnumComponent {

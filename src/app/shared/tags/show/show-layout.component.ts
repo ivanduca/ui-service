@@ -5,8 +5,12 @@ import {Component, Input} from '@angular/core';
     template: `
     <div class="row mt-3 mb-3">
       <div class="col-sm-2 text-end">
-        <strong *ngIf="strong"> {{ label | translate }} </strong>
-        <span *ngIf="!strong"> {{ label | translate }} </span>
+        @if (strong) {
+          <strong> {{ label | translate }} </strong>
+        }
+        @if (!strong) {
+          <span> {{ label | translate }} </span>
+        }
       </div>
       <div class="col-sm-10">
         <ng-content></ng-content>

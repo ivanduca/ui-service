@@ -7,29 +7,40 @@ import { CommonService } from '../../../common/controller/common.service';
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
     <div class="container">
-
-        <div *ngIf="loading" class="text-center">
+    
+      @if (loading) {
+        <div class="text-center">
           Caricamento ...
           <it-spinner small="true" double="true"></it-spinner>
         </div>
-
-        <div *ngIf="count > 0">
-          <app-list-pagination *ngIf="!loading && showTotalOnTop && count > page_offset" [infiniteScroll]="infiniteScroll" [showPage]="showPageOnTop" [page]="page" [count]="count" [page_offset]="page_offset" (onChangePage)="select($event)"></app-list-pagination>
-
+      }
+    
+      @if (count > 0) {
+        <div>
+          @if (!loading && showTotalOnTop && count > page_offset) {
+            <app-list-pagination [infiniteScroll]="infiniteScroll" [showPage]="showPageOnTop" [page]="page" [count]="count" [page_offset]="page_offset" (onChangePage)="select($event)"></app-list-pagination>
+          }
           <div class="row row-eq-height">
             <ng-content></ng-content>
           </div>
-          <div *ngIf="loading && infiniteScroll" class="text-center">
-            Caricamento ...
-            <it-spinner small="true" double="true"></it-spinner>
-          </div>
+          @if (loading && infiniteScroll) {
+            <div class="text-center">
+              Caricamento ...
+              <it-spinner small="true" double="true"></it-spinner>
+            </div>
+          }
         </div>
-
-        <!-- Paging -->
-        <app-list-pagination *ngIf="!loading" [showPage]="showPage" [page]="page" [infiniteScroll]="infiniteScroll" [count]="count" [page_offset]="page_offset" (onChangePage)="select($event)"></app-list-pagination>
-
-        <div *ngIf="!loading && count == 0" class="alert alert-warning text-monospace" innerHtml="{{ noItem | translate }}"></div>
-
+      }
+    
+      <!-- Paging -->
+      @if (!loading) {
+        <app-list-pagination [showPage]="showPage" [page]="page" [infiniteScroll]="infiniteScroll" [count]="count" [page_offset]="page_offset" (onChangePage)="select($event)"></app-list-pagination>
+      }
+    
+      @if (!loading && count == 0) {
+        <div class="alert alert-warning text-monospace" innerHtml="{{ noItem | translate }}"></div>
+      }
+    
     </div>
     `,
     standalone: false

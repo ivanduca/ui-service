@@ -3,25 +3,27 @@ import {Component, Input} from '@angular/core';
 @Component({
     selector: 'app-show-text-popover',
     template: `
-    <span *ngIf="value" class="d-flex gap-1 align-items-center">
-      <span class="label-show-text">{{ label | translate }}</span>
-      <span class="ms-1" [ngClass]="{'fw-bolder': strong}">{{ value }}</span>
-      @if (popover_text) {
-        <span
-          [itPopover]="popover_text"
-          [popoverTitle]="popover_title"
-          popoverTrigger="hover"
-          [popoverPlacement]="popover_placement">
-          <it-icon 
-            size="sm"
-            [name]="icon" 
-            class="ms-2 bg-light" 
-            [color]="color">
-          </it-icon>
-          </span>  
-      }
-    </span>
-  `,
+    @if (value) {
+      <span class="d-flex gap-1 align-items-center">
+        <span class="label-show-text">{{ label | translate }}</span>
+        <span class="ms-1" [ngClass]="{'fw-bolder': strong}">{{ value }}</span>
+        @if (popover_text) {
+          <span
+            [itPopover]="popover_text"
+            [popoverTitle]="popover_title"
+            popoverTrigger="hover"
+            [popoverPlacement]="popover_placement">
+            <it-icon
+              size="sm"
+              [name]="icon"
+              class="ms-2 bg-light"
+              [color]="color">
+            </it-icon>
+          </span>
+        }
+      </span>
+    }
+    `,
     standalone: false
 })
 export class ShowTextPopoverComponent {

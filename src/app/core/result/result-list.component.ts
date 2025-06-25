@@ -14,81 +14,83 @@ import { ConfigurationService } from '../configuration/configuration.service';
     selector: 'result-list',
     template: `
     <!-- List -->
-    <app-grid-layout 
-      [loading]="loading" 
+    <app-grid-layout
+      [loading]="loading"
       [items]="items"
-      [noItem]="'message.no_item'" 
-      [showPage]="showPage" 
-      [infiniteScroll]="infiniteScroll" 
-      [page]="getPage()" 
+      [noItem]="'message.no_item'"
+      [showPage]="showPage"
+      [infiniteScroll]="infiniteScroll"
+      [page]="getPage()"
       [showPageOnTop]="showPageOnTop"
       [showTotalOnTop]="showTotalOnTop"
-      [count]="count" 
-      (onChangePage)="onChangePage($event)" 
+      [count]="count"
+      (onChangePage)="onChangePage($event)"
       [page_offset]="pageOffset">
       @if (items) {
-        <div class="row row-eq-height w-100" 
-          infiniteScroll       
+        <div class="row row-eq-height w-100"
+          infiniteScroll
           [infiniteScrollThrottle]="300"
           [infiniteScrollDistance]="1"
           (scrolled)="onScroll()">
-          <div *ngFor="let item of items" class="col-sm-12 px-md-2 pb-2" @scale [ngClass]="classForDisplayCard()">
-            <app-list-item-result [item]="item" [codiceIpa]="codiceIpa" [filterForm]="filterForm">
-              <div class="callout callout-highlight" [style.color]="getColor(item.status)" [style.border-color]="getColor(item.status)">
-                <div class="callout-title mb-1" [style.color]="getColor(item.status)">
-                  <svg class="icon" [style.fill]="getColor(item.status)"><use href="/bootstrap-italia/dist/svg/sprites.svg#it-pa"></use></svg>{{item.company.denominazioneEnte}}
+          @for (item of items; track item) {
+            <div class="col-sm-12 px-md-2 pb-2" @scale [ngClass]="classForDisplayCard()">
+              <app-list-item-result [item]="item" [codiceIpa]="codiceIpa" [filterForm]="filterForm">
+                <div class="callout callout-highlight" [style.color]="getColor(item.status)" [style.border-color]="getColor(item.status)">
+                  <div class="callout-title mb-1" [style.color]="getColor(item.status)">
+                    <svg class="icon" [style.fill]="getColor(item.status)"><use href="/bootstrap-italia/dist/svg/sprites.svg#it-pa"></use></svg>{{item.company.denominazioneEnte}}
+                  </div>
+                  <div class="col-sm-12">
+                    <app-show-text [label]="'it.company.codiceIpa'" [value]="item.company.codiceIpa"></app-show-text>
+                    <app-show-text class="pull-right" [label]="'it.company.acronimo'" [value]="item.company.acronimo"></app-show-text>
+                  </div>
+                  <div class="col-sm-12">
+                    <app-show-text [label]="'it.company.codiceFiscaleEnte'" [value]="item.company.codiceFiscaleEnte"></app-show-text>
+                  </div>
+                  <div class="col-sm-12">
+                    <app-show-text [label]="'it.company.codiceCategoria'" [value]="item.company.codiceCategoria"></app-show-text>
+                    <app-show-text class="pull-right" [label]="'it.company.codiceNatura'" [value]="item.company.codiceNatura"></app-show-text>
+                  </div>
+                  <div class="col-sm-12">
+                    <app-show-text [label]="'it.company.tipologia'" [value]="item.company.tipologia"></app-show-text>
+                  </div>
+                  <div class="col-sm-12">
+                    <app-show-url [fill]="getColor(item.status)" [label]="'it.company.sitoIstituzionale'" [value]="item.company.sitoIstituzionale"></app-show-url>
+                  </div>
                 </div>
                 <div class="col-sm-12">
-                  <app-show-text [label]="'it.company.codiceIpa'" [value]="item.company.codiceIpa"></app-show-text>
-                  <app-show-text class="pull-right" [label]="'it.company.acronimo'" [value]="item.company.acronimo"></app-show-text>
-                </div>  
-                <div class="col-sm-12">
-                  <app-show-text [label]="'it.company.codiceFiscaleEnte'" [value]="item.company.codiceFiscaleEnte"></app-show-text>
+                  @if (item.errorMessage) {
+                    <app-show-text-popover
+                      [label]="'it.rule.status-label'"
+                      [value]="'it.rule.status.' + item.status + '.ruletitle'| translate"
+                      [icon]="'error'"
+                      [color]="'danger'"
+                      [popover_title]="'it.result.errorMessage'|translate"
+                      [popover_text]="item.errorMessage">
+                    </app-show-text-popover>
+                  }
+                  @if (!item.errorMessage) {
+                    <app-show-text [label]="'it.rule.status-label'" [value]="'it.rule.status.' + item.status + '.ruletitle'| translate"></app-show-text>
+                  }
                 </div>
                 <div class="col-sm-12">
-                  <app-show-text [label]="'it.company.codiceCategoria'" [value]="item.company.codiceCategoria"></app-show-text>
-                  <app-show-text class="pull-right" [label]="'it.company.codiceNatura'" [value]="item.company.codiceNatura"></app-show-text>
+                  <app-show-text [label]="'it.result.updatedAt'" [value]="item.updatedAt| date: 'dd/MM/yyyy HH:mm:ss'"></app-show-text>
                 </div>
                 <div class="col-sm-12">
-                  <app-show-text [label]="'it.company.tipologia'" [value]="item.company.tipologia"></app-show-text>
+                  <app-show-text [label]="'it.rule.name'" [value]="item.ruleName"></app-show-text>
                 </div>
                 <div class="col-sm-12">
-                  <app-show-url [fill]="getColor(item.status)" [label]="'it.company.sitoIstituzionale'" [value]="item.company.sitoIstituzionale"></app-show-url>
+                  <app-show-text-popover [label]="'it.rule.term'" [value]="item.term" [popover_title]="'it.result.content'|translate" [popover_text]="item.content"></app-show-text-popover>
                 </div>
-              </div>
-              <div class="col-sm-12">
-                @if (item.errorMessage) {
-                  <app-show-text-popover 
-                    [label]="'it.rule.status-label'" 
-                    [value]="'it.rule.status.' + item.status + '.ruletitle'| translate" 
-                    [icon]="'error'"
-                    [color]="'danger'"
-                    [popover_title]="'it.result.errorMessage'|translate" 
-                    [popover_text]="item.errorMessage">
-                  </app-show-text-popover>                
-                }
-                @if (!item.errorMessage) {
-                  <app-show-text [label]="'it.rule.status-label'" [value]="'it.rule.status.' + item.status + '.ruletitle'| translate"></app-show-text>                
-                }
-              </div>
-              <div class="col-sm-12">
-                <app-show-text [label]="'it.result.updatedAt'" [value]="item.updatedAt| date: 'dd/MM/yyyy HH:mm:ss'"></app-show-text>
-              </div>
-              <div class="col-sm-12">
-                <app-show-text [label]="'it.rule.name'" [value]="item.ruleName"></app-show-text>
-              </div>
-              <div class="col-sm-12">
-                <app-show-text-popover [label]="'it.rule.term'" [value]="item.term" [popover_title]="'it.result.content'|translate" [popover_text]="item.content"></app-show-text-popover>
-              </div>
-              <div class="col-sm-12">
-                <app-show-url [label]="'it.result.destinationUrl'" [value]="item.destinationUrl"></app-show-url>
-              </div>            
-            </app-list-item-result>
-          </div>
+                <div class="col-sm-12">
+                  <app-show-url [label]="'it.result.destinationUrl'" [value]="item.destinationUrl"></app-show-url>
+                </div>
+              </app-list-item-result>
+            </div>
+          }
         </div>
       }
     </app-grid-layout>
-  `,
+    `,
     styles: [
         ` 
       .callout { max-width: unset!important; }

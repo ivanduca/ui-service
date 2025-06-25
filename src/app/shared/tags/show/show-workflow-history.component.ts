@@ -24,7 +24,7 @@ import saveAs from 'file-saver';
     selector: 'app-show-workflow-history',
     changeDetection: ChangeDetectionStrategy.OnPush,
     template: `
-    @if (authenticated) {    
+    @if (authenticated) {
       <a itButton="outline-primary" size="xs" translate class="mt-1" (click)="workflowModal.toggle()">
         <it-icon name="presentation" color="primary"></it-icon>it.workflow.list
       </a>
@@ -39,52 +39,56 @@ import saveAs from 'file-saver';
               <div class="d-flex justify-content-start w-100">
                 <div class="d-flex">
                   <span class="text-monospace">
-                    @if (!workflow.isRunning) {                  
-                      {{'it.workflow.full_label' | translate: { startTime: workflow.startTime | date:'dd/MM/yyyy', endTime: workflow.endTime | date:'dd/MM/yyyy HH:mm:ss', executionTime: workflow.executionTime | durationFormat} }}                  
+                    @if (!workflow.isRunning) {
+                      {{'it.workflow.full_label' | translate: { startTime: workflow.startTime | date:'dd/MM/yyyy', endTime: workflow.endTime | date:'dd/MM/yyyy HH:mm:ss', executionTime: workflow.executionTime | durationFormat} }}
                     }
                     @if (workflow.isRunning){
-                      {{'it.workflow.label' | translate: { startTime: workflow.startTime | date:'dd/MM/yyyy'} }}                                    
+                      {{'it.workflow.label' | translate: { startTime: workflow.startTime | date:'dd/MM/yyyy'} }}
                     }
                   </span>
                 </div>
                 <div class="w-100 ms-auto">
                   @if (!workflow.isRunning) {
-                    <a 
-                        (click)="workflowModal.toggle()" 
-                        [routerLink]="['/company-graph']" 
-                        [queryParams]="{codiceIpa: codiceIpa, workflowId: workflow.workflowId, ruleName: 'amministrazione-trasparente'}"
-                        [itBadge]="workflow.badge" 
-                        class="h6 align-top pull-right">
-                        <div class="d-flex">
-                          <div>{{'it.workflow.status.'+ workflow.status | translate}}</div>
-                        </div>
+                    <a
+                      (click)="workflowModal.toggle()"
+                      [routerLink]="['/company-graph']"
+                      [queryParams]="{codiceIpa: codiceIpa, workflowId: workflow.workflowId, ruleName: 'amministrazione-trasparente'}"
+                      [itBadge]="workflow.badge"
+                      class="h6 align-top pull-right">
+                      <div class="d-flex">
+                        <div>{{'it.workflow.status.'+ workflow.status | translate}}</div>
+                      </div>
                     </a>
                     @if (isAbleToStartWorkflow && workflow.correlationId == codiceIpa) {
-                      <a 
-                          itButton="danger"
-                          (click)="removeWorkflow(workflow)" 
-                          class="h6 align-top pull-right">
-                          <div class="d-flex">
-                            <div>{{'delete' | translate}}</div>
-                          </div>
+                      <a
+                        itButton="danger"
+                        (click)="removeWorkflow(workflow)"
+                        class="h6 align-top pull-right">
+                        <div class="d-flex">
+                          <div>{{'delete' | translate}}</div>
+                        </div>
                       </a>
                     }
                     @if (workflow.isCompleted && isCSVVisible) {
                       <a href="" (click)="downloadCsv(workflow, codiceIpa)" class="align-top me-1 pull-right">
-                        <it-icon *ngIf="!workflow.isLoadingCsv" name="file-csv" class="bg-light" color="success"></it-icon>
-                        <it-spinner *ngIf="workflow.isLoadingCsv" small="true" double="true"></it-spinner>
+                        @if (!workflow.isLoadingCsv) {
+                          <it-icon name="file-csv" class="bg-light" color="success"></it-icon>
+                        }
+                        @if (workflow.isLoadingCsv) {
+                          <it-spinner small="true" double="true"></it-spinner>
+                        }
                       </a>
                     }
-                  } 
+                  }
                   @if (workflow.isRunning){
-                    <a 
-                        (click)="refresh(workflow)"
-                        itButton="primary"
-                        size="sm" 
-                        class="h6 align-top pull-right p-2">
-                        <div class="d-flex">
+                    <a
+                      (click)="refresh(workflow)"
+                      itButton="primary"
+                      size="sm"
+                      class="h6 align-top pull-right p-2">
+                      <div class="d-flex">
                         <div>{{'it.workflow.status.'+ workflow.status | translate}}</div>
-                        </div>
+                      </div>
                     </a>
                     @if (isRefreshing) {
                       <a href="" class="align-top me-1 pull-right">
@@ -93,7 +97,7 @@ import saveAs from 'file-saver';
                     }
                   }
                 </div>
-              </div> 
+              </div>
             </it-list-item>
           }
         </it-list>
@@ -104,17 +108,18 @@ import saveAs from 'file-saver';
               [dark]="false">
               <span button translate>it.workflow.new</span>
               <span listHeading translate>it.rule.name</span>
-
+    
               <ng-container list>
                 <it-dropdown-item divider="true"></it-dropdown-item>
-
-                <it-dropdown-item
-                  *ngFor="let item of optionsRule"
-                  (click)="startMainWorkflow(item.value)"
-                  externalLink="true"
-                  [large]="true">
-                  {{ item.text }}
-                </it-dropdown-item>
+    
+                @for (item of optionsRule; track item) {
+                  <it-dropdown-item
+                    (click)="startMainWorkflow(item.value)"
+                    externalLink="true"
+                    [large]="true">
+                    {{ item.text }}
+                  </it-dropdown-item>
+                }
               </ng-container>
             </it-dropdown>
           </ng-container>
