@@ -29,8 +29,8 @@ Integra e mostra i dati presenti nei vari servizi fornendo la possibilità, aven
 | [Amcharts5](https://www.amcharts.com/)                            | 5.12.1   |
 | [Leaflet](https://leafletjs.com/)                                 | 1.9.4    |
 | [d3-org-chart](https://github.com/bumbeishvili/org-chart)         | 3.1.1    |
-| [bootstrap-italia](https://italia.github.io/bootstrap-italia/)    | 2.14.0   |
-| [Design Angular Kit](https://italia.github.io/design-angular-kit) | 1.3.0    |
+| [bootstrap-italia](https://italia.github.io/bootstrap-italia/)    | 2.16.0   |
+| [Design Angular Kit](https://italia.github.io/design-angular-kit) | 2.0.0    |
 
 ## Variabili di Ambiente
 
