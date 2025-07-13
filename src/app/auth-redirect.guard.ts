@@ -17,6 +17,6 @@ export class AuthRedirectGuard implements CanActivate {
             }
         });
     }
-    return false; // impedisce accesso alla route "/"
+    return true; // impedisce accesso alla route "/"
   }
 }

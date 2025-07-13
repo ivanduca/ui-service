@@ -314,6 +314,14 @@ export class CompanyMapComponent implements OnInit {
           }
         },
         error: (err)=>{
+          if (err?.httpErrorResponse?.status === 401) {
+            if (environment.oidc.enable) {
+              sessionStorage.setItem('redirect', this.router.url);
+              this.router.navigateByUrl('/auth/signin', { state: { redirect: this.router.url } });
+            } else {
+              this.router.navigate(['error/unauthorized']);
+            }
+          }
           if (this.optionsRule.filter((value: any) => {
             if (value.value == this.ruleName) {
               return value;
