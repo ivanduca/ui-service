@@ -37,7 +37,7 @@
     "@nstudio/nativescript-floatingactionbutton": "^2.1.0",
     "@rxweb/reactive-form-validators": "^2.1.8",
     "@sbzen/ng-cron": "^18.0.0",
-    "angular-auth-oidc-client": "^19.0.1",
+    "angular-auth-oidc-client": "^19.0.2",
     "bootstrap-italia": "^2.16.0",
     "core-js": "^2.6.12",
     "cron-parser": "^4.9.0",

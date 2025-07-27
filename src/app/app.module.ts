@@ -1,5 +1,5 @@
 import {BrowserModule} from '@angular/platform-browser';
-import {ErrorHandler, NgModule} from '@angular/core';
+import {APP_INITIALIZER, ErrorHandler, NgModule} from '@angular/core';
 
 import {AppComponent} from './app.component';
 import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
@@ -19,11 +19,15 @@ import { LoadingInterceptor } from './auth/loading.interceptor';
 import { ConfigService } from './core/config.service';
 import { environment } from '../environments/environment';
 import { APP_BASE_HREF } from '@angular/common';
-import { AuthModule, LogLevel } from 'angular-auth-oidc-client';
+import { AuthModule, LogLevel, OidcSecurityService } from 'angular-auth-oidc-client';
 import { registerLocaleData } from '@angular/common';
 import { AppRoutingEndModule } from './app-routing-end.module';
 
 import localeIt from '@angular/common/locales/it';
+
+export function initializeAuth(oidcSecurityService: OidcSecurityService) {
+  return () => oidcSecurityService.checkAuth().toPromise();
+}
 
 @NgModule({ declarations: [
         AppComponent
@@ -61,6 +65,7 @@ import localeIt from '@angular/common/locales/it';
         AppRoutingEndModule
       ], 
       providers: [
+        { provide: APP_INITIALIZER, useFactory: initializeAuth, deps: [OidcSecurityService], multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true },
         { provide: APP_BASE_HREF, useValue: environment.baseHref },
