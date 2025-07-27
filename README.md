@@ -2,7 +2,7 @@
 
 [![license](https://img.shields.io/badge/License-AGPL%20v3-blue.svg?logo=gnu&style=for-the-badge)](../main/LICENSE)
 [![Docker Image](https://img.shields.io/badge/Docker-2CA5E0?style=for-the-badge&logo=docker&logoColor=white)](../../pkgs/container/ui-service)
-[![Build Status](https://github.com/cnr-anac/ui-service/actions/workflows/build.yml/badge.svg)](https://github.com/cnr-anac/ui-service/actions/workflows/build.yml)
+[![Build Status](https://github.com/cnr-anac/ui-service/actions/workflows/build.yml/badge.svg)](https://github.com/TrasparenzAI/ui-service/actions/workflows/build.yml)
 [![Angular](https://img.shields.io/badge/angular-%23DD0031.svg?style=for-the-badge&logo=angular&logoColor=white)](https://angular.dev/)
 [![Bootstrap](https://img.shields.io/badge/bootstrap-%238511FA.svg?style=for-the-badge&logo=bootstrap&logoColor=white)](https://getbootstrap.com/)
 
@@ -25,7 +25,7 @@ Integra e mostra i dati presenti nei vari servizi fornendo la possibilità, aven
 ## Dipendenze principali
 | Nome                                                              | Versione |
 |-------------------------------------------------------------------|----------|
-| [Angular](https://angular.dev/)                                   | 18.1.1   |
+| [Angular](https://angular.dev/)                                   | 20.0.4   |
 | [Amcharts5](https://www.amcharts.com/)                            | 5.12.1   |
 | [Leaflet](https://leafletjs.com/)                                 | 1.9.4    |
 | [d3-org-chart](https://github.com/bumbeishvili/org-chart)         | 3.1.1    |
@@ -34,23 +34,23 @@ Integra e mostra i dati presenti nei vari servizi fornendo la possibilità, aven
 
 ## Variabili di Ambiente
 
-| Nome                       | Valore di default                  | Descrizione                                                                                        |
-|----------------------------|------------------------------------|----------------------------------------------------------------------------------------------------|
-| BASE_HREF                  | /                                  | URL di base da usare per tutti i link relativi                                                     |
-| API_URL                    | https://dica33.ba.cnr.it           | URL di riferimento dei servizi                                                                     |
-| COMPANY_API_URL            | $API_URL/public-sites-service      | URL del servizio [public-sites-service](https://github.com/cnr-anac/public-sites-service)          |
-| CONDUCTOR_API_URL          | $API_URL/conductor-server          | URL del servizio [conductor-service](https://github.com/cnr-anac/conductor)                        |
-| RESULT_API_URL             | $API_URL/result-service            | URL del servizio [result-service](https://github.com/cnr-anac/result-service)                      |
-| RESULT_AGGREGATOR_API_URL  | $API_URL/result-aggregator-service | URL del servizio [result-aggregator-service](https://github.com/cnr-anac/result-aggregator-service)|
-| TASK_SCHEDULER_API_URL     | $API_URL/task-scheduler-service    | URL del servizio [task-scheduler-service](https://github.com/cnr-anac/task-scheduler-service)      |
-| RULE_API_URL               | $API_URL/rule-service              | URL del servizio [rule-service](https://github.com/cnr-anac/rule-service)                          |
-| CRAWLER_API_URL            | $API_URL/crawl                     | URL del servizio [crawler-service](https://github.com/cnr-anac/crawler-service)                    |
-| OIDC_ENABLE                | false                              | Parametro che indica se è attiva l'autenticazione tramite protocollo basato su OAuth 2.0           |
-| OIDC_FORCE                 | false                              | Parametro che indica se l'autenticazione viene forzata su tutte le pagine                          |
-| OIDC_AUTHORITY             |                                    | URL del servizio authority di norma è nella forma ```.../.well-known/openid-configuration```       |
-| OIDC_REDIRECTURL           | http://localhost/auth/signin       | URL necessiaria per il redirect dopo l'accesso                                                     |
-| OIDC_CLIENTID              | angular-public                     | Identificativo del client da usare, va impostato sul sistema di autenticazione                     |
-| OIDC_POSTLOGOUTREDIRECTURL |                                    | URL da utilizzare dopo aver effettuato il logout può essere anche vuoto                            |
+| Nome                       | Valore di default                  | Descrizione                                                                                            |
+|----------------------------|------------------------------------|--------------------------------------------------------------------------------------------------------|
+| BASE_HREF                  | /                                  | URL di base da usare per tutti i link relativi                                                         |
+| API_URL                    | https://dica33.ba.cnr.it           | URL di riferimento dei servizi                                                                         |
+| COMPANY_API_URL            | $API_URL/public-sites-service      | URL del servizio [public-sites-service](https://github.com/TrasparenzAI/public-sites-service)          |
+| CONDUCTOR_API_URL          | $API_URL/conductor-server          | URL del servizio [conductor-service](https://github.com/TrasparenzAI/conductor)                        |
+| RESULT_API_URL             | $API_URL/result-service            | URL del servizio [result-service](https://github.com/TrasparenzAI/result-service)                      |
+| RESULT_AGGREGATOR_API_URL  | $API_URL/result-aggregator-service | URL del servizio [result-aggregator-service](https://github.com/TrasparenzAI/result-aggregator-service)|
+| TASK_SCHEDULER_API_URL     | $API_URL/task-scheduler-service    | URL del servizio [task-scheduler-service](https://github.com/TrasparenzAI/task-scheduler-service)      |
+| RULE_API_URL               | $API_URL/rule-service              | URL del servizio [rule-service](https://github.com/TrasparenzAI/rule-service)                          |
+| CRAWLER_API_URL            | $API_URL/crawl                     | URL del servizio [crawler-service](https://github.com/TrasparenzAI/crawler-service)                    |
+| OIDC_ENABLE                | false                              | Parametro che indica se è attiva l'autenticazione tramite protocollo basato su OAuth 2.0               |
+| OIDC_FORCE                 | false                              | Parametro che indica se l'autenticazione viene forzata su tutte le pagine                              |
+| OIDC_AUTHORITY             |                                    | URL del servizio authority di norma è nella forma ```.../.well-known/openid-configuration```           |
+| OIDC_REDIRECTURL           | http://localhost/auth/signin       | URL necessiaria per il redirect dopo l'accesso                                                         |
+| OIDC_CLIENTID              | angular-public                     | Identificativo del client da usare, va impostato sul sistema di autenticazione                         |
+| OIDC_POSTLOGOUTREDIRECTURL |                                    | URL da utilizzare dopo aver effettuato il logout può essere anche vuoto                                |
 
 ## Autorizzazioni
 
@@ -153,7 +153,7 @@ Verrà aperta un finestra del browser predefinito alla URL http://localhost:4200
 - Installa Docker Linux: Segui la guida su https://docs.docker.com/engine/install/
 - Windows/Mac: Scarica Docker Desktop da https://www.docker.com/products/docker-desktop
 
-Il servizio è dotato di un [Dockerfile](Dockerfile) e tramite [GitHub Action](.github/workflows/build.yml) pubblica le immagini su [ghcr.io](https://github.com/cnr-anac/ui-service/pkgs/container/ui-service).
+Il servizio è dotato di un [Dockerfile](Dockerfile) e tramite [GitHub Action](.github/workflows/build.yml) pubblica le immagini su [ghcr.io](https://github.com/TrasparenzAI/ui-service/pkgs/container/ui-service).
 
 Per avviare il servizio tramite docker, impostando correttamente le [variabili d'ambiente](#variabili-di-ambiente), basta eseguire la seguente istruzione:  
 
