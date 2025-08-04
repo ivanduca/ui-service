@@ -31,6 +31,7 @@ export class RuleChart {
     public ruleStatus: {};
     public updatedAt: Date;
     public workflowChildId: string;
+    public score: number;
     public content: string;
     public dynamicColor: string;
 

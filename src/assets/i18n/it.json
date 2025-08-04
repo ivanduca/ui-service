@@ -144,7 +144,8 @@
       "html": "Pagina HTML",
       "errorMessage": "Errore",
       "errorNotFound": "Regola non trovata",
-      "download_image": "Scarica Immagine"
+      "download_image": "Scarica Immagine",
+      "score": "Score"
     },
     "map": {
       "preserve-zoom": "Conserva Zoom e Posizione",

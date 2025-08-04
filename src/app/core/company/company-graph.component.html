@@ -86,7 +86,9 @@
         <div #chartdiv [style]="chartDivStyle"></div>
         @if (company) {
           <div class="d-flex text-dark h6 justify-content-center px-2">
-            <span class="font-monospace">{{ 'it.rule.all' | translate: {rulesOK: rulesOK, all: data?.length, percent: rulesOK * 100/data?.length | number:'1.2-2' } }}</span>
+            @if (data?.length) {
+              <span class="font-monospace">{{ 'it.rule.all' | translate: {rulesOK: rulesOK, all: data?.length, percent: rulesOK * 100/data?.length | number:'1.2-2' } }}</span>
+            }
           </div>
         }
       </div>
@@ -150,6 +152,7 @@
             <app-show-list-text [label]="'it.rule.children'" [value]="currentNode?._children?.length"></app-show-list-text>
             @if(currentNode?.data?.status) {
               <app-show-list-text [label]="'it.rule.status-label'" [value]="'it.rule.status.' + currentNode?.data?.status + '.ruletitle'| translate"></app-show-list-text>
+              <app-show-list-text [label]="'it.result.score'" [value]="currentNode?.data?.score"></app-show-list-text>
               <app-show-list-text [label]="'it.result.content'" [value]="currentNode?.data?.content"></app-show-list-text>
             }
             <app-show-list-text [label]="'it.result.updatedAt'" [value]="currentNode?.data?.updatedAt| date: 'dd/MM/yyyy HH:mm:ss'"></app-show-list-text>

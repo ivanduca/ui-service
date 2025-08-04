@@ -339,6 +339,8 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
             ruleChart.color = result.color;
             ruleChart.childStatus = childStatus;
             ruleChart.updatedAt = result.updatedAt; 
+            ruleChart.score = result.score; 
+
             ruleChart.storageData = result.storageData;
             ruleChart.workflowChildId = result.workflowChildId;
             ruleChart.content = result.content;
@@ -705,8 +707,7 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
       const attrs = this.chart.getChartState();
       const root = attrs.generateRoot(attrs.data)
       const descendants = root.descendants();
-      this.currentNode = descendants.filter(({ data }) => attrs.nodeId(data) == node.nodeId)[0];
-  
+      this.currentNode = descendants.filter(({ data }) => attrs.nodeId(data) == node.nodeId)[0];  
     }
     return false;
   }

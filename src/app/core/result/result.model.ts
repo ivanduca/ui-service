@@ -47,6 +47,8 @@ export class Result implements Base {
     public workflowId: string;
     @JsonProperty('workflowChildId')
     public workflowChildId: string;
+    @JsonProperty('score')
+    public score: number;
 
     @JsonProperty('createdAt', ISODateTimeConverter)
     public createdAt: Date;
