@@ -19,15 +19,15 @@
     "@amcharts/amcharts5": "^5.12.1",
     "@amcharts/amcharts5-fonts": "^5.0.1",
     "@amcharts/amcharts5-geodata": "^5.1.4",
-    "@angular/animations": "^20.0.4",
+    "@angular/animations": "^20.1.4",
     "@angular/cdk": "^19.2.18",
-    "@angular/common": "^20.0.4",
-    "@angular/compiler": "^20.0.4",
-    "@angular/core": "^20.0.4",
-    "@angular/forms": "^20.0.4",
-    "@angular/platform-browser": "^20.0.4",
-    "@angular/platform-browser-dynamic": "^20.0.4",
-    "@angular/router": "^20.0.4",
+    "@angular/common": "^20.1.4",
+    "@angular/compiler": "^20.1.4",
+    "@angular/core": "^20.1.4",
+    "@angular/forms": "^20.1.4",
+    "@angular/platform-browser": "^20.1.4",
+    "@angular/platform-browser-dynamic": "^20.1.4",
+    "@angular/router": "^20.1.4",
     "@bluehalo/ngx-leaflet": "^18.0.2",
     "@bluehalo/ngx-leaflet-markercluster": "^18.0.1",
     "@fortawesome/fontawesome-free": "^6.7.2",
@@ -64,11 +64,11 @@
     "zone.js": "^0.15.1"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^20.0.3",
-    "@angular/cli": "^20.0.3",
-    "@angular/compiler-cli": "^20.0.4",
-    "@angular/language-service": "^20.0.4",
-    "@ngtools/webpack": "^20.0.3",
+    "@angular-devkit/build-angular": "^20.1.4",
+    "@angular/cli": "^20.1.4",
+    "@angular/compiler-cli": "^20.1.4",
+    "@angular/language-service": "^20.1.4",
+    "@ngtools/webpack": "^20.1.4",
     "@types/file-saver": "^2.0.7",
     "@types/html2canvas": "0.0.35",
     "@types/jasmine": "^3.10.18",
@@ -92,16 +92,16 @@
   "overrides": {
     "sass": "1.86.3",
     "@sbzen/ng-cron": {
-      "@angular/common": "^20.0.4",
-      "@angular/core": "^20.0.4"
+      "@angular/common": "^20.1.4",
+      "@angular/core": "^20.1.4"
     },
     "@bluehalo/ngx-leaflet": {
-      "@angular/common": "^20.0.4",
-      "@angular/core": "^20.0.4"
+      "@angular/common": "^20.1.4",
+      "@angular/core": "^20.1.4"
     },
     "@bluehalo/ngx-leaflet-markercluster": {
-      "@angular/common": "^20.0.4",
-      "@angular/core": "^20.0.4"
+      "@angular/common": "^20.1.4",
+      "@angular/core": "^20.1.4"
     }
   }
 }
