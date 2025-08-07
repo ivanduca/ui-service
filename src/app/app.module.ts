@@ -1,31 +1,33 @@
-import {BrowserModule} from '@angular/platform-browser';
-import {APP_INITIALIZER, ErrorHandler, NgModule} from '@angular/core';
+import { ErrorHandler, NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
 
-import {AppComponent} from './app.component';
 import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import {AuthInterceptor} from './auth/auth.interceptor';
+import { AppComponent } from './app.component';
+import { AuthInterceptor } from './auth/auth.interceptor';
 
-import {CoreModule} from './core/core.module';
+import { CoreModule } from './core/core.module';
 
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {AppRoutingModule} from './app-routing.module';
-import {GlobalErrorHandler} from './core/global-error-handler.service';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AppRoutingModule } from './app-routing.module';
+import { GlobalErrorHandler } from './core/global-error-handler.service';
 
 // import ngx-translate and the http loader
-import { TranslateCompiler, TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { APP_BASE_HREF, registerLocaleData } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { CustomTranslationCompiler } from './common/helpers/translation-compiler';
-import { LoadingInterceptor } from './auth/loading.interceptor';
-import { ConfigService } from './core/config.service';
+import { TranslateCompiler, TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { AuthModule, LogLevel } from 'angular-auth-oidc-client';
 import { environment } from '../environments/environment';
-import { APP_BASE_HREF } from '@angular/common';
-import { AuthModule, LogLevel, OidcSecurityService } from 'angular-auth-oidc-client';
-import { registerLocaleData } from '@angular/common';
 import { AppRoutingEndModule } from './app-routing-end.module';
+import { LoadingInterceptor } from './auth/loading.interceptor';
+import { CustomTranslationCompiler } from './common/helpers/translation-compiler';
+import { ConfigService } from './core/config.service';
 
 import localeIt from '@angular/common/locales/it';
 
-export function initializeAuth(oidcSecurityService: OidcSecurityService) {
+import { APP_INITIALIZER } from '@angular/core';
+import { OidcSecurityService } from 'angular-auth-oidc-client';
+
+export function appInitializerFactory(oidcSecurityService: OidcSecurityService) {
   return () => oidcSecurityService.checkAuth().toPromise();
 }
 
@@ -65,11 +67,16 @@ export function initializeAuth(oidcSecurityService: OidcSecurityService) {
         AppRoutingEndModule
       ], 
       providers: [
-        { provide: APP_INITIALIZER, useFactory: initializeAuth, deps: [OidcSecurityService], multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true },
         { provide: APP_BASE_HREF, useValue: environment.baseHref },
         { provide: ErrorHandler, useClass: GlobalErrorHandler },
+        {
+          provide: APP_INITIALIZER,
+          useFactory: appInitializerFactory,
+          deps: [OidcSecurityService],
+          multi: true
+        },
         provideHttpClient(withInterceptorsFromDi())
       ] 
     })
