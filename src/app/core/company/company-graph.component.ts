@@ -1,35 +1,35 @@
-import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, ViewChild, ElementRef, OnChanges, HostListener, ViewEncapsulation } from '@angular/core';
+import { DatePipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, ElementRef, HostListener, OnChanges, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, NgForm } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
+import { LoginResponse, OidcSecurityService } from 'angular-auth-oidc-client';
 import { OrgChart } from "d3-org-chart";
-import { RuleService } from '../rule/rule.service';
-import { Rule, RuleChart, Term } from '../rule/rule.model';
-import { Helpers } from '../../common/helpers/helpers';
+import { ItModalComponent, ItTabContainerComponent, ItTabItemComponent, NotificationPosition, SelectControlOption } from 'design-angular-kit';
 import { jsPDF } from "jspdf";
+import { Observable, map, of as observableOf } from 'rxjs';
+import { environment } from '../../../environments/environment';
+import { AuthGuard } from '../../auth/auth-guard';
+import { RoleEnum } from '../../auth/role.enum';
+import { Helpers } from '../../common/helpers/helpers';
+import { CodiceCategoria } from '../../common/model/codice-categoria.enum';
+import { ApiMessageService, MessageType } from '../api-message.service';
 import { ConductorService } from '../conductor/conductor.service';
 import { Workflow } from '../conductor/workflow.model';
-import { ResultService } from '../result/result.service';
-import { Result } from '../result/result.model';
-import { Company } from './company.model';
-import { CompanyService } from './company.service';
-import { ItModalComponent, ItTabContainerComponent, ItTabItemComponent, NotificationPosition, SelectControlOption } from 'design-angular-kit';
-import { ApiMessageService, MessageType } from '../api-message.service';
-import { of as observableOf, Observable, map } from 'rxjs';
-import { FormBuilder, FormControl, FormGroup, NgForm } from '@angular/forms';
-import { DatePipe } from '@angular/common';
-import { RoleEnum } from '../../auth/role.enum';
-import { AuthGuard } from '../../auth/auth-guard';
 import { Configuration } from '../configuration/configuration.model';
 import { ConfigurationService } from '../configuration/configuration.service';
-import { CodiceCategoria } from '../../common/model/codice-categoria.enum';
-import { environment } from '../../../environments/environment';
-import { LoginResponse, OidcSecurityService } from 'angular-auth-oidc-client';
+import { Result } from '../result/result.model';
+import { ResultService } from '../result/result.service';
+import { Rule, RuleChart, Term } from '../rule/rule.model';
+import { RuleService } from '../rule/rule.service';
+import { Company } from './company.model';
+import { CompanyService } from './company.service';
 
-import * as _ from "lodash";
 import * as am5 from '@amcharts/amcharts5';
-import * as am5xy from "@amcharts/amcharts5/xy";
 import * as am5radar from "@amcharts/amcharts5/radar";
 import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
+import * as am5xy from "@amcharts/amcharts5/xy";
+import * as _ from "lodash";
 
 @Component({
     selector: 'company-graph',
@@ -180,6 +180,9 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
     });
     this.route.queryParams.subscribe((queryParams: Params) => {
       this.codiceIpa = queryParams.codiceIpa;
+      if (!this.codiceIpa && this.company) {
+        this.codiceIpa = this.company.codiceIpa;
+      }
       this.fromMap = queryParams.fromMap;
       this.zoom = queryParams.zoom;
       this.paramsWorkflowId = queryParams.workflowId;
@@ -297,13 +300,16 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
   }
 
   manageChart(workflowId: string) {
-    let ruleName = this.workflowRuleName(workflowId); 
+
+
+   let ruleName = this.workflowRuleName(workflowId); 
     this.resultService.getAll({
       workflowId: workflowId,
       codiceIpa: this.codiceIpa,
       size: 500,
       noCache: true
-    }, `/codiceipa`).subscribe((results: Result[]) => {
+    }, "/codiceipa").subscribe((results: Result[]) => {
+      console.log("results:"+results.length);
       if (results.length === 0) {
         this.apiMessageService.sendMessage(MessageType.WARNING, `Risultati non presenti per la PA: ${this.company.denominazioneEnte}!`);
       }
@@ -339,8 +345,6 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
             ruleChart.color = result.color;
             ruleChart.childStatus = childStatus;
             ruleChart.updatedAt = result.updatedAt; 
-            ruleChart.score = result.score; 
-
             ruleChart.storageData = result.storageData;
             ruleChart.workflowChildId = result.workflowChildId;
             ruleChart.content = result.content;
@@ -370,7 +374,9 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
         this.updateChart();
       });  
     });
+  
   }
+
 
   public getDynamicColor(key) {
     return this.statusColor[`status_${key}`] + `!important`; 
@@ -641,7 +647,7 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
                     'font-size','margin-top','margin-bottom','padding','border-bottom'] 
       }
     );
-    let filename = this.codiceIpa || Rule.AMMINISTRAZIONE_TRASPARENTE;
+    let filename = this.company.codiceIpa || Rule.AMMINISTRAZIONE_TRASPARENTE;
     this.chart.exportImg({
       save: false,
       scale: 10,
@@ -707,7 +713,8 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
       const attrs = this.chart.getChartState();
       const root = attrs.generateRoot(attrs.data)
       const descendants = root.descendants();
-      this.currentNode = descendants.filter(({ data }) => attrs.nodeId(data) == node.nodeId)[0];  
+      this.currentNode = descendants.filter(({ data }) => attrs.nodeId(data) == node.nodeId)[0];
+  
     }
     return false;
   }
@@ -715,7 +722,7 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
   showErrorMessage(ruleName: string) {
     this.resultService.getAll({
       workflowId: this.filterFormSearch.value.workflowId,
-      codiceIpa: this.codiceIpa,
+      codiceIpa: this.company.codiceIpa,
       ruleName: `${ruleName}/child`, 
       size: 1,
       noCache: true
