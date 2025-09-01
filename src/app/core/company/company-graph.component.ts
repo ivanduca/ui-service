@@ -345,6 +345,7 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
             ruleChart.color = result.color;
             ruleChart.childStatus = childStatus;
             ruleChart.updatedAt = result.updatedAt; 
+            ruleChart.score = result.score;
             ruleChart.storageData = result.storageData;
             ruleChart.workflowChildId = result.workflowChildId;
             ruleChart.content = result.content;

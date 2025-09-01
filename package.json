@@ -34,7 +34,6 @@
     "@ng-select/ng-select": "^20.0.1",
     "@ngx-translate/core": "^16.0.4",
     "@ngx-translate/http-loader": "^16.0.1",
-    "@nstudio/nativescript-floatingactionbutton": "^2.1.0",
     "@rxweb/reactive-form-validators": "^2.1.8",
     "@sbzen/ng-cron": "^18.0.0",
     "angular-auth-oidc-client": "^19.0.2",

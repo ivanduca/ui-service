@@ -146,8 +146,5 @@
         "base-url": "src/"
       }
     ]
-  },
-  "extends": [
-    "@nativescript/tslint-rules"
-  ]
+  }
 }

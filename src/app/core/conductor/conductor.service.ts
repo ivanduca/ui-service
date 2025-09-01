@@ -130,7 +130,7 @@ export class ConductorService extends CommonService<Workflow> {
     return this.getGateway()
       .pipe(
         switchMap((gateway) => {
-          return this.httpClient.post(`${gateway}${this.getApiService()}/api/workflow/${workflowId}/retry?resumeSubworkflowTasks=false`, {responseType: 'json'})
+          return this.httpClient.post(`${gateway}${this.getApiService()}/api/workflow/${workflowId}/retry?resumeSubworkflowTasks=true`, {responseType: 'json'})
             .pipe(
               map((result: string) => {
                 return result;
