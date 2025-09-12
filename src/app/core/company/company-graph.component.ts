@@ -544,7 +544,7 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
 
   ngAfterViewInit() {
     if (!this.chart) {
-      this.chart = new OrgChart().initialZoom(0.7); // Zoom ridotto per iPad;
+      this.chart = new OrgChart(); // Zoom ridotto per iPad;
     }
     this.updateChart();
     setTimeout(() => {
@@ -596,7 +596,7 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
             ultraLarge = isTermUltraLarge? `pt-0 px-1` : ``; 
           return `
           <div class="card-wrapper card-space hmin-100">
-            <div class="card card-bg shadow-lg border border-5 ${border}" style="border-color: ${d.data.dynamicColor}">
+            <div class="card card-bg border border-5 ${border}" style="border-color: ${d.data.dynamicColor}">
               <div class="card-body pb-0 ${ultraLarge}">
                 <span class="text-break d-flex ${classBox}">${d.data.term}</span>
                 ${
