@@ -46,9 +46,9 @@ export class SearchComponent implements OnInit {
               private datepipe: DatePipe,
               protected router: Router) {
     this.translateService.get('it').subscribe((labels: any) => {
-      this.options.push({ value: 'company.codiceIpa', text: labels.company.codiceIpa });
-      this.options.push({ value: 'company.denominazioneEnte', text: labels.company.denominazioneEnte });
-      this.options.push({ value: 'createdAt,desc', text: labels.order.createdAt.desc });
+      this.options.push({ value: 'company.codiceIpa', text: labels?.company?.codiceIpa });
+      this.options.push({ value: 'company.denominazioneEnte', text: labels?.company?.denominazioneEnte });
+      this.options.push({ value: 'createdAt,desc', text: labels?.order?.createdAt?.desc });
       this.optionsStatus.push({value: '', text: '*', disabled: false});
       this.optionsWorkflow.push({value: '', text: '*', selected: false});
       this.optionsCategoria.push({ value: '', text: '*', selected: true});
