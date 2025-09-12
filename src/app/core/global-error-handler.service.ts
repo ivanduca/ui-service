@@ -2,11 +2,13 @@ import { ErrorHandler, Injectable} from '@angular/core';
 import { Router } from '@angular/router';
 import { SpringError } from '../common/model/spring-error.model';
 import { environment } from '../../environments/environment';
+import { ApiMessageService, MessageType } from './api-message.service';
 
 @Injectable()
 export class GlobalErrorHandler implements ErrorHandler {
 
   constructor(
+    protected apiMessageService: ApiMessageService,
     private router: Router
   ) { }
 
@@ -20,6 +22,7 @@ export class GlobalErrorHandler implements ErrorHandler {
           this.router.navigate(['error/unauthorized']);
         }
       } else {
+        this.apiMessageService.sendMessage(MessageType.ERROR,  error.stack);
         this.router.navigate(['error/server-error']);
       }
     }

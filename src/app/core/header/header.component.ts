@@ -148,7 +148,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     if (messageType === MessageType.SUCCESS) {
       this.notificationService.info('Informazione', message, true, 5000, position);
     } else if (messageType === MessageType.ERROR) {
-      this.notificationService.error('Errore!', message, true , 5000, position);
+      this.notificationService.error('Errore!', message, true , 50000, position);
     } else if (messageType === MessageType.WARNING) {
       this.notificationService.warning('Avvertimento!', message, true, 5000, position);
     }
