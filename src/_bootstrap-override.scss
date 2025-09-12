@@ -63,28 +63,3 @@ a.navbar-brand {
     overflow: hidden;
     text-overflow: ellipsis;
 }
-
-
-/* Disabilita il bounce scroll solo per il container dello scroll infinito */
-.infinite-scroll-container {
-  -webkit-overflow-scrolling: touch;
-  overflow-scrolling: touch;
-  -webkit-transform: translate3d(0, 0, 0);
-  transform: translate3d(0, 0, 0);
-}
-
-/* Per disabilitare completamente il bounce su iOS */
-body {
-  position: fixed;
-  overflow: hidden;
-}
-
-.scroll-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-}
