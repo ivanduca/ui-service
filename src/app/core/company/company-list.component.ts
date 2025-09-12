@@ -29,7 +29,8 @@ import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
         <div class="row row-eq-height w-100"
           infiniteScroll
           [infiniteScrollThrottle]="300"
-          [infiniteScrollDistance]="1"
+          [infiniteScrollDistance]="2"
+          [scrollWindow]="false"
           (scrolled)="onScroll()">
           @for (item of items; track item) {
             <div class="col-sm-12 px-md-2 pb-2" @scale [ngClass]="classForDisplayCard()">
