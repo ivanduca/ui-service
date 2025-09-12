@@ -22,7 +22,7 @@ export class GlobalErrorHandler implements ErrorHandler {
           this.router.navigate(['error/unauthorized']);
         }
       } else {
-        this.apiMessageService.sendMessage(MessageType.ERROR,  error.stack);
+        this.apiMessageService.sendMessage(MessageType.ERROR,  error.message);
         this.router.navigate(['error/server-error']);
       }
     }
