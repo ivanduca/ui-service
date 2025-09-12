@@ -1,11 +1,498 @@
 {
-    "it": {
-        "home" : {
-          "title": "Platform for the analysis and consultation of the administrative transparency of Public Administrations"
-        }        
+  "it": {
+    "errors": {
+      "url-invalid": "Invalid URL!",
+      "required-field": "Required field!",
+      "min-invalid": "Value must be greater than minimum number {{min}}",
+      "max-invalid": "Value must be less than maximum number {{max}}"
     },
-    "header": {
-      "title": "TrasparenzAI",
-      "subtitle": "Platform for the analysis and consultation of the administrative transparency of Public Administrations"
-    }      
+    "order": {
+      "title": "Sorting",
+      "createdAt": {
+        "desc": "Creation descending"
+      }
+    },
+    "home": {
+      "title": "Platform for analysis and consultation of administrative transparency of Public Administrations",
+      "subtitle1": "The objective is to design, develop, experiment and evaluate innovative digital technologies for the recovery, classification and interpretation, in automated mode, of information that may flow into the Unified Transparency Platform, as well as the accessory and complementary services related to it.",
+      "subtitle2": "Develop technological solutions aimed at distributed data collection and valorization of documentary heritage; technology transfer; as well as all activities functional to pursuing the objectives of the CNR - ANAC Memorandum of Understanding.",
+      "header1": "Presence of the Transparent Administration section in Homepage",
+      "legend": "Legend"
+    },
+    "utils": {
+      "selected": "Selected",
+      "language-selection": "Language selection: {{lang}}",
+      "select-language": "Select a language",
+      "error-page": {
+        "404": {
+          "title": "Resource not found",
+          "description": "Oops! The resource you are looking for was not found, return to the homepage and use the menu to continue navigation."
+        },
+        "403": {
+          "title": "Unauthorized",
+          "description": "You are not authorized to access this resource!"
+        },
+        "500": {
+          "title": "An error occurred",
+          "description": "An unexpected error occurred. Please try again later or contact support."
+        },
+        "go-to-homepage": "Return to homepage"
+      }
+    },
+    "configuration": {
+      "color": "Color settings",
+      "cron": {
+        "title": "Expression for executing a new check",
+        "message": "The next check execution will occur on <b>{{nextDate}}</b> do you confirm the change of expression?",
+        "next-date": ", the next execution will occur on {{nextDate}}",
+        "next-next-date": ", the following one on {{nextDate}}",
+        "error": "Cannot select more than one time within the day!",
+        "workflow": "Check settings",
+        "workflow-url": "Platform URL",
+        "workflow-body": "Parameters",
+        "workflow-preserve-label": "Number of checks to preserve",
+        "workflow-preserve": "Number of checks to preserve: {{number_workflows_preserve}}",
+        "workflow-id": "Checks to preserve",
+        "body": {
+          "page_size": "Page size",
+          "execute_child": "Execute child rules",
+          "crawler_save_object": "Always save page",
+          "crawler_save_screenshot": "Always save screenshot",
+          "connection_timeout": "Initial connection timeout (ms)",
+          "read_timeout": "Initial response timeout (ms)",
+          "connection_timeout_max": "Maximum connection timeout (ms)",
+          "read_timeout_max": "Maximum response timeout (ms)",
+          "crawling_mode": "HTML page retrieval mode",
+          "crawler_child_type": "Child workflow execution mode",
+          "result_base_url": "Results service URL",
+          "crawler_uri": "Crawler service URL",
+          "rule_base_url": "Rules service URL",
+          "public_company_base_url": "PA registry URL",
+          "result_aggregator_base_url": "Aggregated data service URL"
+        }
+      },
+      "rule": {
+        "delete": {
+          "title": "Confirm deletion",
+          "text": "Are you sure you want to delete the rule <b>\"{{term}}\"</b>, and all its possible child rules?",
+          "error": "Cannot delete rule \"{{name}}\", as it is used in {{numero}} workflows!"
+        },
+        "edit": {
+          "title": "Edit rule {{id}}"
+        },
+        "new": {
+          "button": "New rule tree",
+          "title": "New child rule of {{id}}",
+          "copy-from": "Copy from",
+          "codice-categoria": "PA Category",
+          "key": "Key",
+          "keytype": "Key as PA category",
+          "error": "The rule you are trying to insert already exists!"
+        }
+      }
+    },
+    "navigation": {
+      "full-login": "Access reserved area",
+      "logout": "Logout",
+      "search": "Search...",
+      "project": "The Project",
+      "map": "Administration Map",
+      "rule": "Rules",
+      "sezioni": "Explore Sections",
+      "home": "Home",
+      "go-back": "Go back",
+      "upper-level": "Upper level",
+      "secondary-navigation": "Secondary navigation",
+      "login": "Login",
+      "website-search": "Search in site",
+      "navigation-path": "Navigation path",
+      "map-result": "Results Map",
+      "configuration": "Configuration",
+      "confirm": "Confirm",
+      "grafici-mappe": {
+        "title": "Charts and Maps",
+        "grafico-regola": "Chart by rule",
+        "mappa-regola": "Map by rule"
+      }
+    },
+    "search": {
+      "title": "Filter your search"
+    },
+    "company": {
+      "denominazioneEnte": "Entity Name",
+      "codiceIpa": "IPA Code",
+      "codiceFiscaleEnte": "Tax Code",
+      "codiceCategoria": "Category",
+      "codiceNatura": "Nature",
+      "acronimo": "Acronym",
+      "tipologia": "Type",
+      "sitoIstituzionale": "Institutional website",
+      "indirizzo": "Address",
+      "comune": "Municipality",
+      "provincia": "Province",
+      "regione": "Region",
+      "responsabile": "Responsible",
+      "map": "Map",
+      "search": "Search Administrations",
+      "history": "History"
+    },
+    "result": {
+      "destinationUrl": "Rule URL",
+      "updatedAt": "Updated at",
+      "content": "Content found",
+      "screenshot": "Screenshot",
+      "html": "HTML Page",
+      "errorMessage": "Error",
+      "errorNotFound": "Rule not found",
+      "download_image": "Download Image",
+      "score": "Score"
+    },
+    "map": {
+      "preserve-zoom": "Preserve Zoom and Position",
+      "cache": "Cached data"
+    },
+    "rule": {
+      "main": "Rule",
+      "title": "Rules",
+      "child": "Child rules not found",
+      "failed": "Failed",
+      "satisfy": "Rules Report",
+      "all": "Check rules {{rulesOK}} / {{all}} ({{percent}}%)",
+      "parent": {
+        "name": "Parent Rule Name"
+      },
+      "name": "Rule Name",
+      "status-label": "Status",
+      "term": "Search term",
+      "alternativeTerm": "Alternative terms",
+      "legend": {
+        "title": "PA WEBSITE ADDRESSES",
+        "subtitle": "Index of digital domiciles of Public Administration and Public Service Managers - Agency for Digital Italy"
+      },
+      "children": "Children",
+      "graph": {
+        "save": "Save",
+        "zoomout": "Zoom Out",
+        "zoomin": "Zoom In",
+        "rotate": "Rotate",
+        "fit": "Fit to Window",
+        "expand": "Expand all",
+        "collapse": "Collapse all",
+        "compact": "Compact",
+        "center": "Center",
+        "export": {
+          "title": "Export",
+          "all": "Entire Image",
+          "visible": "Only visible part",
+          "pdf": "As PDF"
+        }
+      },
+      "status": {
+        "all": "Analyzed PA",
+        "200": {
+          "title": "Compliant homepage",
+          "ruletitle": "Compliant",
+          "subtitle": "The site contains the 'Transparent Administration' section as required by Legislative Decree 33/2013"
+        },
+        "202": {
+          "title": "Compliant homepage with alternative text",
+          "ruletitle": "Compliant with alternative text",
+          "subtitle": "The 'Transparent Administration' section is reachable through a homepage link not complying with Legislative Decree 33/2013"
+        },
+        "400": {
+          "title": "Non-compliant homepage",
+          "ruletitle": "Non-compliant",
+          "subtitle": "The site does not contain the 'Transparent Administration' section as required by Legislative Decree 33/2013"
+        },
+        "407": {
+          "title": "PA site not reachable",
+          "ruletitle": "Not reachable",
+          "subtitle": "The site provided by the Administration is not reachable"
+        },
+        "404": {
+          "title": "Not Found",
+          "ruletitle": "Not Found"
+        },
+        "500": {
+          "title": "PA site not declared",
+          "ruletitle": "Not Present",
+          "subtitle": "The Administration has not provided the institutional website address"
+        },
+        "501": {
+          "ruletitle": "Page not found"
+        }
+      }
+    },
+    "workflow": {
+      "id": "Check",
+      "list": "Checks",
+      "modal-list": "Check history for: <strong>{{codiceIpa}}</strong>",
+      "new": "Execute immediate check",
+      "label": "Check of {{startTime}}",
+      "full_label": "Check of {{startTime}}, completed on {{endTime}} in {{executionTime}}",
+      "date": "Analysis of {{startTime}}",
+      "last-execution": "Check history Transparent Administration section PA sites",
+      "text": "Check of {{startTime}}, status {{status}}",
+      "textfull": "Check of {{startTime}}, completed in {{duration}}",
+      "restart": "Restart",
+      "resume": "Resume",
+      "retry": "Retry",
+      "remove": "Remove",
+      "pause": "Pause",
+      "terminate": "Terminate",
+      "message": {
+        "new": "Operation submitted successfully.",
+        "delete": "Are you sure you want to delete the check and all associated data?",
+        "restart": "Are you sure you want to restart the check?",
+        "pause": "Are you sure you want to pause the check?",
+        "terminate": "Are you sure you want to terminate the check?"
+      },
+      "rule": {
+        "total": "Total:",
+        "global_total": "Global total:"
+      },
+      "status": {
+        "RUNNING": "RUNNING",
+        "COMPLETED": "COMPLETED",
+        "FAILED": "FAILED",
+        "TERMINATED": "TERMINATED",
+        "PAUSED": "PAUSED"
+      }
+    },
+    "time": {
+      "seconds": {
+        "singular": "second",
+        "plural": "seconds"
+      },
+      "minutes": {
+        "singular": "minute",
+        "plural": "minutes"
+      },
+      "hours": {
+        "singular": "hour",
+        "plural": "hours"
+      },
+      "days": {
+        "singular": "day",
+        "plural": "days"
+      }
+    },
+    "download_as": "Download as"
+  },
+  "presents": "There are",
+  "utenti": "Users",
+  "utente": "User",
+  "utente.create": "New User",
+  "utente.edit": "Edit User",
+  "utente.show": "User:",
+  "utente.list": "Users",
+  "utente.create.info": "Creating a new ",
+  "utente.edit.info": "Edit user ",
+  "M": "Male",
+  "F": "Female",
+  "true": "Yes",
+  "false": "No",
+  "close": "Close",
+  "cancel": "Cancel",
+  "save": "Save",
+  "back": "Back",
+  "new": "New",
+  "delete": "Delete",
+  "upload": "Upload file....",
+  "edit": "Edit",
+  "remove": "Remove",
+  "add": "Add",
+  "show": "Show",
+  "attach": "Attachments",
+  "attach_to": "Attachments to {{value}}",
+  "more.actions": "More options..",
+  "properties": "Properties",
+  "required": "Required",
+  "UniqueValidator": "Must be unique",
+  "minlength": "Minimum length not reached",
+  "maxlength": "Maximum length exceeded",
+  "property": "Property",
+  "no_item": "No items present.",
+  "present": "Present",
+  "shown_from": "Shown from",
+  "shown_to": "to",
+  "occurrences": "occurrences",
+  "search": "Search...",
+  "previous": "Previous",
+  "next": "Next",
+  "name": "Name",
+  "title": "Title",
+  "description": "Description",
+  "menu": {
+    "admin": "Administrator",
+    "groups": "Groups",
+    "jsConsole": "Console"
+  },
+  "message": {
+    "no_item": "No data found",
+    "validation": {
+      "required": "This field is required",
+      "requiredTrue": "Value must be positive!",
+      "email": "Invalid E-Mail!",
+      "emailalredyexist": "E-Mail already exists!",
+      "compare": "Field value does not match!",
+      "hasNumber": "Must contain at least one number!",
+      "onlyNumber": "Can only contain numbers!",
+      "hasOnlyNumber": "Must contain only numbers!",
+      "hasCapitalCase": "Must contain at least one uppercase letter!",
+      "hasSmallCase": "Must contain at least one lowercase letter!",
+      "hasYear": "Invalid year!",
+      "minlength8": "Must be at least 8 characters long!",
+      "minlength5": "Must contain at least 5 characters",
+      "maxlength5": "Must contain no more than 5 characters",
+      "maxlength1800": "Must contain no more than 1800 characters",
+      "maxlengtharray2": "Must contain no more than 2 elements",
+      "codicefiscalealredyexist": "Tax code already exists!",
+      "codicefiscale": "Invalid tax code!",
+      "application": {
+        "section_not_confirmed": "Confirm previous sections first"
+      }
+    },
+    "form.invalid": "Correct errors to proceed.",
+    "confirm.registration": "To complete registration, an email will be sent to the following address: <a href=\"mailto:{{value}}\">{{value}}</a><br><b>Do you want to proceed?</b>",
+    "warning": {
+      "permessi.non.sufficienti": "Insufficient permissions, please log in."
+    },
+    "error": {
+      "sistema.non.disponibile": "The service is temporarily unavailable. Please try again in a few seconds.",
+      "permessi.non.sufficienti": "Insufficient permissions",
+      "contentalredyexist": "File <b>{{filename}}</b> already exists!",
+      "maxuploadfilesize": "File <b>{{readableFileSize}}</b> exceeds maximum allowed size <b>{{maxFileSize}}</b>",
+      "codice": {
+        "fiscale": {
+          "nullo": "Invalid tax code: null tax code!",
+          "lung.errata": "Invalid tax code: wrong code length!",
+          "cognome": "Invalid tax code: surname!",
+          "nome": "Invalid tax code: name!",
+          "anno": "Invalid tax code: year!",
+          "mese": "Invalid tax code: month!",
+          "giorno.sesso": "Invalid tax code: birth day or gender incorrect!",
+          "comune": "Invalid tax code: birth municipality code incorrect!",
+          "carattere": "Invalid tax code: wrong control character!"
+        }
+      }
+    },
+    "document": {
+      "upload": {
+        "success": "Document {{value}} has been successfully uploaded."
+      },
+      "delete": {
+        "confirm": "Are you sure you want to delete document {{value}}?",
+        "success": "Document has been successfully deleted."
+      },
+      "download": {
+        "success": "Document {{value}} has been successfully downloaded."
+      }
+    }
+  },
+  "placeholder": {
+    "select": {
+      "country": "Select country...",
+      "place": "Select municipality...",
+      "generic": "Select..."
+    }
+  },
+  "button": {
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "ok": "Ok"
+  },
+  "modal": {
+    "title": {
+      "confirm": "Warning",
+      "info": "Information"
+    }
+  },
+  "header": {
+    "company": {
+      "title": "Memorandum of understanding between the National Anti-Corruption Authority and the National Research Council - August 7, 2023",
+      "acronym": "Anac - Cnr Memorandum of understanding",
+      "url": "https://www.anticorruzione.it/-/protocollo-d-intesa-tra-l-autorit%C3%A0-nazionale-anticorruzione-e-il-consiglio-nazionale-delle-ricerche-7-agosto-2023"
+    },
+    "company2": {
+      "title": "National Anti-Corruption Authority",
+      "acronym": "ANAC",
+      "url": "https://www.anticorruzione.it"
+    },
+    "title": "TrasparenzAI",
+    "subtitle": "Platform for analysis and consultation of administrative transparency of Public Administrations"
+  },
+  "footer": {
+    "first": "Project for the experimentation of innovative digital technologies for automatic analysis of the Transparent Administration section of Public Administration websites and legal entities that fall within the scope of Legislative Decree no. 33/2013.",
+    "second": "The architecture of the implemented platform is composed of many integrated components, this repository contains documentation of the general architecture, individual components and validation results obtained.",
+    "copyright": {
+      "large": "copyright ©2016-2020 National Research Council",
+      "slim": "copyright ©2016-2020 CNR"
+    }
+  },
+  "signin": {
+    "title": "Access personal area",
+    "sso": "Login with SSO SPID/CIE",
+    "unauthorized": "Wrong username and/or password, use the username assigned during registration and not the email address.",
+    "altri": "To register use the link",
+    "new_registration": "New registration",
+    "manuale": "For more information consult the \"Access / registration in procedure\" chapter of the User Manual.",
+    "helpdesk": "For assistance use the service",
+    "username": "Username",
+    "password": "Password",
+    "showpassword": "Show password",
+    "message": {
+      "required": {
+        "username": "Username required!",
+        "password": "Password required!"
+      }
+    }
+  },
+  "user": {
+    "username": "Username",
+    "username_value": "Username: {{value}}",
+    "firstname": "First Name",
+    "lastname": "Last Name",
+    "email": "Regular E-Mail",
+    "confirmemail": "Confirm E-Mail",
+    "emailesterno": "External E-Mail",
+    "codicefiscale": "Tax Code",
+    "matricola": "Registration Number",
+    "matricola_value": "Registration Number: {{value}}",
+    "password": "Password",
+    "newpassword": "New Password",
+    "oldpassword": "Old Password",
+    "confirmpassword": "Confirm Password",
+    "email_value": "E-Mail: {{value}}",
+    "mobile": "Phone",
+    "groups": "Groups",
+    "settings": "Settings",
+    "logout": "Logout",
+    "change.password.title": "Change Password",
+    "cittadinanza": {
+      "label": "Citizenship",
+      "italy": "Italian",
+      "foreign": "Foreign"
+    },
+    "new_registration": {
+      "title": "New Registration",
+      "button": "Confirm registration",
+      "requisiti": "<p>New registration requires, for Italian users, name, surname, username and password, tax code and an email address (exclusively NOT PEC); for foreign users, instead of the tax code, it is required to enter gender, date of birth and foreign state.</p><p>An automatic email with a link to \"click\" <u>within one hour of receipt</u> will be sent to the email address indicated during registration to complete user activation. After one hour from receipt, the user account is deleted, therefore the registration procedure must be repeated from scratch.</p><p>By clicking on the User Activation link contained in the email, registration is completed and the procedure access page is presented.<br>After accessing the procedure, a new menu with your name is activated through which it is possible to view and/or modify your personal settings and it is possible to disconnect from the application.</p>"
+    },
+    "modify_registration.button": "Modify registration",
+    "profile.title": "Personal Information",
+    "sex": "Gender",
+    "male": "Male",
+    "female": "Female",
+    "dataDiNascita": "Date of Birth",
+    "statoestero": "Foreign State",
+    "information": {
+      "title": "Account information",
+      "detail": "Personal information can be changed at any time, if the user account does not come from a SPID account or from the CNR centralized user system. Changes to information are not reflected on applications already sent or in provisional status, in which case a change in personal data must be promptly communicated by opening a report",
+      "change.password": {
+        "title": "If you want to change your password, just activate the following link: ",
+        "link": "Change password"
+      }
+    }
+  }
 }
