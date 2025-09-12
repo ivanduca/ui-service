@@ -23,6 +23,7 @@ export class GlobalErrorHandler implements ErrorHandler {
         }
       } else {
         this.apiMessageService.sendMessage(MessageType.ERROR,  error.message);
+        alert(error.stack);
         this.router.navigate(['error/server-error']);
       }
     }

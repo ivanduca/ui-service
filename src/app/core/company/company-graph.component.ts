@@ -546,7 +546,7 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
 
   ngAfterViewInit() {
     if (!this.chart) {
-      this.chart = new OrgChart();
+      this.chart = new OrgChart(); // Zoom ridotto per iPad;
     }
     this.updateChart();
     setTimeout(() => {
