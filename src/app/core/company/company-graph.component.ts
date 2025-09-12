@@ -300,8 +300,6 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
   }
 
   manageChart(workflowId: string) {
-
-
    let ruleName = this.workflowRuleName(workflowId); 
     this.resultService.getAll({
       workflowId: workflowId,
@@ -546,7 +544,7 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
 
   ngAfterViewInit() {
     if (!this.chart) {
-      this.chart = new OrgChart(); // Zoom ridotto per iPad;
+      this.chart = new OrgChart().initialZoom(0.7); // Zoom ridotto per iPad;
     }
     this.updateChart();
     setTimeout(() => {
