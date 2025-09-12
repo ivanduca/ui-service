@@ -17,7 +17,7 @@ export class SpringError {
     public redirectOnError: boolean = true
   ) {
 
-    let message = this.httpErrorResponse?.error?.error;
+    let message = this.httpErrorResponse?.message || this.httpErrorResponse?.error?.error;
     if (httpErrorResponse.error?.message) {
       message = httpErrorResponse.error.message;
     }

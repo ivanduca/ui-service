@@ -23,7 +23,7 @@ import saveAs from 'file-saver';
         </div>
       }
       <div class="category-top">
-        <div class="d-flex justify-content-end flex-column flex-md-row">
+        <div class="d-flex justify-content-end flex-column flex-xl-row">
           @if (title) {
             <div class="d-flex">
               <a class="category" [routerLink]="['/search']" [queryParams]="{workflowId: workflow.workflowId, ruleName: 'amministrazione-trasparente'}">{{'it.workflow.label' | translate: { startTime: workflow.startTime | date:'dd/MM/yyyy'} }}</a>

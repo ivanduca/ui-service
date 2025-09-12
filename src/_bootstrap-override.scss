@@ -58,3 +58,8 @@ ng-select.break-spaces .ng-option {
     width: 36px;
     height: 36px;
 }
+
+a.navbar-brand {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

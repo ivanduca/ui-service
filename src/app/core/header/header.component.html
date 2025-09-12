@@ -64,7 +64,7 @@
   </ng-container>
   <div class="d-flex" rightZone>
     <div class="it-search-wrapper">
-      <span class="d-none d-md-block h6">{{ 'it.company.search' | translate }}</span>
+      <span class="d-none d-xl-block h6">{{ 'it.company.search' | translate }}</span>
       <a
         class="search-link rounded-icon"
         [attr.aria-label]="'it.company.search' | translate"
@@ -76,13 +76,13 @@
   <ng-container navItems>
     <it-navbar-item>
       <a class="nav-link close-menu"  (click)="toggleCollapse()" [routerLinkActive]="['active']" routerLink="/company-map">
-        <it-icon size="sm" [color]="iconColor" name="map-marker-circle"></it-icon>
+        <it-icon size="sm" class="d-none d-xl-block" [color]="iconColor" name="map-marker-circle"></it-icon>
         <span translate>it.navigation.map</span>
       </a>
     </it-navbar-item>
     <it-navbar-item>
       <a class="nav-link close-menu"  (click)="toggleCollapse()" [routerLinkActive]="['active']" routerLink="/company-graph">
-        <it-icon size="sm" [color]="iconColor" name="settings"></it-icon>
+        <it-icon size="sm" class="d-none d-xl-block" [color]="iconColor" name="settings"></it-icon>
         <span class="ps-1" translate>it.navigation.rule</span>
       </a>
     </it-navbar-item>
