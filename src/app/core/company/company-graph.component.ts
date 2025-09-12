@@ -66,6 +66,10 @@ import * as _ from "lodash";
       margin-right: 0 !important;
       margin-left: 0 !important;
     }
+    
+    .card {
+      position: unset !important;
+    }
   `,
     standalone: false
 })
@@ -592,11 +596,11 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
           let isTermLarge = d?.data?.term?.length > 60,
             isTermUltraLarge = d?.data?.term?.length > 200,
             classBox = !isTermLarge ? `h6`: `fw-bolder`,
-            border = d.data.dynamicColor? ``: `border-primary`,
+            border = d?.data?.dynamicColor || `border-primary`,
             ultraLarge = isTermUltraLarge? `pt-0 px-1` : ``; 
           return `
-          <div class="hmin-100">
-            <div class="card card-bg shadow-lg border border-5 ${border}" style="border-color: ${d.data.dynamicColor}">
+          <div class="card-wrapper card-space hmin-100">
+            <div class="card card-bg shadow-lg border border-5 ${border}" style="border-color: ${border}">
               <div class="card-body pb-0 ${ultraLarge}">
                 <span class="text-break d-flex ${classBox}">${d.data.term}</span>
                 ${
