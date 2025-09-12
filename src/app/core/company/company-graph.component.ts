@@ -596,8 +596,8 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
             ultraLarge = isTermUltraLarge? `pt-0 px-1` : ``; 
           return `
           <div class="hmin-100">
-            <div class="border border-5 ${border}" style="border-color: ${d.data.dynamicColor}">
-              <div class="pb-0 ${ultraLarge}">
+            <div class="card card-bg shadow-lg border border-5 ${border}" style="border-color: ${d.data.dynamicColor}">
+              <div class="card-body pb-0 ${ultraLarge}">
                 <span class="text-break d-flex ${classBox}">${d.data.term}</span>
                 ${
                   d.data.status
