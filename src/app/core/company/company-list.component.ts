@@ -26,7 +26,12 @@ import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
       (onChangePage)="onChangePage($event)"
       [page_offset]="pageOffset">
       @if (items) {
-        <div class="row row-eq-height w-100">
+        <div class="row row-eq-height w-100"
+          infiniteScroll
+          [infiniteScrollThrottle]="300"
+          [infiniteScrollDistance]="2"
+          [scrollWindow]="false"
+          (scrolled)="onScroll()">
           @for (item of items; track item) {
             <div class="col-sm-12 px-md-2 pb-2" @scale [ngClass]="classForDisplayCard()">
               <app-list-item-company [item]="item" [filterForm]="filterForm" (onDelete)="onDelete(item.getId())">
