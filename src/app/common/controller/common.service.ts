@@ -144,12 +144,12 @@ export abstract class CommonService<T extends Base> {
    * @param {number} page
    * @returns {Observable<Page<T extends Base>>}
    */
-  public getPageable(page: number, filter: {}): Observable<Page<T>> {
+  public getPageable(page: number, filter: any): Observable<Page<T>> {
 
     let params = new HttpParams()
       .set('page', page + '')
-      .set('size', filter['size'] || this.getPageOffset())
-      .set('sort', filter['sort'] || 'id')
+      .set('size', filter?.size || this.getPageOffset())
+      .set('sort', filter?.sort || 'id')
     params = this.appendToImmutableHttpParams(filter, params);
 
     return this.getApiBase()
