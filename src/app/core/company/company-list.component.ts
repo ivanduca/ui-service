@@ -35,10 +35,6 @@ import { InfiniteScrollDirective } from 'ngx-infinite-scroll';
             <div class="col-sm-12 px-md-2 pb-2" @scale [ngClass]="classForDisplayCard()">
               <app-list-item-company [item]="item" [filterForm]="filterForm" (onDelete)="onDelete(item.getId())">
                 <div class="col-sm-12">
-                  <app-show-text [label]="'it.company.codiceIpa'" [value]="item.codiceIpa"></app-show-text>
-                  <app-show-text class="pull-right" [label]="'it.company.acronimo'" [value]="item.acronimo"></app-show-text>
-                </div>
-                <div class="col-sm-12">
                   <app-show-text [label]="'it.company.codiceFiscaleEnte'" [value]="item.codiceFiscaleEnte"></app-show-text>
                 </div>
                 <div class="col-sm-12">
