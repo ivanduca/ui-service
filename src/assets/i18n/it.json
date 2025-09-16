@@ -92,7 +92,7 @@
       }
     },
     "navigation" : {
-      "full-login": "Accedi all'area riservata",
+      "full-login": "Area riservata",
       "logout": "Esci",
       "search": "Cerca...",
       "project": "Il Progetto",
