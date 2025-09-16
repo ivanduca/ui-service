@@ -207,7 +207,7 @@
         "407" : {
           "title": "Sito PA non raggiungibile",
           "ruletitle": "Non raggiungibile",
-          "subtitle": "Il sito fornito dall'Amministrazione non risulta raggiungibile"
+          "subtitle": "Il sito fornito dall'Amministrazione non risulta raggiungibile o il tempo necessario alla visualizzazione della homepage è alto (maggiore di 120 secondi)"
         },
         "404" : {
           "title": "Non Trovato",
