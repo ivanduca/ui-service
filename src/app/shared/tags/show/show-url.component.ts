@@ -4,10 +4,10 @@ import {Component, Input} from '@angular/core';
     selector: 'app-show-url',
     template: `
     @if (value) {
-      <span class="me-1">
+      <div class="me-1 overflow-auto">
         <span class="label-show-text">{{ label | translate }}</span>
         <a class="ms-1 multiline-truncate" [style.color]="fill" [ngClass]="{'fw-bolder': strong}" href="{{url}}" [target]="target">{{ value }}</a>
-      </span>
+      </div>
     }
     `,
     styles: `
