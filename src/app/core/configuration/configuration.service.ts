@@ -93,6 +93,10 @@ export class ConfigurationService extends CommonService<Configuration> {
     );
   }
 
+  public setCachedMenuLink(menu: any) {
+    this.cachedMenuLink = menu;
+  }
+
   public getMenuLink(): Observable<any> {
     if (this.cachedMenuLink) {
       return observableOf(this.cachedMenuLink);

@@ -406,7 +406,7 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
     conf.value = JSON.stringify(this.menuForm.value);
     this.configurationService.save(conf).subscribe((result: any) => {
       this.menuid = result.id;
-      this.configurationService.setCachedStatusColor(JSON.parse(conf.value));
+      this.configurationService.setCachedMenuLink(JSON.parse(conf.value));
     });
   }
   
