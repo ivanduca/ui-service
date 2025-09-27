@@ -16,6 +16,8 @@ import { ConductorService } from '../conductor/conductor.service';
 import { Status, Workflow } from '../conductor/workflow.model';
 import { DatePipe } from '@angular/common';
 import { StatusColor } from '../../common/model/status-color.enum';
+import { FormArray } from '@angular/forms';
+import { Validators } from '@angular/forms';
 
 @Component({
     selector: 'app-main-conf',
@@ -45,6 +47,7 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
   protected workflowBODYForm: FormGroup;
   protected workflowBODYid: number;
   protected colorid: number;
+  protected menuid: number;
   protected optionsCategoria: Array<SelectControlOption> = [];
   protected optionsRule: Array<SelectControlOption> = [];
 
@@ -54,6 +57,7 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
   protected workflow_id_preserve_id: number;
 
   protected colorForm: FormGroup;
+  protected menuForm: FormGroup;
 
   readonly localization: CronLocalization = {
     common: {
@@ -206,6 +210,11 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
         });
       });
     });
+    
+    this.menuForm = this.formBuilder.group({
+       dettagli: this.formBuilder.array([])
+    });
+
     this.colorForm = this.formBuilder.group({
       status_200: new FormControl(StatusColor.status_200),
       status_202: new FormControl(StatusColor.status_202),
@@ -255,6 +264,13 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
           if (conf.key === ConfigurationService.WORKFLOW_ID_PRESERVE) {
             this.workflowBODYForm.controls.workflow_id_preserve.patchValue(conf.value.split(","));
             this.workflow_id_preserve_id = conf.id;
+          }
+          if (conf.key === ConfigurationService.MENU) {
+            this.menuid = conf.id;
+            let jsonvalue = JSON.parse(conf.value);
+            jsonvalue?.dettagli.forEach((result: any) => {
+              this.dettagliArray.push(this.createDettaglioMenuFormGroup(result));
+            });
           }
           if (conf.key === ConfigurationService.COLOR) {
             this.colorid = conf.id;
@@ -309,6 +325,27 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
     });
   }
 
+  removeDettaglioMenu(index: number) {
+    this.dettagliArray.removeAt(index);
+  }
+
+  addDettaglioMenu() {
+    this.dettagliArray.push(this.createDettaglioMenuFormGroup());
+  }
+
+  createDettaglioMenuFormGroup(dettaglio?: any): FormGroup {
+    let formGroup = this.formBuilder.group({
+      label: [dettaglio?.label || null, Validators.required],
+      url: [dettaglio?.url || undefined, Validators.required],
+      target: [dettaglio?.target || undefined],
+    });
+    return formGroup;
+  }
+
+  get dettagliArray(): FormArray {
+    return this.menuForm.get('dettagli') as FormArray;
+  }
+
   cronConfirm(): void {
     let cronExpression = parser.parseExpression(this.cronValue);
     if (cronExpression.fields.hour.length > 1) {
@@ -360,6 +397,19 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
     });
   }
 
+  confirmMenu(): void {
+    let conf: Configuration = new Configuration();
+    conf.id = this.menuid;
+    conf.application = `ui-service`;
+    conf.profile = `default`;
+    conf.key = ConfigurationService.MENU;
+    conf.value = JSON.stringify(this.menuForm.value);
+    this.configurationService.save(conf).subscribe((result: any) => {
+      this.menuid = result.id;
+      this.configurationService.setCachedStatusColor(JSON.parse(conf.value));
+    });
+  }
+  
   confirmColor(): void {
     let conf: Configuration = new Configuration();
     conf.id = this.colorid;

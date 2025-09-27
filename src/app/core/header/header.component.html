@@ -6,10 +6,13 @@
   [slimTitle]="companylabel | translate"
   [slimTitleLink]="'header.company.url' | translate"
   (searchClick)="onSearch()">
-  <ul class="link-list" slimLinkList>
-    <li><a class="list-item" [routerLinkActive]="['active']" routerLink="/credits">CREDITS</a></li>
-    <li><a class="list-item" href="https://trasparenzai.github.io" target="_blank">DOCUMENTAZIONE</a></li>
-  </ul>
+  @if(menuLinks && menuLinks.length !== 0) {
+    <ul class="link-list" slimLinkList>
+      @for(menulink of menuLinks; track menulink ) {
+        <li><a class="list-item" href="{{menulink.url}}" target="{{menulink.target}}">{{menulink.label}}</a></li>
+      }
+    </ul>
+  }
   <ng-container slimRightZone>
     @if (!authenticated) {
       <a itButton="primary" class="btn-full btn-icon" routerLink="auth/signin">

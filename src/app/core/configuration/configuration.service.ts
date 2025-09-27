@@ -24,8 +24,10 @@ export class ConfigurationService extends CommonService<Configuration> {
   public static readonly WORKFLOW_ID_PRESERVE = `workflow.id.preserve`;
   public static readonly JSONRULES_KEY = `jsonrules`;
   public static readonly COLOR = `color`;
+  public static readonly MENU = `menu`;
 
   private cachedStatusColor: any;
+  private cachedMenuLink: any;
 
   public constructor(protected httpClient: HttpClient,
                      protected apiMessageService: ApiMessageService,
@@ -90,4 +92,20 @@ export class ConfigurationService extends CommonService<Configuration> {
         })
     );
   }
+
+  public getMenuLink(): Observable<any> {
+    if (this.cachedMenuLink) {
+      return observableOf(this.cachedMenuLink);
+    }
+    return this.getAll().pipe(
+        map((configurations: Configuration[]) => {
+          let menuLinks = configurations.filter((conf: Configuration) => conf.key === ConfigurationService.MENU);
+          if (menuLinks && menuLinks.length === 1) {
+            this.cachedMenuLink = JSON.parse(menuLinks[0].value);
+            return this.cachedMenuLink;
+          }
+        })
+    );
+  }
+
 }

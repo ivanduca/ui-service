@@ -40,6 +40,14 @@
       }
     },
     "configuration" : {
+      "menu": {
+        "title": "Impostazioni Menu",
+        "subtitle": "Voci di Menu",
+        "add": "Aggiungi nuova voce",
+        "label": "Etichetta",
+        "url": "URL",
+        "target": "Target"
+      },
       "color": "Impostazioni colori",
       "cron": {
         "title": "Espressione per l'esecuzione di un nuovo controllo",

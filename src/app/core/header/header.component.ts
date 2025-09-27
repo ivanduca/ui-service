@@ -10,6 +10,7 @@ import { environment } from '../../../environments/environment';
 import { LoginResponse, OidcSecurityService } from 'angular-auth-oidc-client';
 import { AuthGuard } from '../../auth/auth-guard';
 import { RoleEnum } from '../../auth/role.enum';
+import { ConfigurationService } from '../configuration/configuration.service';
 
 @Component({
     selector: 'app-header1',
@@ -49,7 +50,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
   authenticated = false;
   isAdmin: boolean;
   userData: any;
-  
+  menuLinks: any[];
+
   constructor(private apiMessageService: ApiMessageService,
               private translateService: TranslateService,
               private titleService: Title,
@@ -57,6 +59,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
               private authGuard: AuthGuard,
               private responsive: BreakpointObserver,
               private oidcSecurityService: OidcSecurityService,
+              private configurationService: ConfigurationService, 
               private notificationService: ItNotificationService) {
     this.searchHREF = `${environment.baseHref}#/company-search`;
   }
@@ -79,6 +82,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
       this.translateService.get('it.home.title').subscribe((title: string) => {
         this.titleService.setTitle(title);
       });
+    });
+    this.configurationService.getMenuLink().subscribe((menu: any) => {
+      this.menuLinks = menu?.dettagli;
     });
     if (environment.oidc.enable) { 
       if (!environment.oidc.force) {
