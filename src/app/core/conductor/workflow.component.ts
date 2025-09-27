@@ -18,7 +18,7 @@ import saveAs from 'file-saver';
     template: `
     <it-card space="true" background="true">
       @if (!title) {
-        <div class="d-flex bg-dark text-white legend h3 mb-2 justify-content-center">
+        <div class="d-flex bg-dark text-white legend h3 mb-2 justify-content-center text-center">
           <span>{{'it.workflow.label' | translate: { startTime: workflow.startTime | date:'dd/MM/yyyy'} }}</span>
         </div>
       }
