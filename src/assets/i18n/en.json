@@ -40,6 +40,19 @@
       }
     },
     "configuration": {
+      "workflow": {
+        "startnow": "Are you sure you want to run a full scan with the current parameters?",
+        "running": "Unable to start the flow, as there is an unfinished one!",
+        "started": "Scan started successfully."
+      },
+      "menu": {
+        "title": "Menu Settings",
+        "subtitle": "Menu Items",
+        "add": "Add new entry",
+        "label": "Label",
+        "url": "URL",
+        "target": "Target"
+      },
       "color": "Color settings",
       "cron": {
         "title": "Expression for executing a new check",
@@ -109,6 +122,7 @@
       "map-result": "Results Map",
       "configuration": "Configuration",
       "confirm": "Confirm",
+      "start-now": "Start Now",
       "grafici-mappe": {
         "title": "Charts and Maps",
         "grafico-regola": "Chart by rule",
@@ -145,7 +159,8 @@
       "errorMessage": "Error",
       "errorNotFound": "Rule not found",
       "download_image": "Download Image",
-      "score": "Score"
+      "score": "Score",
+      "workflowChildId": "Flows"
     },
     "map": {
       "preserve-zoom": "Preserve Zoom and Position",

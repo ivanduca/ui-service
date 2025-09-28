@@ -40,6 +40,11 @@
       }
     },
     "configuration" : {
+      "workflow": {
+        "startnow": "Sei sicuro di voler avviare una scansione completa con i parametri correnti?",
+        "running": "Impossibile avviare il flusso, in quanto nè esiste uno non completato!",
+        "started": "Scansione avviata correttamente."
+      },
       "menu": {
         "title": "Impostazioni Menu",
         "subtitle": "Voci di Menu",
@@ -117,6 +122,7 @@
       "map-result": "Mappa dei Risultati",
       "configuration": "Configurazione",
       "confirm": "Conferma",
+      "start-now": "Avvia Ora",
       "grafici-mappe": {
         "title": "Grafici e Mappe",
         "grafico-regola": "Grafico per regola",
@@ -153,7 +159,8 @@
       "errorMessage": "Errore",
       "errorNotFound": "Regola non trovata",
       "download_image": "Scarica Immagine",
-      "score": "Score"
+      "score": "Score",
+      "workflowChildId": "Flusso"
     },
     "map": {
       "preserve-zoom": "Conserva Zoom e Posizione",

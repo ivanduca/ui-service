@@ -72,6 +72,15 @@ export class ConductorService extends CommonService<Workflow> {
     }));
   }
 
+  public isWorflowRunning(): Observable<boolean> {
+    return this.getAll({
+      includeClosed: false,
+      includeTasks: false
+    }).pipe(switchMap((workflows: Workflow[]) => {      
+      return observableOf(workflows.length !== 0);
+    }));
+  }
+
   public lastWorflow(): Observable<Workflow> {
     return this.getAll({
       includeClosed: true,
@@ -221,11 +230,11 @@ export class ConductorService extends CommonService<Workflow> {
     );
   }
 
-  public startMainWorkflow(codiceIpa?: string, ruleName?: string): Observable<string> {
+  public startMainWorkflowNow(input: any): Observable<string> {
     return this.getGateway()
       .pipe(
         switchMap((gateway) => {
-          return this.httpClient.post(`${gateway}${this.getApiService()}/api/workflow`, this.inputParamter(codiceIpa, ruleName), {responseType: 'text'})
+          return this.httpClient.post(`${gateway}${this.getApiService()}/api/workflow`, input, {responseType: 'text'})
             .pipe(
               map((result: string) => {
                 return result;
@@ -238,6 +247,11 @@ export class ConductorService extends CommonService<Workflow> {
             );
         })
     );
+  }
+
+
+  public startMainWorkflow(codiceIpa?: string, ruleName?: string): Observable<string> {
+    return this.startMainWorkflowNow(this.inputParamter(codiceIpa, ruleName));
   }
 
   public inputParamter(codiceIpa?: string, ruleName?: string): any {

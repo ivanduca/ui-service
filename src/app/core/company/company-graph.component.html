@@ -154,6 +154,7 @@
               <app-show-list-text [label]="'it.rule.status-label'" [value]="'it.rule.status.' + currentNode?.data?.status + '.ruletitle'| translate"></app-show-list-text>
               @if (authenticated && isSuperuser) {
                 <app-show-list-text [label]="'it.result.score'" [value]="currentNode?.data?.score"></app-show-list-text>
+                <app-show-list-text [label]="'it.result.workflowChildId'" [value]="currentNode?.data?.workflowChildId"></app-show-list-text>
               }
               <app-show-list-text [label]="'it.result.content'" [value]="currentNode?.data?.content"></app-show-list-text>
             }

@@ -1,11 +1,16 @@
 <div class="container pt-4">
   <div class="border border-top-0 border-bottom-0">
     <it-accordion title="{{'it.configuration.cron.title'| translate}}{{'it.configuration.cron.next-date'| translate:{nextDate: nextDate| date:'dd/MM/yyyy \'alle ore\' HH'} }}{{'it.configuration.cron.next-next-date'| translate:{nextDate: nextNextDate| date:'dd/MM/yyyy \'alle ore\' HH'} }}" opened="true">
-      <button (click)="cronConfirm()" role='button' class="btn pull-right py-sm-1 py-md-2 px-sm-1 px-md-4">
-        <it-icon name="pencil" color="primary"></it-icon>
-        <span translate>it.navigation.confirm</span>
-      </button>
-      <bs5-unix-cron #cron [(ngModel)]="cronValue" (tabChanged)="onTabChanged($event)" [activeTab]="activeTab" [tabs]="tabs" [localization]="localization"></bs5-unix-cron>
+      <div class="d-flex">
+        <div class="p-2 flex-grow-1">
+          <bs5-unix-cron #cron [(ngModel)]="cronValue" (tabChanged)="onTabChanged($event)" [activeTab]="activeTab" [tabs]="tabs" [localization]="localization"></bs5-unix-cron>
+        </div>
+        <div>
+          <a itButton="outline-primary" (click)="cronConfirm()" class="ms-auto">
+            <it-icon name="pencil" color="primary"></it-icon>{{'it.navigation.confirm' | translate}}
+          </a>
+        </div>
+      </div>
     </it-accordion> 
     <it-accordion title="{{'it.configuration.cron.workflow'| translate}}">
       <form #workflowURLForm="ngForm">
@@ -16,9 +21,9 @@
             </it-input>  
           </div>
           <div>
-            <button (click)="cronConfirmWorkflowURL()" [disabled]="!workflowURLForm.valid" role='button' class="btn py-sm-1 py-md-2 px-sm-1 px-md-4">
+            <a itButton="outline-primary" (click)="cronConfirmWorkflowURL()" class="ms-2" [disabled]="!workflowURLForm.valid">
               <it-icon name="pencil" color="primary"></it-icon>{{'it.navigation.confirm' | translate}}
-            </button>  
+            </a>
           </div>
         </div>
       </form>
@@ -135,9 +140,12 @@
           </div>
           <div class="row justify-content-md-end">
             <div class="form-group col-md-auto">
-              <button (click)="cronConfirmWorkflowBODY()" [disabled]="!workflowBODYForm.valid" role='button' class="btn">
+              <a itButton="outline-success" (click)="startWorkflowNow()" class="me-2 text-success" [disabled]="!workflowBODYForm.valid">
+                <it-icon name="arrow-right-circle" color="success"></it-icon>{{'it.navigation.start-now' | translate}}
+              </a>
+              <a itButton="outline-primary" (click)="cronConfirmWorkflowBODY()" class="me-2" [disabled]="!workflowBODYForm.valid">
                 <it-icon name="pencil" color="primary"></it-icon>{{'it.navigation.confirm' | translate}}
-              </button>  
+              </a>
             </div>
           </div>
         </form>        
@@ -151,7 +159,7 @@
             <div>
               <a itButton="outline-primary" (click)="confirmMenu()" class="me-2" [disabled]="!menuForm.valid">
                 <it-icon name="pencil" color="primary"></it-icon>{{'it.navigation.confirm' | translate}}
-              </a>              
+              </a>
               <a itButton="outline-success" class="text-success" (click)="addDettaglioMenu();" translate>
                 <it-icon name="plus-circle" color="success"></it-icon>it.configuration.menu.add
               </a>
@@ -163,17 +171,17 @@
                   [formGroupName]="i" 
                   class="shadow dettaglio-item p-3 mb-3 border rounded">
                 <div class="row mt-4">
-                  <div class="col-md-3">
+                  <div class="form-group col-md-3">
                     <it-input formControlName="label" required [label]="'it.configuration.menu.label'| translate">
                       <it-icon name="key" size="sm" color="primary" prependText></it-icon>
                     </it-input>
                   </div>
-                  <div class="col-md-6">
+                  <div class="form-group col-md-6">
                     <it-input formControlName="url" required [label]="'it.configuration.menu.url'| translate">
                       <it-icon name="link" size="sm" color="primary" prependText></it-icon>
                     </it-input>
                   </div>
-                  <div class="col-md-2">
+                  <div class="form-group col-md-2">
                     <it-input formControlName="target" [label]="'it.configuration.menu.target'| translate">
                       <it-icon name="arrow-right" size="sm" color="primary" prependText></it-icon>
                     </it-input>

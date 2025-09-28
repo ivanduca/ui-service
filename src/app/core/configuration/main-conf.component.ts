@@ -433,6 +433,48 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
 
   }
 
+  startWorkflowNow(): void {
+    let input = JSON.stringify({
+      name: ConductorService.AMMINISTRAZIONE_TRASPARENTE_FLOW,
+      correlationId: ConductorService.AMMINISTRAZIONE_TRASPARENTE_FLOW,
+      version: 1,
+      input: {
+        page_size: this.workflowBODYForm.controls.page_size.value,
+        codice_categoria: this.workflowBODYForm.controls.codice_categoria.value||'',
+        codice_ipa: "",
+        id_ipa_from: 0,
+        parent_workflow_id: "",
+        execute_child: this.workflowBODYForm.controls.execute_child.value,
+        crawler_save_object: this.workflowBODYForm.controls.crawler_save_object.value,
+        crawler_save_screenshot: this.workflowBODYForm.controls.crawler_save_screenshot.value,
+        rule_name: Rule.AMMINISTRAZIONE_TRASPARENTE,
+        root_rule: this.workflowBODYForm.controls.rule_name.value,
+        connection_timeout: this.workflowBODYForm.controls.connection_timeout.value,
+        read_timeout: this.workflowBODYForm.controls.read_timeout.value,
+        connection_timeout_max: this.workflowBODYForm.controls.connection_timeout_max.value,
+        read_timeout_max: this.workflowBODYForm.controls.read_timeout_max.value,
+        crawler_child_type: this.workflowBODYForm.controls.crawler_child_type.value,
+        crawling_mode: this.workflowBODYForm.controls.crawling_mode.value,
+        result_base_url: this.workflowBODYForm.controls.result_base_url.value,
+        crawler_uri: this.workflowBODYForm.controls.crawler_uri.value,
+        rule_base_url: this.workflowBODYForm.controls.rule_base_url.value,
+        public_company_base_url: this.workflowBODYForm.controls.public_company_base_url.value,
+        result_aggregator_base_url: this.workflowBODYForm.controls.result_aggregator_base_url.value
+      }   
+    });
+    if(confirm(this.labels?.workflow?.startnow)) {
+      this.conductorService.isWorflowRunning().subscribe((running: boolean) => {      
+        if (running) {
+          this.apiMessageService.sendMessage(MessageType.ERROR, this.labels?.workflow?.running, NotificationPosition.Top);
+        } else {
+          this.conductorService.startMainWorkflowNow(input).subscribe((result) => {
+            this.apiMessageService.sendMessage(MessageType.SUCCESS, this.labels?.workflow?.started, NotificationPosition.Top);
+          });
+        }
+      });    
+    }
+  }
+
   cronConfirmWorkflowBODY(): void {
     let conf: Configuration = new Configuration();
     conf.id = this.workflowBODYid;
