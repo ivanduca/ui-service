@@ -1,11 +1,11 @@
 <div class="container pt-4">
   <div class="border border-top-0 border-bottom-0">
     <it-accordion title="{{'it.configuration.cron.title'| translate}}{{'it.configuration.cron.next-date'| translate:{nextDate: nextDate| date:'dd/MM/yyyy \'alle ore\' HH'} }}{{'it.configuration.cron.next-next-date'| translate:{nextDate: nextNextDate| date:'dd/MM/yyyy \'alle ore\' HH'} }}" opened="true">
-      <div class="d-flex">
+      <div class="d-md-flex">
         <div class="p-2 flex-grow-1">
           <bs5-unix-cron #cron [(ngModel)]="cronValue" (tabChanged)="onTabChanged($event)" [activeTab]="activeTab" [tabs]="tabs" [localization]="localization"></bs5-unix-cron>
         </div>
-        <div>
+        <div class="d-flex d-md-block">
           <a itButton="outline-primary" (click)="cronConfirm()" class="ms-auto">
             <it-icon name="pencil" color="primary"></it-icon>{{'it.navigation.confirm' | translate}}
           </a>
@@ -201,62 +201,63 @@
     <it-accordion title="{{'it.configuration.color'| translate}}">
       <form [formGroup]="colorForm">
         <div class="row mb-3">
-          <div class="form-group col-md-2">
+          <div class="form-group col-md-4">
             <div class="d-flex">
               <ngx-colors ngx-colors-trigger formControlName="status_200"></ngx-colors>
-              <it-input readonly="true" required formControlName="status_200" [(ngModel)]="colorForm.value.status_200" [label]="'it.rule.status.200.ruletitle'| translate"></it-input>  
+              <it-input class="w-100" readonly="true" required formControlName="status_200" [(ngModel)]="colorForm.value.status_200" [label]="'it.rule.status.200.ruletitle'| translate"></it-input>  
             </div>
           </div>
-          <div class="form-group col-md-2">
+          <div class="form-group col-md-4">
             <div class="d-flex">
               <ngx-colors ngx-colors-trigger formControlName="status_202"></ngx-colors>
-              <it-input readonly="true" formControlName="status_202" [(ngModel)]="colorForm.value.status_202" [label]="'it.rule.status.202.ruletitle'| translate"></it-input>  
+              <it-input class="w-100" readonly="true" formControlName="status_202" [(ngModel)]="colorForm.value.status_202" [label]="'it.rule.status.202.ruletitle'| translate"></it-input>  
             </div>
           </div>
-          <div class="form-group col-md-2">
+          <div class="form-group col-md-4">
             <div class="d-flex">
               <ngx-colors ngx-colors-trigger formControlName="status_400"></ngx-colors>
-              <it-input readonly="true" formControlName="status_400" [(ngModel)]="colorForm.value.status_400" [label]="'it.rule.status.400.ruletitle'| translate"></it-input>  
+              <it-input class="w-100" readonly="true" formControlName="status_400" [(ngModel)]="colorForm.value.status_400" [label]="'it.rule.status.400.ruletitle'| translate"></it-input>  
             </div>
           </div>
-          <div class="form-group col-md-2">
+        </div>
+        <div class="row mb-3">
+          <div class="form-group col-md-4">
             <div class="d-flex">
               <ngx-colors ngx-colors-trigger formControlName="status_407"></ngx-colors>
-              <it-input readonly="true" formControlName="status_407" [(ngModel)]="colorForm.value.status_407" [label]="'it.rule.status.407.ruletitle'| translate"></it-input>  
+              <it-input class="w-100" readonly="true" formControlName="status_407" [(ngModel)]="colorForm.value.status_407" [label]="'it.rule.status.407.ruletitle'| translate"></it-input>  
             </div>
           </div>
-          <div class="form-group col-md-2">
+          <div class="form-group col-md-4">
             <div class="d-flex">
               <ngx-colors ngx-colors-trigger formControlName="status_500"></ngx-colors>
-              <it-input readonly="true" formControlName="status_500" [(ngModel)]="colorForm.value.status_500" [label]="'it.rule.status.500.ruletitle'| translate"></it-input>  
+              <it-input class="w-100" readonly="true" formControlName="status_500" [(ngModel)]="colorForm.value.status_500" [label]="'it.rule.status.500.ruletitle'| translate"></it-input>  
             </div>
           </div>
-          <div class="form-group col-md-2">
+          <div class="form-group col-md-4">
             <div class="d-flex">
               <ngx-colors ngx-colors-trigger formControlName="status_501"></ngx-colors>
-              <it-input readonly="true" formControlName="status_501" [(ngModel)]="colorForm.value.status_501" [label]="'it.rule.status.501.ruletitle'| translate"></it-input>  
+              <it-input class="w-100" readonly="true" formControlName="status_501" [(ngModel)]="colorForm.value.status_501" [label]="'it.rule.status.501.ruletitle'| translate"></it-input>  
             </div>
           </div>
         </div>
         <div class="row justify-content-md-end">
           <div class="form-group col-md-auto">
-            <button (click)="confirmColor()" [disabled]="!colorForm.valid" role='button' class="btn">
+            <a itButton="outline-primary" (click)="confirmColor()" class="me-2" [disabled]="!colorForm.valid">
               <it-icon name="pencil" color="primary"></it-icon>{{'it.navigation.confirm' | translate}}
-            </button>  
+            </a>
           </div>
         </div>
       </form>
     </it-accordion>    
 </div> 
   
-  <it-modal #headerPopconfirmModal="itModal" closeButton="true" popconfirm="true">
-    <ng-container modalTitle><span translate>modal.title.info</span></ng-container>
+<it-modal #headerPopconfirmModal="itModal" closeButton="true" popconfirm="true">
+  <ng-container modalTitle><span translate>modal.title.info</span></ng-container>
 
-    <p innerHtml="{{'it.configuration.cron.message'| translate:{nextDate: nextDate| date:'dd/MM/yyyy \'alle ore\' HH'} }}"></p>
+  <p innerHtml="{{'it.configuration.cron.message'| translate:{nextDate: nextDate| date:'dd/MM/yyyy \'alle ore\' HH'} }}"></p>
 
-    <ng-container footer>
-      <button itButton="primary" (click)="cronSave()" size="sm" type="button" data-bs-dismiss="modal" translate>button.ok</button>
-      <button itButton="outline-secondary" size="sm" type="button" data-bs-dismiss="modal" translate>button.cancel</button>
-    </ng-container>
-  </it-modal>
-</div>
+  <ng-container footer>
+    <button itButton="primary" (click)="cronSave()" size="sm" type="button" data-bs-dismiss="modal" translate>button.ok</button>
+    <button itButton="outline-secondary" size="sm" type="button" data-bs-dismiss="modal" translate>button.cancel</button>
+  </ng-container>
+</it-modal>

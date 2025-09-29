@@ -434,7 +434,7 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
   }
 
   startWorkflowNow(): void {
-    let input = JSON.stringify({
+    let input = {
       name: ConductorService.AMMINISTRAZIONE_TRASPARENTE_FLOW,
       correlationId: ConductorService.AMMINISTRAZIONE_TRASPARENTE_FLOW,
       version: 1,
@@ -461,7 +461,7 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
         public_company_base_url: this.workflowBODYForm.controls.public_company_base_url.value,
         result_aggregator_base_url: this.workflowBODYForm.controls.result_aggregator_base_url.value
       }   
-    });
+    };
     if(confirm(this.labels?.workflow?.startnow)) {
       this.conductorService.isWorflowRunning().subscribe((running: boolean) => {      
         if (running) {
