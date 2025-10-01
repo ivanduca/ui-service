@@ -30,22 +30,30 @@
       <it-callout appearance="highlight" color="note" label="{{'it.configuration.cron.workflow-body' | translate}}">
         <form [formGroup]="workflowBODYForm">
           <div class="row mb-3">
-            <div class="form-group col-12 col-lg-2">
+            <div class="form-group col-12 col-lg-2 mt-2">
               <it-input type="number" required [min]="100" 
                 [max]="2000" [step]="100" formControlName="page_size" 
                 [label]="'it.configuration.cron.body.page_size'| translate"></it-input>
             </div>
-            <div class="form-group col-12 col-lg-3">
-              <ng-select formControlName="codice_categoria"  [placeholder]="'it.company.codiceCategoria'| translate">
+            <div class="form-group col-12 col-lg-4 mt-2">
+              <ng-select formControlName="codice_categoria" [placeholder]="'it.company.codiceCategoria'| translate">
                   @for (categoria of optionsCategoria; track categoria.value) {
                       <ng-option [value]="categoria.value">{{categoria.text}}</ng-option>
                   }
               </ng-select>
             </div>
-            <div class="form-check col-12 col-lg-2">
+            <div class="form-group col-12 col-lg-6">
+              <app-rule-select [optionsRule]="optionsRule" [form]="workflowBODYForm" controlName="rule_name"></app-rule-select>
+            </div>
+          </div>
+          <div class="row mb-3">  
+            <div class="form-check col-12 col-lg-3">
+              <it-checkbox formControlName="force_jsoup" [label]="'it.configuration.cron.body.force_jsoup'| translate" toggle="true"></it-checkbox>
+            </div>
+            <div class="form-check col-12 col-lg-3">
               <it-checkbox formControlName="execute_child" [label]="'it.configuration.cron.body.execute_child'| translate" toggle="true"></it-checkbox>
             </div>
-            <div class="form-check col-12 col-lg-2">
+            <div class="form-check col-12 col-lg-3">
               <it-checkbox formControlName="crawler_save_object" [label]="'it.configuration.cron.body.crawler_save_object'| translate" toggle="true"></it-checkbox>
             </div>
             <div class="form-check col-12 col-lg-3">
@@ -53,25 +61,22 @@
             </div>
           </div>
           <div class="row">
-            <div class="form-group col-md-4">
-              <app-rule-select [optionsRule]="optionsRule" [form]="workflowBODYForm" controlName="rule_name"></app-rule-select>
-            </div>
-            <div class="form-group col-md-2">
+            <div class="form-group col-md-3">
               <it-input type="number" required [min]="1000" 
                 [max]="60000" [step]="1000" formControlName="connection_timeout" 
                 [label]="'it.configuration.cron.body.connection_timeout'| translate"></it-input>
             </div>
-            <div class="form-group col-md-2">
+            <div class="form-group col-md-3">
               <it-input type="number" required [min]="1000" 
                 [max]="60000" [step]="1000" formControlName="read_timeout" 
                 [label]="'it.configuration.cron.body.read_timeout'| translate"></it-input>
             </div>
-            <div class="form-group col-md-2">
+            <div class="form-group col-md-3">
               <it-input type="number" required [min]="1000" 
                 [max]="120000" [step]="1000" formControlName="connection_timeout_max" 
                 [label]="'it.configuration.cron.body.connection_timeout_max'| translate"></it-input>
             </div>
-            <div class="form-group col-md-2">
+            <div class="form-group col-md-3">
               <it-input type="number" required [min]="1000" 
                 [max]="120000" [step]="1000" formControlName="read_timeout_max" 
                 [label]="'it.configuration.cron.body.read_timeout_max'| translate"></it-input>

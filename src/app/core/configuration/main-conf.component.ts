@@ -230,6 +230,7 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
       id_ipa_from: new FormControl(0),
       parent_workflow_id: new FormControl(''),
       execute_child: new FormControl(true),
+      force_jsoup: new FormControl(false),
       crawler_save_object: new FormControl(false),
       crawler_save_screenshot: new FormControl(false),
       rule_name: new FormControl(Rule.AMMINISTRAZIONE_TRASPARENTE),
@@ -302,9 +303,10 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
             this.workflowBODYForm.controls.crawling_mode.patchValue(jsonvalue.input.crawling_mode);
             this.workflowBODYForm.controls.result_base_url.patchValue(jsonvalue.input.result_base_url);
             this.workflowBODYForm.controls.crawler_uri.patchValue(jsonvalue.input.crawler_uri);
-            this.workflowBODYForm.controls.rule_base_url.patchValue(jsonvalue.input.rule_base_url);
+            this.workflowBODYForm.controls.rule_base_url.patchValue(jsonvalue.input.rule_base_url);            
             this.workflowBODYForm.controls.public_company_base_url.patchValue(jsonvalue.input.public_company_base_url);
             this.workflowBODYForm.controls.result_aggregator_base_url.patchValue(jsonvalue.input.result_aggregator_base_url);
+            this.workflowBODYForm.controls.force_jsoup.patchValue(jsonvalue.input.force_jsoup);
           }
           if (conf.key === ConfigurationService.JSONRULES_KEY) {
             let resultRules = new Map();
@@ -448,6 +450,7 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
         crawler_save_object: this.workflowBODYForm.controls.crawler_save_object.value,
         crawler_save_screenshot: this.workflowBODYForm.controls.crawler_save_screenshot.value,
         rule_name: Rule.AMMINISTRAZIONE_TRASPARENTE,
+        force_jsoup: this.workflowBODYForm.controls.force_jsoup.value, 
         root_rule: this.workflowBODYForm.controls.rule_name.value,
         connection_timeout: this.workflowBODYForm.controls.connection_timeout.value,
         read_timeout: this.workflowBODYForm.controls.read_timeout.value,
@@ -505,6 +508,7 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
         result_base_url: this.workflowBODYForm.controls.result_base_url.value,
         crawler_uri: this.workflowBODYForm.controls.crawler_uri.value,
         rule_base_url: this.workflowBODYForm.controls.rule_base_url.value,
+        force_jsoup: this.workflowBODYForm.controls.force_jsoup.value,        
         public_company_base_url: this.workflowBODYForm.controls.public_company_base_url.value,
         result_aggregator_base_url: this.workflowBODYForm.controls.result_aggregator_base_url.value
       }   

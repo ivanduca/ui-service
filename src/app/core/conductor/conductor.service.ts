@@ -266,6 +266,7 @@ export class ConductorService extends CommonService<Workflow> {
         id_ipa_from: 0,
         parent_workflow_id: ``,
         execute_child: true,
+        force_jsoup: true,
         crawling_mode: `htmlSource`,
         crawler_save_object: true,
         crawler_save_screenshot: true,

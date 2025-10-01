@@ -81,7 +81,8 @@
           "crawler_uri": "URL del servizio Crawler",
           "rule_base_url": "URL del servizio delle Regole",
           "public_company_base_url": "URL del registro delle PA",
-          "result_aggregator_base_url": "URL del servizio dei dati Aggregati"
+          "result_aggregator_base_url": "URL del servizio dei dati Aggregati",
+          "force_jsoup":"Forza l'utilizzo di JSOUP"
         }
       },
       "rule": {
