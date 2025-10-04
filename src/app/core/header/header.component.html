@@ -7,7 +7,7 @@
   [slimTitleLink]="'header.company.url' | translate"
   (searchClick)="onSearch()">
   <ul class="link-list" slimLinkList>
-    <li><a class="list-item" [routerLinkActive]="['active']" routerLink="/credits">CREDITS</a></li>
+    <li><a class="list-item" [routerLinkActive]="['active']" routerLink="/credits">Credits</a></li>
     @if(menuLinks && menuLinks.length !== 0) {
       @for(menulink of menuLinks; track menulink ) {
         <li><a class="list-item" href="{{menulink.url}}" target="{{menulink.target}}">{{menulink.label}}</a></li>
