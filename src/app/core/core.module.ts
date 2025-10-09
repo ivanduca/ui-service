@@ -54,6 +54,8 @@ import { LeafletMarkerClusterModule } from '@bluehalo/ngx-leaflet-markercluster'
 import { NgSelectModule } from '@ng-select/ng-select';
 import { Bs5UnixCronModule } from '@sbzen/ng-cron';
 import { NgxColorsModule } from 'ngx-colors';
+import { NoteLegaliComponent } from './note-legali/note-legali.component';
+import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.component';
 /**
  * Nel core module inserisco tutti i components necessari all'avvio dell'applicazione.
  * Esempio Pagina Iniziale ed Header.
@@ -78,6 +80,8 @@ import { NgxColorsModule } from 'ngx-colors';
         CreditsComponent,
         RuleSelectComponent,
         MainConfigurationComponent,
+        NoteLegaliComponent,
+        PrivacyPolicyComponent
     ],
     imports: [
         AppRoutingModule,
