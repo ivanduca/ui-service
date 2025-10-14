@@ -135,13 +135,15 @@
                 {{'it.configuration.cron.workflow-preserve'| translate: {number_workflows_preserve: workflowBODYForm.get('number_workflows_preserve').value} }}
               </it-range>
             </div>
-            <div class="form-group col-md-8">
-              <ng-select formControlName="workflow_id_preserve" [multiple]="true" [placeholder]="'it.configuration.cron.workflow-id'| translate">
-                  @for (workflow of optionsWorkflow; track workflow.value) {
-                      <ng-option [value]="workflow.value">{{workflow.text}}</ng-option>
-                  }
-              </ng-select>
-            </div>
+            @if(optionsWorkflow && optionsWorkflow.length != 0) {
+              <div class="form-group col-md-8">
+                <ng-select formControlName="workflow_id_preserve" [multiple]="true" [placeholder]="'it.configuration.cron.workflow-id'| translate">
+                    @for (workflow of optionsWorkflow; track workflow.value) {
+                        <ng-option [value]="workflow.value">{{workflow.text}}</ng-option>
+                    }
+                </ng-select>
+              </div>
+            }
           </div>
           <div class="row justify-content-md-end">
             <div class="form-group col-md-auto">

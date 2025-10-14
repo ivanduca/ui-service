@@ -50,7 +50,6 @@ export class SearchComponent implements OnInit {
       this.options.push({ value: 'company.denominazioneEnte', text: labels?.company?.denominazioneEnte });
       this.options.push({ value: 'createdAt,desc', text: labels?.order?.createdAt?.desc });
       this.optionsStatus.push({value: '', text: '*', disabled: false});
-      this.optionsWorkflow.push({value: '', text: '*', selected: false});
       this.optionsCategoria.push({ value: '', text: '*', selected: true});
     });
     Object.keys(CodiceCategoria).forEach((key) => {
@@ -113,6 +112,7 @@ export class SearchComponent implements OnInit {
         includeClosed: true,
         includeTasks: false
       }).subscribe((workflows: Workflow[]) => {
+        this.optionsWorkflow.push({value: '', text: '*', selected: false});
         workflows.forEach((workflow: Workflow) => {
           this.optionsWorkflow.push({
             value: workflow.workflowId,

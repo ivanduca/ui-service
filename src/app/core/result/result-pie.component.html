@@ -2,13 +2,15 @@
   @if (filterFormSearch) {
     <form class="clearfix my-3 px-2 shadow" [formGroup]="filterFormSearch" >
       <div class="row col-md-12">
-        <div class="form-group mb-1 col-md-6">
-          <ng-select [clearable]="false" formControlName="workflowId" [placeholder]="'it.workflow.id'| translate">
-            @for (workflow of optionsWorkflow; track workflow.value) {
-              <ng-option [value]="workflow.value">{{workflow.text}}</ng-option>
-            }
-          </ng-select>
-        </div>
+        @if(optionsWorkflow && optionsWorkflow.length != 0) {
+          <div class="form-group mb-1 col-md-6">
+            <ng-select [clearable]="false" formControlName="workflowId" [placeholder]="'it.workflow.id'| translate">
+              @for (workflow of optionsWorkflow; track workflow.value) {
+                <ng-option [value]="workflow.value">{{workflow.text}}</ng-option>
+              }
+            </ng-select>
+          </div>
+        }
         <div class="form-group mb-1 col-md-6">
           <app-rule-select [optionsRule]="optionsRule" [form]="filterFormSearch" controlName="ruleName" [value]="ruleName"></app-rule-select>
         </div>
