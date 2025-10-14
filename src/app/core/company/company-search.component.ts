@@ -32,6 +32,9 @@ export class CompanySearchComponent implements OnInit, OnDestroy{
               private route: ActivatedRoute,
               private translateService: TranslateService,
               protected router: Router) {
+  }
+
+  ngOnInit(): void {
     this.translateService.get(`it`).subscribe((labels: any) => {
       this.options.push({ value: 'codiceIpa', text: labels?.company?.codiceIpa });
       this.options.push({ value: 'denominazioneEnte', text: labels?.company?.denominazioneEnte });
@@ -43,9 +46,7 @@ export class CompanySearchComponent implements OnInit, OnDestroy{
     Object.keys(Regione).forEach((key) => {
       this.optionsRegione.push({ value: Regione[key], text: Regione[key]});
     });
-  }
 
-  ngOnInit(): void {
     this.route.queryParams.subscribe((queryParams) => {
       this.filterFormSearch = this.formBuilder.group({
         denominazioneEnte: new FormControl(''),
