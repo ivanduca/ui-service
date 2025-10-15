@@ -178,7 +178,7 @@ export class ResultRuleListComponent extends CommonListComponent<Result> impleme
         this.filterForm = this.formBuilder.group({
           workflowId: new FormControl(workflowId),
           status: [[Status.OK, Status.ACCEPTED]],
-          minNumberOfRules: new FormControl(queryParams.min),
+          minNumberOfRules: new FormControl(queryParams.min || 1),
           maxNumberOfRules: new FormControl(queryParams.max || this.maxNumberOfRules),
           denominazioneEnte: new FormControl(''),
           codiceFiscaleEnte: new FormControl(),
