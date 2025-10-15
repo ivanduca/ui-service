@@ -3,5 +3,10 @@
     "target": "http://localhost:8080/",
     "pathRewrite": {"^/conductor-server" : ""},
     "secure": false
-  }
+  },
+  "/result-service": {
+    "target": "http://localhost:8080/",
+    "pathRewrite": {"^/result-service" : ""},
+    "secure": false
+  }  
 }

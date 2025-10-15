@@ -16,6 +16,8 @@ import { MainConfigurationComponent } from './core/configuration/main-conf.compo
 import { AuthGuard } from './auth/auth-guard';
 import { RoleEnum } from './auth/role.enum';
 import { AuthRedirectGuard } from './auth-redirect.guard';
+import { ResultRuleListComponent } from './core/result/result-rule-list.component';
+import { ResultPieRuleComponent } from './core/result/result-pie-rule.component';
 
 const appRoutes: Routes = [
   {path: '', canActivateChild:(environment.oidc.enable && environment.oidc.force)?[AutoLoginAllRoutesGuard]:[], children: [
@@ -26,6 +28,8 @@ const appRoutes: Routes = [
     { path: 'company-map', component: CompanyMapComponent },
     { path: 'company-graph', component: CompanyGraphComponent },
     { path: 'result-pie', component: ResultPieComponent },
+    { path: 'result-pie-rule', component: ResultPieRuleComponent },
+    { path: 'result-rule', component: ResultRuleListComponent },
     { path: 'credits', component: CreditsComponent },
     { path: 'configuration', component: MainConfigurationComponent, canActivate: [AuthGuard], data: {role: RoleEnum.ADMIN}},
   ]},

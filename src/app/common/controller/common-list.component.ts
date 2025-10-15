@@ -122,14 +122,19 @@ export abstract class CommonListComponent<T extends Base> implements OnInit, OnD
     });
     return this.service.getPageable(
       this.navigationService.getPage(this.service.getRoute()), 
-      this.filterFormValue()
+      this.filterFormValue(),
+      this.pageAppendURI
     );
+  }
+
+  protected get pageAppendURI() {
+    return ``;
   }
 
   private pageableResult(pageResult: Page<T>) {
     this.loading = false;
-    this.hasMoreItems = !pageResult.last;
-    this.setItems(pageResult.content);
+    this.hasMoreItems = !pageResult?.last;
+    this.setItems(pageResult?.content);
     this.count = pageResult.totalElements;
     if (!this.initialized) {
       this.initialized = true;
@@ -263,8 +268,9 @@ export abstract class CommonListComponent<T extends Base> implements OnInit, OnD
       );
       this.service.getPageable(
         this.navigationService.getPage(this.service.getRoute()), 
-        this.filterFormValue())
-        .subscribe((pageResult: Page<T>) => {
+        this.filterFormValue(),
+        this.pageAppendURI
+      ).subscribe((pageResult: Page<T>) => {
           this.loading = false;
           this.hasMoreItems = !pageResult.last;
           this.setItems(this.getItems().concat(pageResult.content));
@@ -286,8 +292,9 @@ export abstract class CommonListComponent<T extends Base> implements OnInit, OnD
     this.navigationService.setPage(this.service.getRoute(), 0);
     this.service.getPageable(
       this.navigationService.getPage(this.service.getRoute()), 
-      this.filterFormValue())
-      .subscribe((pageResult: Page<T>) => {
+      this.filterFormValue(),
+      this.pageAppendURI
+    ).subscribe((pageResult: Page<T>) => {
         this.loading = false;
         this.hasMoreItems = !pageResult.last;
         this.setItems(pageResult.content);

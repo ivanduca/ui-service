@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import packageJson from '../../../../package.json';
 
 @Component({
     selector: 'app-footer',
@@ -18,5 +19,5 @@ import { Component } from '@angular/core';
     standalone: false
 })
 export class FooterComponent {
-
+   version = packageJson.version;
 }

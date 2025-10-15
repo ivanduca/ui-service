@@ -2,6 +2,7 @@
   "it": {
     "errors": {
       "url-invalid": "URL non valido!",
+      "invalid-field": "Valore non valido",
       "required-field": "Campo obbligatorio!",
       "min-invalid": "Il valore deve essere superiore al numero minimo {{min}}",
       "max-invalid": "Il valore deve essere inferiore al numero massimo {{max}}"
@@ -40,10 +41,18 @@
       }
     },
     "configuration" : {
+      "slice": {
+        "title": "Impostazioni grafico statistiche",
+        "subtitle": "Lista delle sezioni",
+        "add": "Aggiungi nuova sezione",
+        "color": "Colore",
+        "min": "Minimo valore {{number}}",
+        "max": "Massimo valore {{number}}"
+      },
       "workflow": {
         "startnow": "Sei sicuro di voler avviare una scansione completa con i parametri correnti?",
         "running": "Impossibile avviare il flusso, in quanto nè esiste uno non completato!",
-        "started": "Scansione avviata correttamente."
+        "started": "Scansione avviata correttamente"
       },
       "menu": {
         "title": "Impostazioni Menu",
@@ -127,7 +136,9 @@
       "grafici-mappe": {
         "title": "Grafici e Mappe",
         "grafico-regola": "Grafico per regola",
-        "mappa-regola": "Mappa per regola"
+        "mappa-regola": "Mappa per regola",
+        "grafico-statistiche-regola": "Grafico per PA",
+        "statistiche-regola": "Statistiche sulle regole"
       }
     },
     "search": {
@@ -161,7 +172,9 @@
       "errorNotFound": "Regola non trovata",
       "download_image": "Scarica Immagine",
       "score": "Score",
-      "workflowChildId": "Flusso"
+      "workflowChildId": "Flusso",
+      "minNumberOfRules": "Numero minimo delle regole rispettate: {{number}}",
+      "maxNumberOfRules": "Numero massimo delle regole rispettate: {{number}}"
     },
     "map": {
       "preserve-zoom": "Conserva Zoom e Posizione",

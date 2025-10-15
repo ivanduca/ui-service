@@ -14,6 +14,7 @@ import {JsonConvert, ValueCheckingMode} from 'json2typescript';
 import { Base } from '../model/base.model';
 import { ErrorObservable } from 'rxjs-compat/observable/ErrorObservable';
 import { TranslateService } from '@ngx-translate/core';
+import get from "lodash/get";
 
 export abstract class CommonService<T extends Base> {
 
@@ -144,7 +145,7 @@ export abstract class CommonService<T extends Base> {
    * @param {number} page
    * @returns {Observable<Page<T extends Base>>}
    */
-  public getPageable(page: number, filter: any): Observable<Page<T>> {
+  public getPageable(page: number, filter: any, pageAppendURI: string): Observable<Page<T>> {
 
     let params = new HttpParams()
       .set('page', page + '')
@@ -155,24 +156,25 @@ export abstract class CommonService<T extends Base> {
     return this.getApiBase()
       .pipe(
         switchMap((apiBase) => {
-          return this.httpClient.get<Page<T>>(apiBase + this.getRequestMapping(), {params: params})
+          return this.httpClient.get<Page<T>>(apiBase + this.getRequestMapping() + pageAppendURI, {params: params})
             .pipe(
-              map((result) => {
+              map((result: any) => {
                 try {
-                  const items: T[] = result[this.nameOfResults].map((item) => {
+                  const items: T[] = get(result, this.nameOfResults).map((item) => {
                     const instance: T = this._buildInstance(item);
                     return instance;
                   });
+                  const page = get(result, this.nameOfPage);
                   return new Page(
                     items, 
                     result.empty, 
                     result.first, 
-                    result.last, 
+                    (page || result)?.last|| (result?.offset * result?.page) + items.length == result?.count, 
                     result.number, 
                     result.numberOfElements, 
-                    result.size, 
+                    result?.count || (page || result)?.size, 
                     result.sort, 
-                    result.totalElements, 
+                    result?.count || (page || result)?.totalElements, 
                     result.totalPages);
                 } catch (ex) {
                   this.apiMessageService.sendMessage(MessageType.ERROR, ex.message);
@@ -187,6 +189,10 @@ export abstract class CommonService<T extends Base> {
             );
         })
       );
+  }
+
+  protected get nameOfPage(): string {
+    return `page`;
   }
 
   getApiBase(): Observable<string> {

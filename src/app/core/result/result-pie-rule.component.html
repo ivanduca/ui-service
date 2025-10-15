@@ -1,0 +1,26 @@
+@if (isWorkflowLoaded) {
+  @if (filterFormSearch) {
+    <form class="clearfix my-3 px-2 shadow" [formGroup]="filterFormSearch" >
+      <div class="row col-md-12">
+        @if(optionsWorkflow && optionsWorkflow.length != 0) {
+          <div class="form-group mb-1 col-md-12">
+            <ng-select [clearable]="false" formControlName="workflowId" [placeholder]="'it.workflow.id'| translate">
+              @for (workflow of optionsWorkflow; track workflow.value) {
+                <ng-option [value]="workflow.value">{{workflow.text}}</ng-option>
+              }
+            </ng-select>
+          </div>
+        }
+      </div>
+    </form>
+  }
+}
+<div #chartdiv class="h-100" [style]="chartDivStyle">
+  @if (loadingChart()) {
+    <div class="h-100">
+        <div class="d-flex justify-content-center">
+            <it-spinner double="true"></it-spinner>
+        </div>
+    </div>
+  }
+</div>

@@ -10,6 +10,7 @@ import { Result } from './result.model';
 import { switchMap} from 'rxjs/operators';
 import { SpringError } from '../../common/model/spring-error.model';
 import { environment } from '../../../environments/environment';
+import { Status } from '../rule/status.enum';
 
 @Injectable()
 export class ResultService extends CommonService<Result> {
@@ -70,7 +71,25 @@ export class ResultService extends CommonService<Result> {
         })
       );
   }
-  
+
+  public refresh(): Observable<any> {
+    return this.getApiBase()
+      .pipe(
+        switchMap((apiBase) => {
+          return this.httpClient.post( apiBase + `/actuator/refresh`,{}).pipe(
+              map((result) => {
+                return result;
+              }),
+              catchError( (httpErrorResponse: HttpErrorResponse) => {
+                const springError = new SpringError(httpErrorResponse, this.translateService);
+                this.apiMessageService.sendMessage(MessageType.ERROR,  springError.getRestErrorMessage());
+                return observableThrowError(springError);
+              })
+            );
+        })
+      );
+  }
+
   public getWorkflowMap(ruleName?: string, workflowIds?: string[], noCache?: boolean): Observable<any> {
     let params = new HttpParams();
     if(ruleName) {
@@ -85,6 +104,34 @@ export class ResultService extends CommonService<Result> {
     return this.getApiBase().pipe(
       switchMap((apiBase) => {
         return this.httpClient.get<any>( apiBase + this.getRequestMapping() + `/countAndGroupByWorkflowIdAndStatus`, {params: params})
+        .pipe(
+          map((result) => {
+            try {
+              return result;
+            } catch (ex) {
+              console.log(ex);
+              this.apiMessageService.sendMessage(MessageType.ERROR, ex.message);
+              observableThrowError(ex);
+            }
+          }),
+          catchError( (httpErrorResponse: HttpErrorResponse) => {
+            const springError = new SpringError(httpErrorResponse, this.translateService);
+            this.apiMessageService.sendMessage(MessageType.ERROR,  springError.getRestErrorMessage());
+            return observableThrowError(springError);
+          })
+        );
+    }));    
+  }
+
+  public countResultsAndGroupByCategoriesWidthWorkflowIdAndStatus(workflowId: string): Observable<any> {
+    let params = new HttpParams();
+    if (workflowId) {
+      params = params.set('workflowId', workflowId);
+    }
+    params = params.set('status', `${Status.OK},${Status.ACCEPTED}`);
+    return this.getApiBase().pipe(
+      switchMap((apiBase) => {
+        return this.httpClient.get<any>( apiBase + this.getRequestMapping() + `/countResultsAndGroupByCategoriesWidthWorkflowIdAndStatus`, {params: params})
         .pipe(
           map((result) => {
             try {

@@ -56,6 +56,8 @@ import { Bs5UnixCronModule } from '@sbzen/ng-cron';
 import { NgxColorsModule } from 'ngx-colors';
 import { NoteLegaliComponent } from './note-legali/note-legali.component';
 import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.component';
+import { ResultRuleListComponent } from './result/result-rule-list.component';
+import { ResultPieRuleComponent } from './result/result-pie-rule.component';
 /**
  * Nel core module inserisco tutti i components necessari all'avvio dell'applicazione.
  * Esempio Pagina Iniziale ed Header.
@@ -76,12 +78,14 @@ import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.componen
         CompanyGraphComponent,
         ResultListComponent,
         ResultPieComponent,
+        ResultPieRuleComponent,
         WorkflowCardComponent,
         CreditsComponent,
         RuleSelectComponent,
         MainConfigurationComponent,
         NoteLegaliComponent,
-        PrivacyPolicyComponent
+        PrivacyPolicyComponent,
+        ResultRuleListComponent
     ],
     imports: [
         AppRoutingModule,
@@ -119,6 +123,7 @@ import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.componen
         CreditsComponent,
         ResultListComponent,
         ResultPieComponent,
+        ResultPieRuleComponent,
         CompanySearchComponent,
         CompanyMapComponent,
         CompanyGraphComponent,
@@ -126,6 +131,7 @@ import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.componen
         RuleSelectComponent,
         MainConfigurationComponent,
         DesignAngularKitModule,
+        ResultRuleListComponent
     ],
     providers: [
         // Capire il discorso del root-injector e child-injector.

@@ -25,6 +25,7 @@ export class ConfigurationService extends CommonService<Configuration> {
   public static readonly JSONRULES_KEY = `jsonrules`;
   public static readonly COLOR = `color`;
   public static readonly MENU = `menu`;
+  public static readonly SLICE = `slice`;
 
   private cachedStatusColor: any;
   private cachedMenuLink: any;

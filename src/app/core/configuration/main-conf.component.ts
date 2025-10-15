@@ -18,6 +18,8 @@ import { DatePipe } from '@angular/common';
 import { StatusColor } from '../../common/model/status-color.enum';
 import { FormArray } from '@angular/forms';
 import { Validators } from '@angular/forms';
+import { ResultService } from '../result/result.service';
+import { validColorValidator } from 'ngx-colors';
 
 @Component({
     selector: 'app-main-conf',
@@ -48,6 +50,7 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
   protected workflowBODYid: number;
   protected colorid: number;
   protected menuid: number;
+  protected sliceid: number;
   protected optionsCategoria: Array<SelectControlOption> = [];
   protected optionsRule: Array<SelectControlOption> = [];
 
@@ -58,6 +61,7 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
 
   protected colorForm: FormGroup;
   protected menuForm: FormGroup;
+  protected sliceForm: FormGroup;
 
   readonly localization: CronLocalization = {
     common: {
@@ -184,10 +188,26 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
     private configurationService: ConfigurationService,
     private apiMessageService: ApiMessageService,
     private ruleService: RuleService,
+    private resultService: ResultService,
     private conductorService: ConductorService,
     private datepipe: DatePipe,
     private elementRef: ElementRef                  
   ) {}
+
+  private colorChanges(form: FormGroup, input: string, inputColor: string) {
+    form.controls[input].valueChanges.subscribe((color) => {
+      if (form.controls[input].valid) {
+        form.controls[inputColor].setValue(color, {
+          emitEvent: false,
+        });
+      }
+    });
+    form.controls[inputColor].valueChanges.subscribe((color) =>
+      form.controls[input].setValue(color, {
+        emitEvent: false,
+      })
+    );
+  }
 
   ngOnInit(): void {
     this.translateService.get('it.configuration').subscribe((labels: any) => {
@@ -215,14 +235,32 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
        dettagli: this.formBuilder.array([])
     });
 
-    this.colorForm = this.formBuilder.group({
-      status_200: new FormControl(StatusColor.status_200),
-      status_202: new FormControl(StatusColor.status_202),
-      status_400: new FormControl(StatusColor.status_400),
-      status_407: new FormControl(StatusColor.status_407),
-      status_500: new FormControl(StatusColor.status_500),
-      status_501: new FormControl(StatusColor.status_501),
+    this.sliceForm = this.formBuilder.group({
+       dettagli: this.formBuilder.array([])
     });
+
+    this.colorForm = this.formBuilder.group({
+      ngx_status_200: new FormControl(StatusColor.status_200,[Validators.required, validColorValidator()]),
+      status_200: new FormControl(StatusColor.status_200,[Validators.required, validColorValidator()]),
+      ngx_status_202: new FormControl(StatusColor.status_202,[Validators.required, validColorValidator()]),
+      status_202: new FormControl(StatusColor.status_202,[Validators.required, validColorValidator()]),
+      ngx_status_400: new FormControl(StatusColor.status_400,[Validators.required, validColorValidator()]),
+      status_400: new FormControl(StatusColor.status_400,[Validators.required, validColorValidator()]),
+      ngx_status_407: new FormControl(StatusColor.status_407,[Validators.required, validColorValidator()]),
+      status_407: new FormControl(StatusColor.status_407,[Validators.required, validColorValidator()]),
+      ngx_status_500: new FormControl(StatusColor.status_500,[Validators.required, validColorValidator()]),
+      status_500: new FormControl(StatusColor.status_500,[Validators.required, validColorValidator()]),
+      ngx_status_501: new FormControl(StatusColor.status_501,[Validators.required, validColorValidator()]),
+      status_501: new FormControl(StatusColor.status_501,[Validators.required, validColorValidator()]),
+    });
+    
+    this.colorChanges(this.colorForm, "status_200", "ngx_status_200");
+    this.colorChanges(this.colorForm, "status_202", "ngx_status_202");
+    this.colorChanges(this.colorForm, "status_400", "ngx_status_400");
+    this.colorChanges(this.colorForm, "status_407", "ngx_status_407");
+    this.colorChanges(this.colorForm, "status_500", "ngx_status_500");
+    this.colorChanges(this.colorForm, "status_501", "ngx_status_501");
+
     this.workflowBODYForm = this.formBuilder.group({
       page_size: new FormControl(1000),
       codice_categoria: new FormControl(''),
@@ -271,6 +309,13 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
             let jsonvalue = JSON.parse(conf.value);
             jsonvalue?.dettagli.forEach((result: any) => {
               this.dettagliArray.push(this.createDettaglioMenuFormGroup(result));
+            });
+          }
+          if (conf.key === ConfigurationService.SLICE) {
+            this.sliceid = conf.id;
+            let jsonvalue = JSON.parse(conf.value);
+            jsonvalue?.dettagli.forEach((result: any) => {
+              this.dettagliSliceArray.push(this.createDettaglioSliceFormGroup(result));
             });
           }
           if (conf.key === ConfigurationService.COLOR) {
@@ -322,7 +367,7 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
                 text: `${key} - ${text}`
               });
             });
-          }  
+          }
       });
     });
   }
@@ -346,6 +391,40 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
 
   get dettagliArray(): FormArray {
     return this.menuForm.get('dettagli') as FormArray;
+  }
+
+  removeDettaglioSlice(index: number) {
+    this.dettagliSliceArray.removeAt(index);
+  }
+
+  addDettaglioSlice() {
+    this.dettagliSliceArray.push(this.createDettaglioSliceFormGroup());
+  }
+
+  createDettaglioSliceFormGroup(dettaglio?: any): FormGroup {
+    let formGroup = this.formBuilder.group({
+      ngxcolor: [dettaglio?.color || '#FFFFFF', validColorValidator()],
+      color: [dettaglio?.color || '#FFFFFF', [Validators.required, validColorValidator()]],
+      min: [dettaglio?.min || 1, Validators.required],
+      max: [dettaglio?.max || 1, Validators.required],
+    });
+    formGroup.controls["color"].valueChanges.subscribe((color) => {
+      if (formGroup.controls["color"].valid) {
+        formGroup.controls["ngxcolor"].setValue(color, {
+          emitEvent: false,
+        });
+      }
+    });
+    formGroup.controls["ngxcolor"].valueChanges.subscribe((color) =>
+      formGroup.controls["color"].setValue(color, {
+        emitEvent: false,
+      })
+    );
+    return formGroup;
+  }
+
+  get dettagliSliceArray(): FormArray {
+    return this.sliceForm.get('dettagli') as FormArray;
   }
 
   cronConfirm(): void {
@@ -411,7 +490,22 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
       this.configurationService.setCachedMenuLink(JSON.parse(conf.value));
     });
   }
-  
+
+  confirmSlice(): void {
+    let conf: Configuration = new Configuration();
+    conf.id = this.sliceid;
+    conf.application = `result-service`;
+    conf.profile = `default`;
+    conf.key = ConfigurationService.SLICE;
+    conf.value = JSON.stringify(this.sliceForm.value);
+    this.configurationService.save(conf).subscribe((result: any) => {
+      this.sliceid = result.id;
+      this.resultService.refresh().subscribe((rs) => {
+        console.log('Configurazione aggiornata correttamente.');
+      });
+    });
+  }
+
   confirmColor(): void {
     let conf: Configuration = new Configuration();
     conf.id = this.colorid;
