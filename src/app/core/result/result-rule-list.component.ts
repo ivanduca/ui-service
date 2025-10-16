@@ -9,7 +9,7 @@ import { Result } from './result.model';
 import { ResultService } from './result.service';
 import * as _ from "lodash";
 import { ConfigurationService } from '../configuration/configuration.service';
-import { Observable, of } from 'rxjs';
+import { map, Observable, of, switchMap } from 'rxjs';
 import { ConductorService } from '../conductor/conductor.service';
 import { Workflow } from '../conductor/workflow.model';
 import { Rule } from '../rule/rule.model';
@@ -170,7 +170,7 @@ export class ResultRuleListComponent extends CommonListComponent<Result> impleme
     Object.keys(CodiceCategoria).forEach((key) => {
       this.optionsCategoria.push({ value: key, text: CodiceCategoria[key]});
     });    
-    this.route.queryParams.subscribe((queryParams) => {
+    return this.route.queryParams.pipe(switchMap((queryParams) => {
       let workflowId = queryParams.workflowId;
       if (this.filterForm) {
         this.filterForm.controls['workflowId'].patchValue(workflowId);
@@ -186,10 +186,10 @@ export class ResultRuleListComponent extends CommonListComponent<Result> impleme
           codiceCategoria: new FormControl(),
         });
       }
-      this.conductorService.getAll({
+      return this.conductorService.getAll({
         includeClosed: true,
         includeTasks: false
-      }).subscribe((workflows: Workflow[]) => {
+      }).pipe(map((workflows: Workflow[]) => {
         workflows.forEach((workflow: Workflow) => {
           this.optionsWorkflow.push({
             value: workflow.workflowId,
@@ -211,9 +211,8 @@ export class ResultRuleListComponent extends CommonListComponent<Result> impleme
           }
         })[0];
         this.loadNumberOfRules(workflow?.ruleName || Rule.AMMINISTRAZIONE_TRASPARENTE);
-      });
-    });
-    return of(null);
+      }));
+    }));
   }
 
   loadNumberOfRules(rootRuleName: string) {

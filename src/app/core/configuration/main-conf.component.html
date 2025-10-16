@@ -1,6 +1,6 @@
 <div class="container pt-4">
   <div class="border border-top-0 border-bottom-0">
-    <it-accordion title="{{'it.configuration.cron.title'| translate}}{{'it.configuration.cron.next-date'| translate:{nextDate: nextDate| date:'dd/MM/yyyy \'alle ore\' HH'} }}{{'it.configuration.cron.next-next-date'| translate:{nextDate: nextNextDate| date:'dd/MM/yyyy \'alle ore\' HH'} }}" opened="true">
+    <it-accordion (showEvent)="showAccordion($event, this)" title="{{'it.configuration.cron.title'| translate}}{{'it.configuration.cron.next-date'| translate:{nextDate: nextDate| date:'dd/MM/yyyy \'alle ore\' HH'} }}{{'it.configuration.cron.next-next-date'| translate:{nextDate: nextNextDate| date:'dd/MM/yyyy \'alle ore\' HH'} }}" opened="true">
       <div class="d-md-flex">
         <div class="p-2 flex-grow-1">
           <bs5-unix-cron #cron [(ngModel)]="cronValue" (tabChanged)="onTabChanged($event)" [activeTab]="activeTab" [tabs]="tabs" [localization]="localization"></bs5-unix-cron>
@@ -12,7 +12,7 @@
         </div>
       </div>
     </it-accordion> 
-    <it-accordion title="{{'it.configuration.cron.workflow'| translate}}">
+    <it-accordion (showEvent)="showAccordion($event, this)" title="{{'it.configuration.cron.workflow'| translate}}">
       <form #workflowURLForm="ngForm">
         <div class="d-flex">
           <div class="flex-grow-1">
@@ -158,7 +158,7 @@
         </form>        
       </it-callout>
     </it-accordion>
-    <it-accordion title="{{'it.configuration.menu.title'| translate}}">
+    <it-accordion (showEvent)="showAccordion($event, this)" title="{{'it.configuration.menu.title'| translate}}">
       <form [formGroup]="menuForm">
         <div class="card mb-4">
           <div class="card-header px-0 d-xl-flex justify-content-between align-items-center border-success">
@@ -205,7 +205,7 @@
         </div>
       </form>
     </it-accordion>
-    <it-accordion title="{{'it.configuration.slice.title'| translate}}">
+    <it-accordion (showEvent)="showAccordion($event, this)" title="{{'it.configuration.slice.title'| translate}}">
       <form [formGroup]="sliceForm">
         <div class="card mb-4">
           <div class="card-header px-0 d-xl-flex justify-content-between align-items-center border-success">
@@ -253,7 +253,7 @@
         </div>
       </form>
     </it-accordion>
-    <it-accordion title="{{'it.configuration.color'| translate}}">
+    <it-accordion (showEvent)="showAccordion($event, this)" title="{{'it.configuration.color'| translate}}">
       <form [formGroup]="colorForm">
         <div class="row mb-3">
           <div class="form-group col-md-4">

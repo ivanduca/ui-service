@@ -1,8 +1,8 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren, ViewEncapsulation } from '@angular/core';
 import { ConfigurationService } from './configuration.service';
 import { Configuration } from './configuration.model';
 import { Bs5UnixCronComponent, CronLocalization, Tab } from '@sbzen/ng-cron';
-import { ItModalComponent, NotificationPosition, SelectControlOption } from 'design-angular-kit';
+import { ItAccordionComponent, ItModalComponent, NotificationPosition, SelectControlOption } from 'design-angular-kit';
 import { ApiMessageService, MessageType } from '../api-message.service';
 import { TranslateService } from '@ngx-translate/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
@@ -36,7 +36,8 @@ import { validColorValidator } from 'ngx-colors';
 export class MainConfigurationComponent implements OnInit, AfterViewInit {
   @ViewChild('cron') cronComponent: Bs5UnixCronComponent;
   @ViewChild('headerPopconfirmModal') headerPopconfirmModal: ItModalComponent;
-  
+  @ViewChildren(ItAccordionComponent) accordions!: QueryList<ItAccordionComponent>;
+
   readonly activeTab = Tab.HOURS;
   readonly tabs = [Tab.HOURS, Tab.DAY, Tab.MONTH];
 
@@ -207,6 +208,16 @@ export class MainConfigurationComponent implements OnInit, AfterViewInit {
         emitEvent: false,
       })
     );
+  }
+
+  showAccordion(event: any, item: any) {
+    console.log('Accordion aperto:', item);
+    this.accordions.forEach((accordion: ItAccordionComponent) => {
+      if (accordion.id !== item.id) {
+        if (accordion.isOpen()) accordion.hide();
+      }
+    });
+
   }
 
   ngOnInit(): void {
