@@ -121,7 +121,7 @@
       "project": "Il Progetto",
       "map": "Mappa delle Amministrazioni",
       "rule": "Regole",
-      "sezioni": "Esplora Sezioni",
+      "sezioni": "Analisi Sezioni",
       "home": "Home",
       "go-back": "Torna indietro",
       "upper-level": "Livello superiore",
@@ -134,11 +134,11 @@
       "confirm": "Conferma",
       "start-now": "Avvia Ora",
       "grafici-mappe": {
-        "title": "Grafici e Mappe",
-        "grafico-regola": "Grafico per regola",
-        "mappa-regola": "Mappa per regola",
-        "grafico-statistiche-regola": "Grafico per PA",
-        "statistiche-regola": "Statistiche sulle regole"
+        "title": "Statistiche",
+        "grafico-regola": "Statistiche scansioni per sezione",
+        "mappa-regola": "Compliance su scala nazionale",
+        "grafico-statistiche-regola": "Compliance per classi",
+        "statistiche-regola": "Compliance per intervalli"
       }
     },
     "search": {

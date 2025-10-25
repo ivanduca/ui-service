@@ -93,6 +93,43 @@
     @if (authenticated) {
       <it-navbar-item>
         <it-dropdown mode="nav">
+          <span button translate>it.navigation.sezioni</span>
+          <span listHeading>
+            <a class="pb-1" href="#" (click)="toggleCollapse()" routerLink="/search" [queryParams]="{ruleName: ''}">
+              Tutte le Regole
+            </a>
+            <hr class="my-0">
+          </span>
+          <ng-container list>
+            <it-dropdown-item href="#" (click)="toggleCollapse()" routerLink="/search" [queryParams]="{ruleName: 'amministrazione-trasparente'}">
+              <span>Amministrazione Trasparente</span>
+            </it-dropdown-item>
+            <it-dropdown-item href="#" (click)="toggleCollapse()" routerLink="/search" [queryParams]="{ruleName: 'patrimonio-immobiliare'}">
+              <span>Patrimonio immobiliare</span>
+            </it-dropdown-item>
+            <it-dropdown-item href="#" (click)="toggleCollapse()" routerLink="/search" [queryParams]="{ruleName: 'canoni-locazione-affitto'}">
+              <span>Canoni di locazione o affitto</span>
+            </it-dropdown-item>
+            <it-dropdown-item href="#" (click)="toggleCollapse()" routerLink="/search" [queryParams]="{ruleName: 'bandi-gara-contratti'}">
+              <span>Bandi di gara e contratti</span>
+            </it-dropdown-item>
+            <it-dropdown-item href="#" (click)="toggleCollapse()" routerLink="/search" [queryParams]="{ruleName: 'bandi-concorso'}">
+              <span>Bandi di concorso</span>
+            </it-dropdown-item>
+            <it-dropdown-item href="#" (click)="toggleCollapse()" routerLink="/search" [queryParams]="{ruleName: 'prevenzione-corruzione'}">
+              <span>Prevenzione della corruzione</span>
+            </it-dropdown-item>
+            <it-dropdown-item href="#" (click)="toggleCollapse()" routerLink="/search" [queryParams]="{ruleName: 'indicatore-tempestivita-pagamenti'}">
+              <span>Indicatore di tempestività dei pagamenti</span>
+            </it-dropdown-item>
+            <it-dropdown-item href="#" (click)="toggleCollapse()" routerLink="/search" [queryParams]="{ruleName: 'bilanci'}">
+              <span>Bilanci</span>
+            </it-dropdown-item>
+          </ng-container>
+        </it-dropdown>
+      </it-navbar-item>
+      <it-navbar-item>
+        <it-dropdown mode="nav">
           <span button translate>it.navigation.grafici-mappe.title</span>
           <ng-container list>
             <it-dropdown-item>
@@ -135,43 +172,6 @@
                 <it-icon size="sm" name="box"></it-icon>
                 <span translate>it.navigation.grafici-mappe.statistiche-regola</span>
               </a>
-            </it-dropdown-item>
-          </ng-container>
-        </it-dropdown>
-      </it-navbar-item>    
-      <it-navbar-item>
-        <it-dropdown mode="nav">
-          <span button translate>it.navigation.sezioni</span>
-          <span listHeading>
-            <a class="pb-1" href="#" (click)="toggleCollapse()" routerLink="/search" [queryParams]="{ruleName: ''}">
-              Tutte le Regole
-            </a>
-            <hr class="my-0">
-          </span>
-          <ng-container list>
-            <it-dropdown-item href="#" (click)="toggleCollapse()" routerLink="/search" [queryParams]="{ruleName: 'amministrazione-trasparente'}">
-              <span>Amministrazione Trasparente</span>
-            </it-dropdown-item>
-            <it-dropdown-item href="#" (click)="toggleCollapse()" routerLink="/search" [queryParams]="{ruleName: 'patrimonio-immobiliare'}">
-              <span>Patrimonio immobiliare</span>
-            </it-dropdown-item>
-            <it-dropdown-item href="#" (click)="toggleCollapse()" routerLink="/search" [queryParams]="{ruleName: 'canoni-locazione-affitto'}">
-              <span>Canoni di locazione o affitto</span>
-            </it-dropdown-item>
-            <it-dropdown-item href="#" (click)="toggleCollapse()" routerLink="/search" [queryParams]="{ruleName: 'bandi-gara-contratti'}">
-              <span>Bandi di gara e contratti</span>
-            </it-dropdown-item>
-            <it-dropdown-item href="#" (click)="toggleCollapse()" routerLink="/search" [queryParams]="{ruleName: 'bandi-concorso'}">
-              <span>Bandi di concorso</span>
-            </it-dropdown-item>
-            <it-dropdown-item href="#" (click)="toggleCollapse()" routerLink="/search" [queryParams]="{ruleName: 'prevenzione-corruzione'}">
-              <span>Prevenzione della corruzione</span>
-            </it-dropdown-item>
-            <it-dropdown-item href="#" (click)="toggleCollapse()" routerLink="/search" [queryParams]="{ruleName: 'indicatore-tempestivita-pagamenti'}">
-              <span>Indicatore di tempestività dei pagamenti</span>
-            </it-dropdown-item>
-            <it-dropdown-item href="#" (click)="toggleCollapse()" routerLink="/search" [queryParams]="{ruleName: 'bilanci'}">
-              <span>Bilanci</span>
             </it-dropdown-item>
           </ng-container>
         </it-dropdown>
