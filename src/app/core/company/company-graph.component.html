@@ -55,9 +55,11 @@
   @if (filterFormSearch) {
     <form [formGroup]="filterFormSearch">
       @if (company) {
-        <div class="form-group mb-0 px-2">
-          <it-select [options]="optionsWorkflow" formControlName="workflowId"></it-select>
-        </div>
+        @if (userData) {
+          <div class="form-group mb-0 px-2">
+            <it-select [options]="optionsWorkflow" formControlName="workflowId"></it-select>
+          </div>
+        }
       } @else {
         <div class="form-group mb-0 px-2 border shadow border-primary rounded">
           <it-select [options]="optionsRule" formControlName="rootRule"></it-select>

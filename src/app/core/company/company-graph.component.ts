@@ -7,7 +7,7 @@ import { LoginResponse, OidcSecurityService } from 'angular-auth-oidc-client';
 import { OrgChart } from "d3-org-chart";
 import { ItModalComponent, ItTabContainerComponent, ItTabItemComponent, NotificationPosition, SelectControlOption } from 'design-angular-kit';
 import { jsPDF } from "jspdf";
-import { Observable, map, of as observableOf } from 'rxjs';
+import { Observable, map, of as observableOf, of, switchMap, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { AuthGuard } from '../../auth/auth-guard';
 import { RoleEnum } from '../../auth/role.enum';
@@ -203,35 +203,39 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
             this.apiMessageService.sendMessage(MessageType.ERROR,  `PA non presente!`);
           }
         });
-        this.getWorkflow(queryParams).subscribe((workflowId: string) => {
-          this.filterFormSearch.controls.workflowId.patchValue(workflowId);
-          this.filterFormSearch.valueChanges.subscribe((value: any) => {            
-            this.manageChart(value.workflowId);
-          });  
-          this.conductorService.getAll({
-            includeClosed: true,
-            includeTasks: false
-          }).subscribe((workflows: Workflow[]) => {
-            this.optionsWorkflow = [];
+        if (this.userData) {
+          this.getWorkflow(queryParams).subscribe((workflowId: string) => {
+            this.filterFormSearch.controls.workflowId.patchValue(workflowId);
+            this.filterFormSearch.valueChanges.subscribe((value: any) => {            
+              this.manageChart(value.workflowId);
+            });          
             this.conductorService.getAll({
               includeClosed: true,
               includeTasks: false
-            },`/${ConductorService.AMMINISTRAZIONE_TRASPARENTE_FLOW}/correlated/${this.codiceIpa}`).subscribe((ipaWorkflows: Workflow[]) => {
-              ipaWorkflows.concat(workflows).sort((a,b) => (a.startTime < b.startTime)? 1 : -1).forEach((workflow: Workflow) => {
-                this.optionsWorkflow.push({
-                  value: workflow.workflowId,
-                  text: this.translateService.instant('it.workflow.text', {
-                    startTime: this.datepipe.transform(workflow.startTime, 'dd/MM/yyyy HH:mm:ss'),
-                    status: this.translateService.instant(`it.workflow.status.${workflow.status}`)
-                  }),
-                  selected: workflow.workflowId === queryParams['workflowId'],
-                  ruleName: workflow.input.root_rule || Rule.AMMINISTRAZIONE_TRASPARENTE
-                });
-              });  
-              this.manageChart(workflowId);
-            });      
-          });
-        });
+            }).subscribe((workflows: Workflow[]) => {
+              this.optionsWorkflow = [];
+              this.conductorService.getAll({
+                includeClosed: true,
+                includeTasks: false
+              },`/${ConductorService.AMMINISTRAZIONE_TRASPARENTE_FLOW}/correlated/${this.codiceIpa}`).subscribe((ipaWorkflows: Workflow[]) => {
+                ipaWorkflows.concat(workflows).sort((a,b) => (a.startTime < b.startTime)? 1 : -1).forEach((workflow: Workflow) => {
+                  this.optionsWorkflow.push({
+                    value: workflow.workflowId,
+                    text: this.translateService.instant('it.workflow.text', {
+                      startTime: this.datepipe.transform(workflow.startTime, 'dd/MM/yyyy HH:mm:ss'),
+                      status: this.translateService.instant(`it.workflow.status.${workflow.status}`)
+                    }),
+                    selected: workflow.workflowId === queryParams['workflowId'],
+                    ruleName: workflow.input.root_rule || Rule.AMMINISTRAZIONE_TRASPARENTE
+                  });
+                });  
+                this.manageChart(workflowId);
+              });      
+            });
+          });          
+        } else {
+          this.manageChart();
+        }
       } else {
         this.chartDivStyle = 'height:0px !important';
         this.configurationService.getAll().subscribe((configurations: Configuration[]) => {
@@ -262,7 +266,7 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
     });
   }
 
-  workflowRuleName(workflowId: string): string {
+  workflowRuleName(workflowId: string): Observable<string> {
     if (this.optionsWorkflow) {
       let workflows: any[] = this.optionsWorkflow.filter((value: any) => {
         if (value.value == workflowId) {
@@ -270,10 +274,20 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
         }
       });
       if (workflows.length == 1) {
-        return workflows[0].ruleName;  
+        return of(workflows[0].ruleName);  
       }
     }
-    return Rule.AMMINISTRAZIONE_TRASPARENTE;
+    if (!workflowId) {
+      return this.configurationService.getAll().pipe(switchMap((configurations: Configuration[]) => {
+        return configurations.filter((configuration: Configuration) => {
+          return configuration.key === ConfigurationService.WORKFLOW_CRON_BODY;
+        }).map((configuration: Configuration) => {
+          let jsonvalue = JSON.parse(configuration.value);
+          return String(jsonvalue.input.root_rule);
+        });
+      }));
+    }
+    return of(Rule.AMMINISTRAZIONE_TRASPARENTE);
   }
 
   loadSelectRules() {
@@ -303,81 +317,82 @@ export class CompanyGraphComponent implements OnInit, OnDestroy, OnChanges{
     this.updateChart();
   }
 
-  manageChart(workflowId: string) {
-   let ruleName = this.workflowRuleName(workflowId); 
-    this.resultService.getAll({
-      workflowId: workflowId,
-      codiceIpa: this.codiceIpa,
-      size: 500,
-      noCache: true
-    }, "/codiceipa").subscribe((results: Result[]) => {
-      console.log("results:"+results.length);
-      if (results.length === 0) {
-        this.apiMessageService.sendMessage(MessageType.WARNING, `Risultati non presenti per la PA: ${this.company.denominazioneEnte}!`);
-      }
-      this.rulesOK = results.filter(result => result.status == 200 || result.status == 202).length;
-      this.rulesFailed = [];
-      this.optionsRuleDetail = [];
-      this.ruleService.getRules().subscribe((rules: Map<String, Rule>) => {
-        let rule = rules.get(ruleName);
-        this.data = rule.getCharts(undefined, ruleName, []);
-        this.rating = Math.trunc((this.rulesOK * 100 / this.data.length) / 20);
-        this.loadChart();
-        this.data.forEach((ruleChart: RuleChart) => {
-          this.optionsRuleDetail.push(ruleChart);
-          let nodeId = (ruleName == ruleChart.nodeId) ? Rule.AMMINISTRAZIONE_TRASPARENTE : ruleChart.nodeId;
-          let childStatus : Number[] = [];
-          this.data.filter(result => result.parentNodeId == ruleChart.nodeId).forEach((childRule: RuleChart) => {
-            let child = results.filter(result => result.ruleName == childRule.nodeId);
-            if (child && child.length == 1) {
-              childStatus.push(child[0].status);
-            }
-          });
-          let result = results.filter(result => result.ruleName == nodeId)[0];
-          if (ruleChart.nodeId === ruleName) {
-            this.currentNode = {
-              data: ruleChart
-            };
-          }
-          ruleChart.ruleStatus = this.ruleStatus;
-          if (result) {
-            ruleChart.status = result.status;
-            ruleChart.dynamicColor = this.getDynamicColor(result.status);
-            ruleChart.destinationUrl = result.destinationUrl;
-            ruleChart.color = result.color;
-            ruleChart.childStatus = childStatus;
-            ruleChart.updatedAt = result.updatedAt; 
-            ruleChart.score = result.score;
-            ruleChart.storageData = result.storageData;
-            ruleChart.workflowChildId = result.workflowChildId;
-            ruleChart.content = result.content;
-            ruleChart.buttonColor = 'danger';  
-            if (childStatus && childStatus.length > 0) {
-              let successCount = childStatus.filter(result => result == 200 || result == 202).length;
-              //console.log(`${result.ruleName} width total:${childStatus.length} and success: ${successCount}`);
-              if (successCount == 0) {
-                ruleChart.buttonColor = 'danger';  
-              } else if (successCount < childStatus.length) {
-                ruleChart.buttonColor = 'warning';  
-              } else {
-                ruleChart.buttonColor = 'success';  
+  manageChart(workflowId?: string) {
+    this.workflowRuleName(workflowId).subscribe((ruleName: string) => {
+      this.resultService.getAll({
+        workflowId: workflowId,
+        codiceIpa: this.codiceIpa,
+        size: 500,
+        noCache: true
+      }, this.userData ? "/codiceipa/byWorkflow" : "/codiceipa").subscribe((results: Result[]) => {
+        console.log("results:"+results.length);
+        if (results.length === 0) {
+          this.apiMessageService.sendMessage(MessageType.WARNING, `Risultati non presenti per la PA: ${this.company.denominazioneEnte}!`);
+        }
+        this.rulesOK = results.filter(result => result.status == 200 || result.status == 202).length;
+        this.rulesFailed = [];
+        this.optionsRuleDetail = [];
+        this.ruleService.getRules().subscribe((rules: Map<String, Rule>) => {
+          let rule = rules.get(ruleName);
+          this.data = rule.getCharts(undefined, ruleName, []);
+          this.rating = Math.trunc((this.rulesOK * 100 / this.data.length) / 20);
+          this.loadChart();
+          this.data.forEach((ruleChart: RuleChart) => {
+            this.optionsRuleDetail.push(ruleChart);
+            let nodeId = (ruleName == ruleChart.nodeId) ? Rule.AMMINISTRAZIONE_TRASPARENTE : ruleChart.nodeId;
+            let childStatus : Number[] = [];
+            this.data.filter(result => result.parentNodeId == ruleChart.nodeId).forEach((childRule: RuleChart) => {
+              let child = results.filter(result => result.ruleName == childRule.nodeId);
+              if (child && child.length == 1) {
+                childStatus.push(child[0].status);
               }
+            });
+            let result = results.filter(result => result.ruleName == nodeId)[0];
+            if (ruleChart.nodeId === ruleName) {
+              this.currentNode = {
+                data: ruleChart
+              };
             }
-            if (result.status !== 200 && result.status !== 202 ) {
+            ruleChart.ruleStatus = this.ruleStatus;
+            if (result) {
+              ruleChart.status = result.status;
+              ruleChart.dynamicColor = this.getDynamicColor(result.status);
+              ruleChart.destinationUrl = result.destinationUrl;
+              ruleChart.color = result.color;
+              ruleChart.childStatus = childStatus;
+              ruleChart.updatedAt = result.updatedAt; 
+              ruleChart.score = result.score;
+              ruleChart.storageData = result.storageData;
+              ruleChart.workflowChildId = result.workflowChildId;
+              ruleChart.content = result.content;
+              ruleChart.buttonColor = 'danger';  
+              if (childStatus && childStatus.length > 0) {
+                let successCount = childStatus.filter(result => result == 200 || result == 202).length;
+                //console.log(`${result.ruleName} width total:${childStatus.length} and success: ${successCount}`);
+                if (successCount == 0) {
+                  ruleChart.buttonColor = 'danger';  
+                } else if (successCount < childStatus.length) {
+                  ruleChart.buttonColor = 'warning';  
+                } else {
+                  ruleChart.buttonColor = 'success';  
+                }
+              }
+              if (result.status !== 200 && result.status !== 202 ) {
+                this.rulesFailed.push(ruleChart);
+              }
+            } else {
+              ruleChart.status = 404;
+              ruleChart.dynamicColor = this.getDynamicColor(404);
+              ruleChart.color = 'danger';
+              ruleChart.buttonColor = 'danger';
               this.rulesFailed.push(ruleChart);
             }
-          } else {
-            ruleChart.status = 404;
-            ruleChart.dynamicColor = this.getDynamicColor(404);
-            ruleChart.color = 'danger';
-            ruleChart.buttonColor = 'danger';
-            this.rulesFailed.push(ruleChart);
-          }
-        });
-        this.updateChart();
-      });  
-    });
-  
+          });
+          this.updateChart();
+        });  
+      });
+
+    });  
   }
 
 
