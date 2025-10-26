@@ -4,7 +4,7 @@ import { Workflow } from '../conductor/workflow.model';
 import { ResultService } from './result.service';
 import { Rule, SelectRule } from '../rule/rule.model';
 import { TranslateService } from '@ngx-translate/core';
-import { DatePipe } from '@angular/common';
+import { DatePipe, formatNumber } from '@angular/common';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { debounceTime } from 'rxjs';
 import { DurationFormatPipe } from '../../shared/pipes/durationFormat.pipe';
@@ -12,13 +12,13 @@ import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RuleService } from '../rule/rule.service';
-import { StatusColor } from '../../common/model/status-color.enum';
+import { ConfigurationService } from '../configuration/configuration.service';
 
 import * as am5 from '@amcharts/amcharts5';
 import * as am5percent from "@amcharts/amcharts5/percent";
 import am5locales_it_IT from "@amcharts/amcharts5/locales/it_IT";
 import am5themes_Animated from "@amcharts/amcharts5/themes/Animated";
-import { ConfigurationService } from '../configuration/configuration.service';
+import { Status } from '../rule/status.enum';
 
 @Component({
     selector: 'app-result-pie-rule',
@@ -47,6 +47,7 @@ export class ResultPieRuleComponent implements OnInit {
 
   protected small: boolean = false;
   protected workflowId: string;
+  protected statusColor: any;
 
   @ViewChild('chartdiv', {static: true}) chartdiv: ElementRef;
   @ViewChild('columnchartdiv', {static: true}) columnchartdiv: ElementRef;
@@ -85,6 +86,9 @@ export class ResultPieRuleComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.configurationService.getStatusColor().subscribe((color: any) => {
+      this.statusColor = color;
+    }); 
     this.route.queryParams.subscribe((queryParams) => {
       this.workflowId = queryParams.workflowId;
       this.conductorService.getAll({
@@ -131,15 +135,25 @@ export class ResultPieRuleComponent implements OnInit {
     }, 0);
     this.isPieLoaded = false;
     let wokflowId = this.filterFormSearch.value.workflowId;
-    this.resultService.countResultsAndGroupByCategoriesWidthWorkflowIdAndStatus(wokflowId).subscribe((result: any) => {
-      this.loadChart(result);
-      setTimeout(() => {
-        this.loadingChart.set(false);
-      }, 0);
-    }); 
+    this.resultService.getWorkflowMap(Rule.AMMINISTRAZIONE_TRASPARENTE, [wokflowId], false).subscribe((resultAll: any) => {
+      var others = {};
+      Object.keys(resultAll[wokflowId])
+      .filter((key) => {
+        return !(key == String(Status.OK) || key == String(Status.ACCEPTED));
+      })
+      .forEach((key) => {
+        others[key] = resultAll[wokflowId][key];
+      });
+      this.resultService.countResultsAndGroupByCategoriesWidthWorkflowIdAndStatus(wokflowId).subscribe((result: any) => {
+        this.loadChart(result, others);
+        setTimeout(() => {
+          this.loadingChart.set(false);
+        }, 0);
+      });
+    });
   }
   
-  loadChart(result: any) {
+  loadChart(result: any, resultAll: any) {
     this.isPieLoaded = true;
     if (this.chartdiv) {
       this.root.setThemes([
@@ -190,29 +204,56 @@ export class ResultPieRuleComponent implements OnInit {
         templateField: "sliceSettings"
       });
 
-      series.slices.template.setAll({
-        strokeWidth: 2,
-        tooltipText:
-          "{category}: {value.formatNumber(',000')}"
-      });
       
+      series.slices.template.adapters.add("tooltipText", (text, target) => {
+        const dataItem = target.dataItem;
+        if (!dataItem) return text;
+        
+        const category = dataItem.get("category");
+        const value = dataItem.get("value");
+        const percent = formatNumber(dataItem.get("valuePercentTotal"), 'it-IT', '0.0-2');
+        const extra = dataItem.dataContext.extra;
+        if(extra.min && extra.max) {
+          let label = `Classe (`;
+          if (extra.min == extra.max) {
+            label += `${extra.min}`;
+          } else {
+            label += `${extra.min} - ${extra.max}`;
+          }
+          label += `)`;
+          return `${label} = ${value} - (${percent}%)`;
+        } else {
+          let label = this.translateService.instant(`it.rule.status.${extra.key}.compliance`); 
+          return `${label} = ${value} - (${percent}%)`;
+        }
+      });
+
       series.slices.template.events.on("click", function(ev) {
-        this.router.navigate(['/result-rule'],  { queryParams: {
-          workflowId: this.filterFormSearch.value.workflowId,
-          min: ev.target.dataItem.dataContext.extra.min,
-          max: ev.target.dataItem.dataContext.extra.max
-        }});
+        var status = ev.target.dataItem.dataContext.extra.key;
+        if (status) {
+          this.router.navigate(['/search'],  { queryParams: {
+            workflowId: this.filterFormSearch.value.workflowId,
+            ruleName: Rule.AMMINISTRAZIONE_TRASPARENTE,
+            status: status 
+          }});
+        } else {
+          this.router.navigate(['/result-rule'],  { queryParams: {
+            workflowId: this.filterFormSearch.value.workflowId,
+            min: ev.target.dataItem.dataContext.extra.min,
+            max: ev.target.dataItem.dataContext.extra.max
+          }});
+        }
       }, this);
 
       let single = [];
       result.forEach((r) => {
-        let label = `PA con`;
+        let label = `Classe (`;
         if (r.category.min == r.category.max) {
-          label += ` ${r.category.min} regole rispettate`;
+          label += `${r.category.min}`;
         } else {
-          label += ` regole rispettate da ${r.category.min} a ${r.category.max}`;
+          label += `${r.category.min} - ${r.category.max}`;
         }
-        label += ` sono`;
+        label += `)`;
         single.push({
           name: `${label}`,
           value: r.value,
@@ -226,6 +267,20 @@ export class ResultPieRuleComponent implements OnInit {
           }
         });
       });
+      Object.keys(resultAll).forEach((key) => {
+        single.push({
+          name: this.translateService.instant(`it.rule.status.${key}.compliance`),
+          value: resultAll[key],
+          sliceSettings: {
+            fill: am5.color(this.statusColor[`status_${key}`]),
+            stroke: am5.color(this.statusColor[`status_${key}`])
+          },
+          extra: {
+            key: key
+          }
+        });
+      });
+
       series.data.setAll(single);
       // Create legend
       let legend = chart.children.push(am5.Legend.new(this.root, {
@@ -247,12 +302,70 @@ export class ResultPieRuleComponent implements OnInit {
                         (dataItem as any).value ||
                         (dataItem as any)._settings?.value;
           if (category) {            
-            return `${category}: ${value} - `;
+            return `${category} = ${value} -`;
           }
         }
         return text;
       });
-      legend.data.setAll(series.dataItems);      
+      legend.data.setAll(series.dataItems);
+      // Calcola il totale dinamicamente
+      let total = series.data.values.reduce((sum, item) => sum + item.value, 0);
+
+      // Formatta il totale
+      let formattedTotal = this.root.numberFormatter.format(total, "#,###");
+
+      let totalLabel = legend.children.push(
+        am5.Label.new(this.root, {
+          text: `[bold]Totale PA analizzate: ${formattedTotal}[/]`,
+          fontSize: 24,
+          paddingTop: 10,
+          paddingBottom: 5
+        })
+      );
+
+      // === FUNZIONE DI AGGIORNAMENTO ===
+      const updateTotal = () => {
+        let total = 0;
+        let visibleCount = 0;
+        
+        series.dataItems.forEach((dataItem) => {
+          // Controlla se lo slice è visibile
+          if (!dataItem.isHidden()) {
+            total += dataItem.get("value") as number;
+            visibleCount++;
+          }
+        });
+        
+        // Formatta il totale
+        const formattedTotal = this.root.numberFormatter.format(total, "#,###");
+        totalLabel.set("text", `[bold]Totale PA analizzate: ${formattedTotal}[/]`);
+        
+      };
+
+      // Aggiorna al caricamento iniziale
+      series.events.on("datavalidated", () => {
+        updateTotal();
+      });
+
+      // IMPORTANTE: Ascolta l'evento "click" su ogni slice della legenda
+      legend.itemContainers.template.on("click", (ev) => {
+        // Usa un piccolo delay per aspettare che l'animazione finisca
+        setTimeout(() => {
+          updateTotal();
+        }, 50);
+      });
+
+      // ALTERNATIVA: Ascolta l'evento di visibilità dei dataItem
+      series.dataItems.forEach((dataItem) => {
+        dataItem.on("visible", () => {
+          updateTotal();
+        });
+        
+        dataItem.on("hidden", () => {
+          updateTotal();
+        });
+      });
+
       this.legend = legend;
 
       series.appear(1000, 100);

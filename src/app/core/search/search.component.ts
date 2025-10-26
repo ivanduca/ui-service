@@ -45,16 +45,6 @@ export class SearchComponent implements OnInit {
               private authGuard: AuthGuard,
               private datepipe: DatePipe,
               protected router: Router) {
-    this.translateService.get('it').subscribe((labels: any) => {
-      this.options.push({ value: 'company.codiceIpa', text: labels?.company?.codiceIpa });
-      this.options.push({ value: 'company.denominazioneEnte', text: labels?.company?.denominazioneEnte });
-      this.options.push({ value: 'createdAt,desc', text: labels?.order?.createdAt?.desc });
-      this.optionsStatus.push({value: '', text: '*', disabled: false});
-      this.optionsCategoria.push({ value: '', text: '*', selected: true});
-    });
-    Object.keys(CodiceCategoria).forEach((key) => {
-      this.optionsCategoria.push({ value: key, text: CodiceCategoria[key]});
-    });    
   }
 
   isStatusDisabled(status: number, ruleName: string): boolean {
@@ -72,31 +62,22 @@ export class SearchComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.translateService.get('it').subscribe((labels: any) => {
+      this.options.push({ value: 'company.codiceIpa', text: labels?.company?.codiceIpa });
+      this.options.push({ value: 'company.denominazioneEnte', text: labels?.company?.denominazioneEnte });
+      this.options.push({ value: 'createdAt,desc', text: labels?.order?.createdAt?.desc });
+      this.optionsStatus.push({value: '', text: '*', disabled: false});
+      this.optionsCategoria.push({ value: '', text: '*', selected: true});
+    });
+    Object.keys(CodiceCategoria).forEach((key) => {
+      this.optionsCategoria.push({ value: key, text: CodiceCategoria[key]});
+    });
     this.authGuard.hasRole([RoleEnum.ADMIN, RoleEnum.SUPERUSER]).subscribe((hasRole: boolean) => {
       this.isCSVVisible = hasRole;
     });
     this.route.queryParams.subscribe((queryParams) => {
       this.ruleName = queryParams.ruleName == '' ? '': queryParams.ruleName||Rule.AMMINISTRAZIONE_TRASPARENTE;
       let workflowId = queryParams.workflowId;
-      if (this.filterFormSearch) {
-        this.filterFormSearch.controls['workflowId'].patchValue(workflowId);
-        this.filterFormSearch.controls['ruleName'].patchValue(this.ruleName);
-        this.filterFormSearch.controls['child'].patchValue(queryParams.child);
-        this.filterFormSearch.controls['codiceIpa'].patchValue(queryParams.codiceIpa);
-        this.filterFormSearch.controls['status'].patchValue(queryParams.status||'');
-        this.filterFormSearch.controls['sort'].patchValue(queryParams.sort);
-      } else {
-        this.filterFormSearch = this.formBuilder.group({
-          workflowId: new FormControl(workflowId),
-          child: new FormControl(queryParams.child),
-          status: new FormControl(queryParams.status||''),
-          denominazioneEnte: new FormControl(),
-          codiceFiscaleEnte: new FormControl(),
-          codiceIpa: new FormControl(queryParams.codiceIpa),
-          codiceCategoria: new FormControl(),
-          sort: new FormControl(queryParams.sort),
-        });
-      }
 
       Object.values(Status).filter(key => !isNaN(Number(key))).forEach((key: number) => {
         let status = String(key);
@@ -124,6 +105,25 @@ export class SearchComponent implements OnInit {
             selected: workflow.workflowId === queryParams['workflowId']
           });
         });
+        if (this.filterFormSearch) {
+          this.filterFormSearch.controls['workflowId'].patchValue(workflowId);
+          this.filterFormSearch.controls['ruleName'].patchValue(this.ruleName);
+          this.filterFormSearch.controls['child'].patchValue(queryParams.child);
+          this.filterFormSearch.controls['codiceIpa'].patchValue(queryParams.codiceIpa);
+          this.filterFormSearch.controls['status'].patchValue(queryParams.status||'');
+          this.filterFormSearch.controls['sort'].patchValue(queryParams.sort);
+        } else {
+          this.filterFormSearch = this.formBuilder.group({
+            workflowId: new FormControl(workflowId),
+            child: new FormControl(queryParams.child),
+            status: new FormControl(queryParams.status||''),
+            denominazioneEnte: new FormControl(),
+            codiceFiscaleEnte: new FormControl(),
+            codiceIpa: new FormControl(queryParams.codiceIpa),
+            codiceCategoria: new FormControl(),
+            sort: new FormControl(queryParams.sort),
+          });
+        }
         if (workflowId == undefined) {
           workflowId = workflows[0].workflowId;
           this.optionsWorkflow[0].selected = true;

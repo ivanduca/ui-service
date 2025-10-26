@@ -231,12 +231,14 @@
         "400" : {
           "title": "Homepage non conforme",
           "ruletitle": "Non conforme",
-          "subtitle": "Il sito non contiene la sezione 'Amministrazione Trasparente' come previsto dal D.Lgs. 33/2013"
+          "subtitle": "Il sito non contiene la sezione 'Amministrazione Trasparente' come previsto dal D.Lgs. 33/2013",
+          "compliance": "Sezione Amministrazione Trasparente non rilevata"
         },
         "407" : {
           "title": "Sito PA non raggiungibile",
           "ruletitle": "Non raggiungibile",
-          "subtitle": "Il sito fornito dall'Amministrazione non risulta raggiungibile o il tempo necessario alla visualizzazione della homepage è alto (maggiore di 120 secondi)"
+          "subtitle": "Il sito fornito dall'Amministrazione non risulta raggiungibile o il tempo necessario alla visualizzazione della homepage è alto (maggiore di 120 secondi)",
+          "compliance": "Sito web non raggiungibile"
         },
         "404" : {
           "title": "Non Trovato",
@@ -245,7 +247,8 @@
         "500" : {
           "title": "Sito PA non dichiarato",
           "ruletitle": "Non Presente",
-          "subtitle": "L'Amministrazione non ha fornito l'indirizzo del sito istituzionale"
+          "subtitle": "L'Amministrazione non ha fornito l'indirizzo del sito istituzionale",
+          "compliance": "Sito web non dichiarato"
         },
         "501" : {
           "ruletitle": "Pagina non trovata"
